@@ -24,6 +24,11 @@ export class CanvasImage implements SceneObject {
     effect: 'none' | 'zoom-in' | 'pan-left';
     name: string;
 
+    shadowColor: string;
+    shadowBlur: number;
+    shadowOffsetX: number;
+    shadowOffsetY: number;
+
     private image: HTMLImageElement;
     private isLoaded = false;
 
@@ -38,6 +43,11 @@ export class CanvasImage implements SceneObject {
         this.borderRadius = props.borderRadius || 10;
         this.effect = props.effect || 'zoom-in';
         this.name = props.name || 'Image';
+
+        this.shadowColor = 'rgba(0,0,0,0.5)';
+        this.shadowBlur = 20;
+        this.shadowOffsetX = 0;
+        this.shadowOffsetY = 10;
 
         this.startTime = 0;
         this.duration = 3000;
@@ -56,6 +66,19 @@ export class CanvasImage implements SceneObject {
         const progress = Math.min(1, t / this.duration);
 
         ctx.save();
+
+        // --- Shadow ---
+        if (this.shadowColor && this.shadowBlur > 0) {
+            ctx.save();
+            ctx.shadowColor = this.shadowColor;
+            ctx.shadowBlur = this.shadowBlur;
+            ctx.shadowOffsetX = this.shadowOffsetX;
+            ctx.shadowOffsetY = this.shadowOffsetY;
+            ctx.fillStyle = '#000000'; // Dummy fill
+            this.roundedRect(ctx, this.x, this.y, this.width, this.height, this.borderRadius);
+            ctx.fill();
+            ctx.restore();
+        }
 
         // Path for rounded corners (clipping mask)
         this.roundedRect(ctx, this.x, this.y, this.width, this.height, this.borderRadius);
@@ -112,6 +135,10 @@ export class CanvasImage implements SceneObject {
             src: this.src,
             borderRadius: this.borderRadius,
             effect: this.effect,
+            shadowColor: this.shadowColor,
+            shadowBlur: this.shadowBlur,
+            shadowOffsetX: this.shadowOffsetX,
+            shadowOffsetY: this.shadowOffsetY,
             duration: this.duration,
             startTime: this.startTime,
             name: this.name
@@ -125,6 +152,11 @@ export class CanvasImage implements SceneObject {
         }
         if (props.borderRadius !== undefined) this.borderRadius = Number(props.borderRadius);
         if (props.effect !== undefined) this.effect = props.effect;
+        if (props.shadowColor !== undefined) this.shadowColor = props.shadowColor;
+        if (props.shadowBlur !== undefined) this.shadowBlur = Number(props.shadowBlur);
+        if (props.shadowOffsetX !== undefined) this.shadowOffsetX = Number(props.shadowOffsetX);
+        if (props.shadowOffsetY !== undefined) this.shadowOffsetY = Number(props.shadowOffsetY);
+
         if (props.duration !== undefined) this.duration = Number(props.duration);
         if (props.startTime !== undefined) this.startTime = Number(props.startTime);
         if (props.name !== undefined) this.name = props.name;
@@ -140,6 +172,10 @@ export class CanvasImage implements SceneObject {
             effect: this.effect,
             name: this.name + " (Copy)"
         });
+        clone.shadowColor = this.shadowColor;
+        clone.shadowBlur = this.shadowBlur;
+        clone.shadowOffsetX = this.shadowOffsetX;
+        clone.shadowOffsetY = this.shadowOffsetY;
         clone.duration = this.duration;
         clone.startTime = this.startTime;
         clone.width = this.width;

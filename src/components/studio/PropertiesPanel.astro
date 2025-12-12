@@ -141,8 +141,26 @@
                                 <span class="text-xs text-gray-500">Show Labels</span>
                             </div>
                             `
-                                            : key === "fontFamily"
+                                            : key === "code"
                                               ? `
+                            <textarea data-key="${key}" rows="10" class="prop-input w-full bg-gray-50 dark:bg-gray-800 text-gray-700 dark:text-gray-200 text-xs rounded-lg border-0 ring-1 ring-transparent hover:ring-gray-200 dark:hover:ring-gray-700 focus:bg-white dark:focus:bg-gray-900 focus:ring-2 focus:ring-blue-500 px-3 py-2 outline-none transition-all font-mono resize-y whitespace-pre overflow-x-auto">${val}</textarea>
+                            `
+                                              : key === "borderRadius"
+                                                ? `
+                            <div class="flex items-center gap-2 w-full">
+                                <input type="range" 
+                                    min="0" max="100" step="1"
+                                    data-key="${key}" 
+                                    value="${val}" 
+                                    class="prop-input-range flex-1 h-1.5 bg-gray-200 dark:bg-gray-700 rounded-lg appearance-none cursor-pointer accent-blue-600">
+                                <input type="number" 
+                                    data-key="${key}" 
+                                    value="${val}" 
+                                    class="prop-input w-12 bg-gray-50 dark:bg-gray-800 text-gray-700 dark:text-gray-200 text-xs rounded-lg border-0 ring-1 ring-transparent hover:ring-gray-200 dark:hover:ring-gray-700 focus:bg-white dark:focus:bg-gray-900 focus:ring-2 focus:ring-blue-500 px-1 py-1 text-center outline-none transition-all font-medium">
+                            </div>
+                            `
+                                                : key === "fontFamily"
+                                                  ? `
                             <select data-key="${key}" class="prop-input w-full bg-gray-50 dark:bg-gray-800 text-gray-700 dark:text-gray-200 text-xs rounded-lg border-0 ring-1 ring-transparent hover:ring-gray-200 dark:hover:ring-gray-700 focus:bg-white dark:focus:bg-gray-900 focus:ring-2 focus:ring-blue-500 px-3 py-2 outline-none transition-all font-medium cursor-pointer appearance-none" style="font-family: '${val}'">
                                 <option value="Poppins" style="font-family: 'Poppins'">Poppins</option>
                                 <option value="Inter" style="font-family: 'Inter'">Inter</option>
@@ -156,8 +174,8 @@
                                 <option value="Montserrat" style="font-family: 'Montserrat'">Montserrat</option>
                             </select>
                             `
-                                              : key === "fontWeight"
-                                                ? `
+                                                  : key === "fontWeight"
+                                                    ? `
                             <select data-key="${key}" class="prop-input w-full bg-gray-50 dark:bg-gray-800 text-gray-700 dark:text-gray-200 text-xs rounded-lg border-0 ring-1 ring-transparent hover:ring-gray-200 dark:hover:ring-gray-700 focus:bg-white dark:focus:bg-gray-900 focus:ring-2 focus:ring-blue-500 px-3 py-2 outline-none transition-all font-medium cursor-pointer appearance-none">
                                 <option value="100" ${val === "100" ? "selected" : ""}>Thin 100</option>
                                 <option value="300" ${val === "300" ? "selected" : ""}>Light 300</option>
@@ -167,10 +185,12 @@
                                 <option value="900" ${val === "900" ? "selected" : ""}>Black 900</option>
                             </select>
                             `
-                                                : key.includes("Blur") ||
-                                                    key.includes("Offset") ||
-                                                    key.includes("Spacing")
-                                                  ? `
+                                                    : key.includes("Blur") ||
+                                                        key.includes(
+                                                            "Offset",
+                                                        ) ||
+                                                        key.includes("Spacing")
+                                                      ? `
                             <div class="flex items-center gap-2 w-full">
                                 <input type="range" 
                                     min="-50" max="50" step="1"
@@ -183,7 +203,7 @@
                                     class="prop-input w-12 bg-gray-50 dark:bg-gray-800 text-gray-700 dark:text-gray-200 text-xs rounded-lg border-0 ring-1 ring-transparent hover:ring-gray-200 dark:hover:ring-gray-700 focus:bg-white dark:focus:bg-gray-900 focus:ring-2 focus:ring-blue-500 px-1 py-1 text-center outline-none transition-all font-medium">
                             </div>
                             `
-                                                  : `
+                                                      : `
                             <input type="${isNum ? "number" : "text"}" 
                                    data-key="${key}" 
                                    value="${val}" 

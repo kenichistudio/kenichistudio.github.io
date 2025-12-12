@@ -32,6 +32,12 @@ export class CanvasCode implements SceneObject {
     highlightedWords: string[];
     name: string;
 
+    borderRadius: number;
+    shadowColor: string;
+    shadowBlur: number;
+    shadowOffsetX: number;
+    shadowOffsetY: number;
+
     constructor(id: string, props: Partial<CanvasCodeProperties> & { x: number, y: number }) {
         this.id = id;
         this.x = props.x;
@@ -48,6 +54,12 @@ export class CanvasCode implements SceneObject {
         this.highlightedWords = props.highlightedWords || [];
         this.name = props.name || 'Code Block';
 
+        this.borderRadius = 20; // Default curve
+        this.shadowColor = 'rgba(0,0,0,0.5)';
+        this.shadowBlur = 20;
+        this.shadowOffsetX = 0;
+        this.shadowOffsetY = 10;
+
         this.startTime = 0;
         this.duration = 2000;
     }
@@ -59,6 +71,25 @@ export class CanvasCode implements SceneObject {
         const progress = Math.min(1, t / this.duration);
 
         ctx.save();
+
+        // --- Shadow & Shape ---
+        // We draw the shape first for the shadow
+        if (this.shadowColor && this.shadowBlur > 0) {
+            ctx.save();
+            ctx.shadowColor = this.shadowColor;
+            ctx.shadowBlur = this.shadowBlur;
+            ctx.shadowOffsetX = this.shadowOffsetX;
+            ctx.shadowOffsetY = this.shadowOffsetY;
+            ctx.fillStyle = '#1e1e1e'; // Temp fill for shadow generation
+            this.roundedRect(ctx, this.x, this.y, this.width, this.height, this.borderRadius);
+            ctx.fill();
+            ctx.restore();
+        }
+
+        // --- Clipping for rounded corners ---
+        this.roundedRect(ctx, this.x, this.y, this.width, this.height, this.borderRadius);
+        ctx.clip();
+
 
         // 1. Theme Configuration
         const themes: any = {
@@ -192,6 +223,18 @@ export class CanvasCode implements SceneObject {
         ctx.restore();
     }
 
+    private roundedRect(ctx: CanvasRenderingContext2D, x: number, y: number, w: number, h: number, r: number) {
+        if (w < 2 * r) r = w / 2;
+        if (h < 2 * r) r = h / 2;
+        ctx.beginPath();
+        ctx.moveTo(x + r, y);
+        ctx.arcTo(x + w, y, x + w, y + h, r);
+        ctx.arcTo(x + w, y + h, x, y + h, r);
+        ctx.arcTo(x, y + h, x, y, r);
+        ctx.arcTo(x, y, x + w, y, r);
+        ctx.closePath();
+    }
+
     containsPoint(px: number, py: number): boolean {
         return px >= this.x && px <= this.x + this.width &&
             py >= this.y && py <= this.y + this.height;
@@ -206,6 +249,11 @@ export class CanvasCode implements SceneObject {
             animationStyle: this.animationStyle,
             highlightedLines: this.highlightedLines.join(', '),
             highlightedWords: this.highlightedWords.join(', '),
+            borderRadius: this.borderRadius,
+            shadowColor: this.shadowColor,
+            shadowBlur: this.shadowBlur,
+            shadowOffsetX: this.shadowOffsetX,
+            shadowOffsetY: this.shadowOffsetY,
             duration: this.duration,
             startTime: this.startTime,
             name: this.name
@@ -218,6 +266,11 @@ export class CanvasCode implements SceneObject {
         if (props.fontSize !== undefined) this.fontSize = Number(props.fontSize);
         if (props.theme !== undefined) this.theme = props.theme;
         if (props.animationStyle !== undefined) this.animationStyle = props.animationStyle;
+        if (props.borderRadius !== undefined) this.borderRadius = Number(props.borderRadius);
+        if (props.shadowColor !== undefined) this.shadowColor = props.shadowColor;
+        if (props.shadowBlur !== undefined) this.shadowBlur = Number(props.shadowBlur);
+        if (props.shadowOffsetX !== undefined) this.shadowOffsetX = Number(props.shadowOffsetX);
+        if (props.shadowOffsetY !== undefined) this.shadowOffsetY = Number(props.shadowOffsetY);
 
         if (props.highlightedLines !== undefined) {
             // Parse "1, 3-5" => [1, 3, 4, 5]
@@ -260,6 +313,11 @@ export class CanvasCode implements SceneObject {
         clone.animationStyle = this.animationStyle;
         clone.highlightedLines = [...this.highlightedLines];
         clone.highlightedWords = [...this.highlightedWords];
+        clone.borderRadius = this.borderRadius;
+        clone.shadowColor = this.shadowColor;
+        clone.shadowBlur = this.shadowBlur;
+        clone.shadowOffsetX = this.shadowOffsetX;
+        clone.shadowOffsetY = this.shadowOffsetY;
         clone.duration = this.duration;
         clone.startTime = this.startTime;
         clone.width = this.width;
