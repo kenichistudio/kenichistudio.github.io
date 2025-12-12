@@ -78,12 +78,32 @@
                                 >
                             </div>
                         `
-                                : ""
+                                : key === "theme"
+                                  ? `
+                            <select data-key="${key}" class="prop-input w-full bg-gray-50 dark:bg-gray-800 text-gray-700 dark:text-gray-200 text-xs rounded-lg border-0 ring-1 ring-transparent hover:ring-gray-200 dark:hover:ring-gray-700 focus:bg-white dark:focus:bg-gray-900 focus:ring-2 focus:ring-blue-500 px-3 py-2 outline-none transition-all font-medium cursor-pointer appearance-none">
+                                <option value="dark" ${val === "dark" ? "selected" : ""}>Dark</option>
+                                <option value="light" ${val === "light" ? "selected" : ""}>Light</option>
+                                <option value="vscode" ${val === "vscode" ? "selected" : ""}>VS Code</option>
+                                <option value="classic" ${val === "classic" ? "selected" : ""}>Classic</option>
+                                <option value="matrix" ${val === "matrix" ? "selected" : ""}>Matrix</option>
+                                <option value="dracula" ${val === "dracula" ? "selected" : ""}>Dracula</option>
+                            </select>
+                            `
+                                  : key === "animationStyle"
+                                    ? `
+                            <select data-key="${key}" class="prop-input w-full bg-gray-50 dark:bg-gray-800 text-gray-700 dark:text-gray-200 text-xs rounded-lg border-0 ring-1 ring-transparent hover:ring-gray-200 dark:hover:ring-gray-700 focus:bg-white dark:focus:bg-gray-900 focus:ring-2 focus:ring-blue-500 px-3 py-2 outline-none transition-all font-medium cursor-pointer appearance-none">
+                                <option value="typewriter" ${val === "typewriter" ? "selected" : ""}>Typewriter</option>
+                                <option value="line-by-line" ${val === "line-by-line" ? "selected" : ""}>Line by Line</option>
+                                <option value="fade" ${val === "fade" ? "selected" : ""}>Fade</option>
+                            </select>
+                            `
+                                    : `
+                            <input type="${isNum ? "number" : "text"}" 
+                                   data-key="${key}" 
+                                   value="${val}" 
+                                   class="prop-input w-full bg-gray-50 dark:bg-gray-800 text-gray-700 dark:text-gray-200 text-xs rounded-lg border-0 ring-1 ring-transparent hover:ring-gray-200 dark:hover:ring-gray-700 focus:bg-white dark:focus:bg-gray-900 focus:ring-2 focus:ring-blue-500 px-3 py-2 outline-none transition-all placeholder-gray-400 font-medium">
+                            `
                         }
-                        <input type="${isNum ? "number" : "text"}" 
-                               data-key="${key}" 
-                               value="${val}" 
-                               class="prop-input w-full bg-gray-50 dark:bg-gray-800 text-gray-700 dark:text-gray-200 text-xs rounded-lg border-0 ring-1 ring-transparent hover:ring-gray-200 dark:hover:ring-gray-700 focus:bg-white dark:focus:bg-gray-900 focus:ring-2 focus:ring-blue-500 px-3 py-2 outline-none transition-all placeholder-gray-400 font-medium">
                     </div>
                 </div>
             `;

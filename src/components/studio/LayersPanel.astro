@@ -76,6 +76,18 @@
                     </div>
 
                     <div class="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                         <!-- Move Up -->
+                        <button class="action-btn move-up-layer p-1 text-gray-400 hover:text-blue-500 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded"
+                            title="Bring Forward" data-id="${obj.id}">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m18 15-6-6-6 6"/></svg>
+                        </button>
+
+                        <!-- Move Down -->
+                        <button class="action-btn move-down-layer p-1 text-gray-400 hover:text-blue-500 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded"
+                            title="Send Backward" data-id="${obj.id}">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+                        </button>
+
                          <!-- Rename -->
                         <button class="action-btn rename-layer p-1 text-gray-400 hover:text-blue-500 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded"
                             title="Rename" data-id="${obj.id}" data-name="${displayName}">
@@ -127,6 +139,24 @@
                 e.stopPropagation();
                 const id = (btn as HTMLElement).dataset.id;
                 (window as any).studioEngine.duplicateObject(id);
+            });
+        });
+
+        // Move Up
+        panel.querySelectorAll(".move-up-layer").forEach((btn) => {
+            btn.addEventListener("click", (e) => {
+                e.stopPropagation();
+                const id = (btn as HTMLElement).dataset.id;
+                (window as any).studioEngine.moveObjectUp(id);
+            });
+        });
+
+        // Move Down
+        panel.querySelectorAll(".move-down-layer").forEach((btn) => {
+            btn.addEventListener("click", (e) => {
+                e.stopPropagation();
+                const id = (btn as HTMLElement).dataset.id;
+                (window as any).studioEngine.moveObjectDown(id);
             });
         });
 

@@ -81,6 +81,32 @@ export class StudioEngine {
         }
     }
 
+    moveObjectUp(id: string) {
+        const index = this.objects.findIndex(o => o.id === id);
+        if (index !== -1 && index < this.objects.length - 1) {
+            // Swap with next
+            const temp = this.objects[index];
+            this.objects[index] = this.objects[index + 1];
+            this.objects[index + 1] = temp;
+
+            if (this.onObjectListChange) this.onObjectListChange(this.objects);
+            this.draw(this.currentTime);
+        }
+    }
+
+    moveObjectDown(id: string) {
+        const index = this.objects.findIndex(o => o.id === id);
+        if (index > 0) {
+            // Swap with prev
+            const temp = this.objects[index];
+            this.objects[index] = this.objects[index - 1];
+            this.objects[index - 1] = temp;
+
+            if (this.onObjectListChange) this.onObjectListChange(this.objects);
+            this.draw(this.currentTime);
+        }
+    }
+
     getObject(id: string) {
         return this.objects.find(o => o.id === id);
     }
@@ -154,8 +180,17 @@ export class StudioEngine {
 
     // --- Playback ---
 
+    // Playback Settings
+    isLooping = true;
+
     play() {
         if (isPlaying.get()) return;
+
+        // If at end and not looping, restart
+        if (this.currentTime >= this.totalDuration) {
+            this.currentTime = 0;
+        }
+
         isPlaying.set(true);
         this.lastFrameTime = performance.now();
         this.loop();
@@ -179,8 +214,14 @@ export class StudioEngine {
         this.lastFrameTime = now;
 
         let nextTime = currentTime.get() + dt;
+
         if (nextTime >= this.totalDuration) {
-            nextTime = 0; // Loop
+            if (this.isLooping) {
+                nextTime = 0; // Loop
+            } else {
+                nextTime = this.totalDuration;
+                this.pause(); // Stop
+            }
         }
 
         this.draw(nextTime);
@@ -339,7 +380,19 @@ export class StudioEngine {
                 if (isPlaying.get()) this.pause();
                 else this.play();
             }
+            if (e.key === 'ArrowLeft') {
+                this.pause();
+                this.seek(this.currentTime - 100); // -0.1s
+            }
+            if (e.key === 'ArrowRight') {
+                this.pause();
+                this.seek(this.currentTime + 100); // +0.1s
+            }
         });
+    }
+
+    get isPlaying(): boolean {
+        return isPlaying.get();
     }
 
     private getMousePos(e: MouseEvent) {

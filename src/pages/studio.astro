@@ -290,61 +290,138 @@ import LayersPanel from "../components/studio/LayersPanel.astro";
                     ></canvas>
                 </div>
 
-                <!-- Floating Player Controls (Overlay) -->
+                <!-- Enhanced Timeline Controls (Floating) -->
                 <div
-                    class="absolute bottom-8 left-1/2 -translate-x-1/2 z-20 flex flex-col items-center gap-2"
+                    class="absolute bottom-6 left-1/2 -translate-x-1/2 z-30 w-[600px] max-w-[90%] flex flex-col gap-2"
                 >
+                    <!-- Scrubber Bar -->
                     <div
-                        class="flex items-center gap-3 bg-white/90 dark:bg-gray-800/90 backdrop-blur border border-gray-200 dark:border-gray-700 p-2 rounded-2xl shadow-lg ring-1 ring-black/5"
+                        class="relative w-full h-8 flex items-center group cursor-pointer"
+                        id="timeline-container"
                     >
-                        <button
-                            id="play-btn"
-                            class="w-10 h-10 rounded-full bg-blue-600 hover:bg-blue-500 text-white flex items-center justify-center transition-transform active:scale-95 shadow-md shadow-blue-600/20"
-                            title="Play"
+                        <!-- Track -->
+                        <div
+                            class="absolute w-full h-1.5 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden pointer-events-none"
                         >
-                            <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                width="18"
-                                height="18"
-                                viewBox="0 0 24 24"
-                                fill="currentColor"
-                                stroke="none"
-                                ><polygon points="5 3 19 12 5 21 5 3"
-                                ></polygon></svg
+                            <!-- Progress -->
+                            <div
+                                id="timeline-progress"
+                                class="h-full bg-blue-600/80 dark:bg-blue-500/80 w-0"
                             >
-                        </button>
-                        <button
-                            id="pause-btn"
-                            class="w-10 h-10 rounded-full bg-blue-600 hover:bg-blue-500 text-white hidden flex items-center justify-center transition-transform active:scale-95 shadow-md shadow-blue-600/20"
-                            title="Pause"
-                        >
-                            <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                width="18"
-                                height="18"
-                                viewBox="0 0 24 24"
-                                fill="currentColor"
-                                stroke="none"
-                                ><rect x="6" y="4" width="4" height="16"
-                                ></rect><rect x="14" y="4" width="4" height="16"
-                                ></rect></svg
-                            >
-                        </button>
-
-                        <div class="h-6 w-px bg-gray-200 dark:bg-gray-700 mx-1">
+                            </div>
                         </div>
-                        <span
-                            id="time-display"
-                            class="font-mono text-sm font-medium text-gray-700 dark:text-gray-200 w-16 text-center tabular-nums"
-                            >0.00s</span
+
+                        <!-- Hover Interaction Layer (Wider hit area) -->
+                        <div class="absolute inset-0 z-10"></div>
+
+                        <!-- Handle -->
+                        <div
+                            id="timeline-handle"
+                            class="absolute h-4 w-4 bg-white border-2 border-blue-600 rounded-full shadow-md top-1/2 -translate-y-1/2 -translate-x-1/2 pointer-events-none transition-transform group-hover:scale-125 left-0"
                         >
+                        </div>
+                    </div>
+
+                    <!-- Controls Row -->
+                    <div
+                        class="flex items-center justify-between bg-white/90 dark:bg-gray-800/90 backdrop-blur border border-gray-200 dark:border-gray-700 px-4 py-2 rounded-xl shadow-lg ring-1 ring-black/5"
+                    >
+                        <!-- Left: Play/Pause/Stop -->
+                        <div class="flex items-center gap-2">
+                            <button
+                                id="play-pause-btn"
+                                class="w-8 h-8 rounded-full bg-blue-600 hover:bg-blue-500 text-white flex items-center justify-center transition-all active:scale-95"
+                                title="Play/Pause (Space)"
+                            >
+                                <!-- Play Icon -->
+                                <svg
+                                    id="icon-play"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    width="16"
+                                    height="16"
+                                    viewBox="0 0 24 24"
+                                    fill="currentColor"
+                                    stroke="none"
+                                    ><polygon points="5 3 19 12 5 21 5 3"
+                                    ></polygon></svg
+                                >
+                                <!-- Pause Icon -->
+                                <svg
+                                    id="icon-pause"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    width="16"
+                                    height="16"
+                                    viewBox="0 0 24 24"
+                                    fill="currentColor"
+                                    stroke="none"
+                                    class="hidden"
+                                    ><rect x="6" y="4" width="4" height="16"
+                                    ></rect><rect
+                                        x="14"
+                                        y="4"
+                                        width="4"
+                                        height="16"></rect></svg
+                                >
+                            </button>
+
+                            <button
+                                id="stop-btn"
+                                class="w-8 h-8 rounded-full bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-200 flex items-center justify-center transition-all active:scale-95"
+                                title="Stop"
+                            >
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    width="14"
+                                    height="14"
+                                    viewBox="0 0 24 24"
+                                    fill="currentColor"
+                                    stroke="none"
+                                    ><rect x="4" y="4" width="16" height="16"
+                                    ></rect></svg
+                                >
+                            </button>
+                        </div>
+
+                        <!-- Simple PreviousFrame/NextFrame (Hidden features for now or add small buttons) -->
+                    </div>
+
+                    <!-- Center: Time -->
+                    <div
+                        class="font-mono text-xs font-semibold text-gray-700 dark:text-gray-300 select-none"
+                    >
+                        <span id="time-current">0.00</span>s <span
+                            class="text-gray-400">/</span
+                        >
+                        <span id="time-total">5.00</span>s
+                    </div>
+
+                    <!-- Right: Settings -->
+                    <div class="flex items-center gap-2">
+                        <button
+                            id="loop-btn"
+                            class="p-1.5 rounded-lg text-blue-600 bg-blue-50 dark:bg-blue-900/20 hover:bg-blue-100 dark:hover:bg-blue-900/40 transition-colors"
+                            title="Toggle Loop"
+                        >
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                width="16"
+                                height="16"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="2"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                ><path d="m7 10 5-6 5 6"></path><path
+                                    d="M21 12H7"></path><path d="m17 14-5 6-5-6"
+                                ></path><path d="M3 12h14"></path></svg
+                            >
+                        </button>
                     </div>
                 </div>
             </div>
         </main>
-
-        <!-- Right Sidebar (Properties & Layers) -->
-        <!-- Right Sidebar (Properties & Layers) -->
+        <!-- Removed closing div from here -->
         <!-- Right Sidebar (Properties & Layers) -->
         <aside
             class="w-80 bg-white dark:bg-gray-900 border-l border-gray-200 dark:border-gray-800 flex flex-col z-20 shadow-xl shrink-0 h-full right-sidebar"
@@ -474,37 +551,126 @@ import LayersPanel from "../components/studio/LayersPanel.astro";
     }) as EventListener);
 
     // --- Playback Controls ---
-    const playBtn = document.getElementById("play-btn");
-    const pauseBtn = document.getElementById("pause-btn");
-    const timeDisplay = document.getElementById("time-display");
+    const playPauseBtn = document.getElementById("play-pause-btn");
+    const stopBtn = document.getElementById("stop-btn");
+    const iconPlay = document.getElementById("icon-play");
+    const iconPause = document.getElementById("icon-pause");
+    const timeCurrent = document.getElementById("time-current");
+    const timeTotal = document.getElementById("time-total");
+    const loopBtn = document.getElementById("loop-btn");
 
-    if (playBtn && pauseBtn) {
-        playBtn.addEventListener("click", () => {
-            if (engine) {
+    // Timeline UI
+    const timelineContainer = document.getElementById("timeline-container");
+    const timelineProgress = document.getElementById("timeline-progress");
+    const timelineHandle = document.getElementById("timeline-handle");
+
+    function updatePlayStateUI(isPlaying: boolean) {
+        if (isPlaying) {
+            iconPlay?.classList.add("hidden");
+            iconPause?.classList.remove("hidden");
+        } else {
+            iconPlay?.classList.remove("hidden");
+            iconPause?.classList.add("hidden");
+        }
+    }
+
+    if (playPauseBtn) {
+        playPauseBtn.addEventListener("click", () => {
+            if (!engine) return;
+            // Check engine state directly or infer from UI?
+            // Better to check engine's isPlaying atom or just toggle based on current state check
+            if (iconPause?.classList.contains("hidden")) {
                 engine.play();
-                playBtn.classList.add("hidden");
-                pauseBtn.classList.remove("hidden");
-            }
-        });
-
-        pauseBtn.addEventListener("click", () => {
-            if (engine) {
+                // updatePlayStateUI(true); // Handled by sync loop now
+            } else {
                 engine.pause();
-                if (engine.isPreviewing) engine.stopPreview();
-                pauseBtn.classList.add("hidden");
-                playBtn.classList.remove("hidden");
+                // updatePlayStateUI(false); // Handled by sync loop now
             }
         });
     }
 
-    // Time Loop
+    if (stopBtn) {
+        stopBtn.addEventListener("click", () => {
+            if (!engine) return;
+            engine.pause();
+            engine.seek(0);
+        });
+    }
+
+    if (loopBtn) {
+        loopBtn.addEventListener("click", () => {
+            if (!engine) return;
+            engine.isLooping = !engine.isLooping;
+            loopBtn.classList.toggle("text-blue-600");
+            loopBtn.classList.toggle("text-gray-400");
+            loopBtn.classList.toggle("bg-blue-50");
+        });
+    }
+
+    // Timeline Interaction
+    let isScrubbing = false;
+
+    if (timelineContainer) {
+        const updateScrub = (e: MouseEvent) => {
+            if (!engine) return;
+            const rect = timelineContainer.getBoundingClientRect();
+            const x = Math.max(0, Math.min(e.clientX - rect.left, rect.width));
+            const pct = x / rect.width;
+            const targetTime = pct * engine.totalDuration;
+            engine.seek(targetTime);
+            updateTimelineUI(targetTime);
+        };
+
+        timelineContainer.addEventListener("mousedown", (e) => {
+            isScrubbing = true;
+            if (engine) engine.pause(); // Pause while scrubbing
+            updateScrub(e);
+        });
+
+        window.addEventListener("mousemove", (e) => {
+            if (isScrubbing) {
+                e.preventDefault();
+                updateScrub(e);
+            }
+        });
+
+        window.addEventListener("mouseup", () => {
+            if (isScrubbing) {
+                isScrubbing = false;
+                // Optional: Resume play if it was playing? For now leave paused
+                updatePlayStateUI(false);
+            }
+        });
+    }
+
+    function updateTimelineUI(timeMs: number) {
+        if (!engine) return;
+        const total = engine.totalDuration;
+        const pct = Math.max(0, Math.min(1, timeMs / total)) * 100;
+
+        if (timelineProgress) timelineProgress.style.width = `${pct}%`;
+        if (timelineHandle) timelineHandle.style.left = `${pct}%`;
+
+        if (timeCurrent) timeCurrent.textContent = (timeMs / 1000).toFixed(2);
+        if (timeTotal) timeTotal.textContent = (total / 1000).toFixed(2);
+    }
+
+    // Time Loop (UI Sync)
     setInterval(() => {
-        if (
-            engine &&
-            !document.getElementById("pause-btn")?.classList.contains("hidden")
-        ) {
-            const t = engine.currentTime / 1000;
-            if (timeDisplay) timeDisplay.textContent = t.toFixed(2) + "s";
+        if (engine && !isScrubbing) {
+            // Sync Play Button State if changed externally (e.g. auto-stop at end)
+            // We need a way to know if engine stopped itself.
+            // Usually we'd subscribe. For now, simple poll:
+            // But we don't expose isPlaying state easily without importing store.
+            // We can check if time stopped increasing? too complex.
+            // We'll trust manual clicks mostly, but for "Loop=False" stop, we need to update UI.
+            // Let's rely on the engine not auto-stopping unless we want it to.
+
+            // Update Time
+            updateTimelineUI(engine.currentTime);
+
+            // Sync Play Button State
+            updatePlayStateUI(engine.isPlaying);
         }
     }, 50);
 
@@ -546,6 +712,33 @@ import LayersPanel from "../components/studio/LayersPanel.astro";
     const formatSelect = document.getElementById(
         "header-format",
     ) as HTMLSelectElement;
+
+    // Filter unsupported formats
+    if (formatSelect) {
+        const mp4Option = formatSelect.querySelector(
+            'option[value="video/mp4"]',
+        ) as HTMLOptionElement;
+        const webmOption = formatSelect.querySelector(
+            'option[value="video/webm"]',
+        ) as HTMLOptionElement;
+
+        // Check strict support
+        // Note: browser might say true for 'video/mp4' but then fail if codec not strictly supported,
+        // so checking specific codec can be safer, but 'video/mp4' usually implies basic h264.
+        const supportsMp4 = MediaRecorder.isTypeSupported("video/mp4");
+        const supportsWebM = MediaRecorder.isTypeSupported("video/webm");
+
+        if (!supportsMp4 && mp4Option) {
+            mp4Option.remove();
+            // Fallback selection if mp4 was default
+            if (formatSelect.value === "video/mp4")
+                formatSelect.value = "video/webm";
+        }
+
+        if (!supportsWebM && webmOption) {
+            webmOption.remove();
+        }
+    }
     const toast = document.getElementById("export-toast");
     const toastBar = document.getElementById("toast-progress-bar");
     const toastVal = document.getElementById("toast-progress-val");

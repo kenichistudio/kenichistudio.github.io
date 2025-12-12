@@ -20,11 +20,16 @@ export class VideoRecorder {
         };
     }
 
+    static isTypeSupported(mimeType: string): boolean {
+        return MediaRecorder.isTypeSupported(mimeType);
+    }
+
     static getSupportedMimeType(): string {
         const types = [
             'video/webm; codecs=vp9',
             'video/webm; codecs=vp8',
             'video/webm',
+            'video/mp4; codecs=h264',
             'video/mp4'
         ];
         for (const type of types) {
