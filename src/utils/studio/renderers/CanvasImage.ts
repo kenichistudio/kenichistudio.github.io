@@ -53,6 +53,7 @@ export class CanvasImage implements SceneObject {
         this.duration = 3000;
 
         this.image = new Image();
+        this.image.crossOrigin = "Anonymous"; // Fix for tainted canvas (SecurityError on export)
         this.image.src = this.src;
         this.image.onload = () => { this.isLoaded = true; };
     }

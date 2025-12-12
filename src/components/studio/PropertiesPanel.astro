@@ -63,6 +63,20 @@
                     key.includes("fill") ||
                     key.includes("stroke"));
 
+            // Helper to sanitize color for input type="color" (must be #RRGGBB)
+            const toHex = (c: any) => {
+                if (!c || typeof c !== "string") return "#000000";
+                if (c.startsWith("#") && c.length === 7) return c;
+                if (c === "transparent") return "#000000"; // Fallback
+
+                // Simple canvas hack to get hex from any string
+                const ctx = document.createElement("canvas").getContext("2d");
+                if (!ctx) return "#000000";
+                ctx.fillStyle = c;
+                return ctx.fillStyle; // returns #RRGGBB usually
+            };
+            const hexVal = isColor ? toHex(val) : val;
+
             html += `
                 <div class="flex flex-col gap-1.5">
                     <label class="text-[10px] uppercase font-bold text-gray-400 tracking-wider truncate" title="${label}">${label}</label>
@@ -73,7 +87,7 @@
                             <div class="w-8 h-8 rounded-lg shadow-sm ring-1 ring-gray-200 dark:ring-gray-700 overflow-hidden shrink-0 cursor-pointer hover:ring-2 hover:ring-blue-500 transition-all relative">
                                 <input type="color" 
                                     data-key="${key}"
-                                    value="${val}" 
+                                    value="${hexVal}" 
                                     class="prop-color absolute w-[150%] h-[150%] -top-1/4 -left-1/4 cursor-pointer p-0 border-0"
                                 >
                             </div>
