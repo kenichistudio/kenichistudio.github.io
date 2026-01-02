@@ -42,6 +42,30 @@ export const PropertiesPanel = ({ engine, selectedId, exportConfig, setExportCon
     const [editingLayerId, setEditingLayerId] = useState<string | null>(null);
     const [editName, setEditName] = useState("");
     const [_, setForceUpdate] = useState(0);
+    
+    // Export simulation state
+    const [isExporting, setIsExporting] = useState(false);
+    const [exportProgress, setExportProgress] = useState(0);
+
+    const handleExport = () => {
+        if (isExporting) return;
+        
+        setIsExporting(true);
+        setExportProgress(0);
+
+        // Simulate export process
+        const interval = setInterval(() => {
+            setExportProgress(prev => {
+                if (prev >= 100) {
+                    clearInterval(interval);
+                    setTimeout(() => setIsExporting(false), 500); // Small delay at 100%
+                    return 100;
+                }
+                // Random increment between 2 and 8
+                return Math.min(prev + Math.random() * 6 + 2, 100);
+            });
+        }, 100);
+    };
 
     const editInputRef = useRef<HTMLInputElement>(null);
 
@@ -115,7 +139,7 @@ export const PropertiesPanel = ({ engine, selectedId, exportConfig, setExportCon
                     onClick={() => setActiveTab("properties")}
                     className={`flex-1 py-3 text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-2 ${activeTab === "properties" ? "text-blue-600 border-b-2 border-blue-600" : "text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-800"}`}
                 >
-                    <Settings size={14} /> Properties
+                    <Settings size={14} /> Inspector
                 </button>
                 <button 
                     onClick={() => setActiveTab("layers")}
@@ -127,7 +151,7 @@ export const PropertiesPanel = ({ engine, selectedId, exportConfig, setExportCon
                     onClick={() => setActiveTab("animations")}
                     className={`flex-1 py-3 text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-2 ${activeTab === "animations" ? "text-blue-600 border-b-2 border-blue-600" : "text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-800"}`}
                 >
-                    <MonitorPlay size={14} /> Animations
+                    <MonitorPlay size={14} /> Motion
                 </button>
             </div>
 
@@ -239,7 +263,8 @@ export const PropertiesPanel = ({ engine, selectedId, exportConfig, setExportCon
                                             <label className="text-[10px] uppercase text-slate-500 font-bold block mb-1">Filename</label>
                                             <input 
                                                 type="text" 
-                                                className="w-full bg-slate-100 dark:bg-slate-800 border-none rounded px-2 py-1 text-xs text-slate-700 dark:text-slate-300"
+                                                disabled={isExporting}
+                                                className="w-full bg-slate-100 dark:bg-slate-800 border-none rounded px-2 py-1 text-xs text-slate-700 dark:text-slate-300 disabled:opacity-50"
                                                 value={exportConfig.filename}
                                                 onChange={(e) => setExportConfig({...exportConfig, filename: e.target.value})}
                                             />
@@ -249,7 +274,8 @@ export const PropertiesPanel = ({ engine, selectedId, exportConfig, setExportCon
                                             <div>
                                                  <label className="text-[10px] uppercase text-slate-500 font-bold block mb-1">Format</label>
                                                  <select 
-                                                    className="w-full bg-slate-100 dark:bg-slate-800 border-none rounded px-2 py-1 text-xs text-slate-700 dark:text-slate-300"
+                                                    disabled={isExporting}
+                                                    className="w-full bg-slate-100 dark:bg-slate-800 border-none rounded px-2 py-1 text-xs text-slate-700 dark:text-slate-300 disabled:opacity-50"
                                                     value={exportConfig.format}
                                                     onChange={(e) => setExportConfig({...exportConfig, format: e.target.value as any})}
                                                  >
@@ -260,7 +286,8 @@ export const PropertiesPanel = ({ engine, selectedId, exportConfig, setExportCon
                                             <div>
                                                  <label className="text-[10px] uppercase text-slate-500 font-bold block mb-1">Duration</label>
                                                  <select 
-                                                    className="w-full bg-slate-100 dark:bg-slate-800 border-none rounded px-2 py-1 text-xs text-slate-700 dark:text-slate-300"
+                                                    disabled={isExporting}
+                                                    className="w-full bg-slate-100 dark:bg-slate-800 border-none rounded px-2 py-1 text-xs text-slate-700 dark:text-slate-300 disabled:opacity-50"
                                                     value={exportConfig.useFullDuration ? "full" : "custom"}
                                                     onChange={(e) => setExportConfig({...exportConfig, useFullDuration: e.target.value === "full"})}
                                                  >
@@ -277,12 +304,38 @@ export const PropertiesPanel = ({ engine, selectedId, exportConfig, setExportCon
                                                     type="number" 
                                                     min={1}
                                                     max={60}
-                                                    className="w-full bg-slate-100 dark:bg-slate-800 border-none rounded px-2 py-1 text-xs text-slate-700 dark:text-slate-300"
+                                                    disabled={isExporting}
+                                                    className="w-full bg-slate-100 dark:bg-slate-800 border-none rounded px-2 py-1 text-xs text-slate-700 dark:text-slate-300 disabled:opacity-50"
                                                     value={exportConfig.duration}
                                                     onChange={(e) => setExportConfig({...exportConfig, duration: Number(e.target.value)})}
                                                 />
                                             </div>
                                         )}
+
+                                        <div className="pt-2">
+                                            {!isExporting ? (
+                                                <button
+                                                    onClick={handleExport}
+                                                    className="w-full py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-xs font-bold shadow-lg shadow-blue-900/20 active:scale-95 transition-all flex items-center justify-center gap-2"
+                                                >
+                                                    <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse"/>
+                                                    Export Video
+                                                </button>
+                                            ) : (
+                                                <div className="space-y-2">
+                                                    <div className="flex justify-between items-end">
+                                                        <span className="text-[10px] text-blue-600 dark:text-blue-400 font-bold uppercase animate-pulse">Rendering...</span>
+                                                        <span className="text-[10px] text-slate-500 font-mono">{Math.round(exportProgress)}%</span>
+                                                    </div>
+                                                    <div className="h-2 w-full bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
+                                                        <div 
+                                                            className="h-full bg-blue-600 transition-all duration-300 ease-out"
+                                                            style={{ width: `${exportProgress}%` }}
+                                                        />
+                                                    </div>
+                                                </div>
+                                            )}
+                                        </div>
                                      </div>
                                  )}
 

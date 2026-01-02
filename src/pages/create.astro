@@ -1,12 +1,14 @@
 ---
+import SquareAd from "../components/ads/SquareAd.astro";
+
 import Layout from "../layouts/Layout.astro";
 import { EditorLayout } from "../components/create/EditorLayout";
 ---
 
-<Layout title="Kinetix Create" showFooter={false} showAds={false}>
+<Layout title="Kinetix Create" showFooter={false} showAds={false} isApp>
     <!-- Dark/Light mode is handled by Layout usually, but we force specific classes for the app -->
     <div
-        class="h-screen w-screen overflow-hidden bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100"
+        class="h-full w-full overflow-hidden bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 relative"
     >
         <EditorLayout client:only="react" />
     </div>

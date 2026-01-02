@@ -12,6 +12,7 @@ import { CodeBlockObject } from "../../engine/objects/CodeBlockObject";
 import { ChartObject } from "../../engine/objects/ChartObject";interface SidebarProps {
     engine: Engine | null;
 }
+import { SquareAd } from "../ads/SquareAd";
 
 type Tab = "templates" | "text" | "media" | "shapes" | null;
 
@@ -121,6 +122,12 @@ export const Sidebar = ({ engine }: SidebarProps) => {
                 
                 <div className="flex-1" />
                 
+                {/* Ad Spot - Sponsor Slot */}
+                <div className="w-12 h-12 mb-2 bg-slate-100 dark:bg-slate-800 rounded-lg flex flex-col items-center justify-center border border-slate-200 dark:border-slate-700 overflow-hidden cursor-pointer group hover:border-blue-300 transition-colors">
+                    <span className="text-[8px] font-bold text-slate-400 uppercase tracking-tighter mb-0.5">AD</span>
+                    <div className="w-6 h-4 bg-gradient-to-br from-indigo-500 to-purple-500 rounded-sm group-hover:scale-110 transition-transform"></div>
+                </div>
+                
                 <button 
                      onClick={() => setActiveTab(null)}
                      className="p-3 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition-colors"
@@ -206,6 +213,10 @@ export const Sidebar = ({ engine }: SidebarProps) => {
                             </div>
                         )}
 
+                    </div>
+                    
+                    <div className="mt-auto pt-4">
+                        <SquareAd />
                     </div>
                 </aside>
             )}

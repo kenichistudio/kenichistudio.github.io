@@ -3,15 +3,16 @@ interface Props {
     title: string;
     showFooter?: boolean;
     showAds?: boolean;
+    isApp?: boolean;
 }
 
-const { title, showFooter = true, showAds = true } = Astro.props;
+const { title, showFooter = true, showAds = true, isApp = false } = Astro.props;
 import Footer from "../components/Footer.astro";
 import VerticalAd from "../components/ads/VerticalAd.astro";
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang="en" class={isApp ? "h-full overflow-hidden" : ""}>
     <head>
         <meta charset="UTF-8" />
         <meta name="description" content="Astro description" />
@@ -53,7 +54,9 @@ import VerticalAd from "../components/ads/VerticalAd.astro";
             href={`${import.meta.env.BASE_URL}pwa-icon-192.png`}
         />
     </head>
-    <body class="font-sans antialiased text-slate-900 bg-white">
+    <body
+        class={`font-sans antialiased text-slate-900 bg-white ${isApp ? "h-full w-full overflow-hidden select-none" : ""}`}
+    >
         <!-- Ad Rails -->
         {
             showAds && (
@@ -128,5 +131,13 @@ import VerticalAd from "../components/ads/VerticalAd.astro";
         .ad-rail {
             display: block;
         }
+    }
+
+    /* Helper to re-enable selection for inputs even if body is select-none */
+    .select-none input,
+    .select-none textarea,
+    .select-none [contenteditable] {
+        -webkit-user-select: text;
+        user-select: text;
     }
 </style>
