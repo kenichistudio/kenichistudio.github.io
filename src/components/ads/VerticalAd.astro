@@ -2,13 +2,8 @@
 
 ---
 
-<div class="vertical-ad-container text-white">
+<div class="vertical-ad-container">
     <div class="ad-label">Advertisement</div>
-    <!-- AdSense Script -->
-    <script
-        async
-        src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7993314093599705"
-        crossorigin="anonymous"></script>
 
     <!-- VERTICAL_AD -->
     <ins
@@ -28,23 +23,17 @@
     .vertical-ad-container {
         width: 160px;
         min-height: 600px;
-        display: flex;
-        flex-direction: column;
-        justify-content: start;
-        align-items: center;
-        background: rgba(255, 255, 255, 0.03);
-        background-color: aliceblue;
+        background-color: aliceblue; /* Placeholder color, ad will cover */
         border-radius: 8px;
-        border: 1px solid rgba(255, 255, 255, 0.05);
-        overflow: hidden;
+        /* Removed flex and overflow:hidden to allow ad expansion */
     }
 
     .ad-label {
-        font-size: 8px;
+        font-size: 10px;
         text-transform: uppercase;
-        letter-spacing: 1px;
-        color: rgb(7, 7, 7);
-        margin: 4px 0;
+        color: #94a3b8;
+        margin-bottom: 4px;
+        text-align: center;
         font-family: sans-serif;
     }
 </style>
