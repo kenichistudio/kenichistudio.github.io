@@ -131,7 +131,7 @@ export const EditorLayout = () => {
             </div>
 
             {/* Header */}
-            <header className="h-14 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between px-4 bg-white dark:bg-slate-900 shrink-0 z-20">
+            <header className="h-14 border-b border-slate-200 dark:border-neutral-800 flex items-center justify-between px-4 bg-white dark:bg-neutral-900 shrink-0 z-20">
                 <a href={import.meta.env.BASE_URL} className="flex items-center gap-2 hover:opacity-80 transition-opacity">
                     <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center text-white font-bold">K</div>
                     <span className="font-bold text-lg hidden sm:block text-slate-900 dark:text-white">Kinetix Create</span>
@@ -143,18 +143,18 @@ export const EditorLayout = () => {
                         href="https://ko-fi.com"
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="hidden md:flex items-center gap-2 px-3 py-2 bg-amber-100 hover:bg-amber-200 text-amber-900 rounded-lg text-xs font-bold transition-colors mr-2"
+                        className="hidden md:flex items-center gap-2 px-3 py-2 bg-amber-100 hover:bg-amber-200 text-amber-900 dark:bg-amber-900/20 dark:text-amber-500 dark:hover:bg-amber-900/40 rounded-lg text-xs font-bold transition-colors mr-2"
                     >
-                        <Coffee size={14} className="text-amber-700" />
+                        <Coffee size={14} className="text-amber-700 dark:text-amber-500" />
                         <span>Buy me a coffee</span>
                     </a>
                     <a
                         href="https://patreon.com"
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="hidden md:flex items-center gap-2 px-3 py-2 bg-red-100 hover:bg-red-200 text-red-900 rounded-lg text-xs font-bold transition-colors mr-4"
+                        className="hidden md:flex items-center gap-2 px-3 py-2 bg-red-100 hover:bg-red-200 text-red-900 dark:bg-red-900/20 dark:text-red-400 dark:hover:bg-red-900/40 rounded-lg text-xs font-bold transition-colors mr-4"
                     >
-                        <Heart size={14} className="text-red-600 fill-red-600" />
+                        <Heart size={14} className="text-red-600 fill-red-600 dark:text-red-500 dark:fill-red-500" />
                         <span>Patreon</span>
                     </a>
 
@@ -162,14 +162,14 @@ export const EditorLayout = () => {
                     <div className="relative">
                         <button
                             onClick={() => setShowGuidesMenu(!showGuidesMenu)}
-                            className={`p-2 rounded-lg transition-colors mr-1 ${currentGuide !== 'none' ? "bg-blue-50 text-blue-600 dark:bg-blue-900/20 dark:text-blue-400" : "text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800"}`}
+                            className={`p-2 rounded-lg transition-colors mr-1 ${currentGuide !== 'none' ? "bg-blue-50 text-blue-600 dark:bg-blue-900/20 dark:text-blue-400" : "text-slate-500 hover:bg-slate-100 dark:hover:bg-neutral-800"}`}
                             title="Canvas Guides"
                         >
                             <Grid3x3 size={20} />
                         </button>
 
                         {showGuidesMenu && (
-                            <div className="absolute top-full right-0 mt-2 w-48 bg-white dark:bg-slate-900 rounded-xl shadow-xl border border-slate-200 dark:border-slate-800 overflow-hidden z-50 animate-in fade-in slide-in-from-top-2 duration-200">
+                            <div className="absolute top-full right-0 mt-2 w-48 bg-white dark:bg-neutral-900 rounded-xl shadow-xl border border-slate-200 dark:border-neutral-800 overflow-hidden z-50 animate-in fade-in slide-in-from-top-2 duration-200">
                                 <div className="p-2 space-y-1">
                                     {[
                                         { id: "none", label: "No Guides" },
@@ -180,7 +180,7 @@ export const EditorLayout = () => {
                                         <button
                                             key={opt.id}
                                             onClick={() => handleGuideChange(opt.id as any)}
-                                            className={`w-full text-left px-3 py-2 text-xs font-bold rounded-lg transition-colors ${currentGuide === opt.id ? "bg-blue-50 text-blue-600 dark:bg-blue-900/20 dark:text-blue-400" : "text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800"}`}
+                                            className={`w-full text-left px-3 py-2 text-xs font-bold rounded-lg transition-colors ${currentGuide === opt.id ? "bg-blue-50 text-blue-600 dark:bg-blue-900/20 dark:text-blue-400" : "text-slate-600 dark:text-neutral-400 hover:bg-slate-50 dark:hover:bg-neutral-800"}`}
                                         >
                                             {opt.label}
                                         </button>
@@ -190,13 +190,44 @@ export const EditorLayout = () => {
                         )}
                     </div>
 
+                    {/* Theme Toggle */}
+                    <button
+                        onClick={() => {
+                            if (document.documentElement.classList.contains("dark")) {
+                                document.documentElement.classList.remove("dark");
+                                localStorage.setItem("theme", "light");
+                            } else {
+                                document.documentElement.classList.add("dark");
+                                localStorage.setItem("theme", "dark");
+                            }
+                        }}
+                        className="p-2 text-slate-500 hover:bg-slate-100 dark:hover:bg-neutral-800 rounded-lg transition-colors mr-1"
+                        title="Toggle Dark Mode"
+                    >
+                        {/* Simple Sun/Moon Icon Logic (Client-side only) */}
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="hidden dark:block">
+                            <circle cx="12" cy="12" r="5" />
+                            <path d="M12 1v2" />
+                            <path d="M12 21v2" />
+                            <path d="M4.22 4.22l1.42 1.42" />
+                            <path d="M18.36 18.36l1.42 1.42" />
+                            <path d="M1 12h2" />
+                            <path d="M21 12h2" />
+                            <path d="M4.22 19.78l1.42-1.42" />
+                            <path d="M18.36 5.64l1.42-1.42" />
+                        </svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="block dark:hidden">
+                            <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z" />
+                        </svg>
+                    </button>
+
                     <button
                         onClick={() => {
                             // Deselect to show global settings
                             engine?.selectObject(null);
                             setRightSidebarOpen(true);
                         }}
-                        className="p-2 text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors mr-2"
+                        className="p-2 text-slate-500 hover:bg-slate-100 dark:hover:bg-neutral-800 rounded-lg transition-colors mr-2"
                         title="Scene & Export Settings"
                     >
                         <Settings size={20} />
@@ -204,7 +235,7 @@ export const EditorLayout = () => {
 
                     <button
                         onClick={handleExportImage}
-                        className="px-3 py-2 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 rounded-lg font-medium text-sm hover:bg-slate-200 transition-colors"
+                        className="px-3 py-2 bg-slate-100 dark:bg-neutral-800 text-slate-700 dark:text-neutral-300 rounded-lg font-medium text-sm hover:bg-slate-200 transition-colors"
                     >
                         Snapshot
                     </button>
@@ -231,7 +262,7 @@ export const EditorLayout = () => {
                 <Sidebar engine={engine} />
 
                 {/* Center Canvas */}
-                <div className="flex-1 flex flex-col min-w-0 min-h-0 bg-slate-100 dark:bg-slate-950 relative">
+                <div className="flex-1 flex flex-col min-w-0 min-h-0 bg-slate-100 dark:bg-black relative">
                     <CanvasWorkspace ref={canvasRef} />
 
                     {/* Timeline */}
@@ -249,7 +280,7 @@ export const EditorLayout = () => {
                 </div>
 
                 {rightSidebarOpen && (
-                    <div className="w-80 border-l border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shrink-0 flex flex-col overflow-hidden min-h-0">
+                    <div className="w-80 border-l border-slate-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 shrink-0 flex flex-col overflow-hidden min-h-0">
                         <PropertiesPanel
                             engine={engine}
                             selectedId={selectedId}
@@ -263,10 +294,10 @@ export const EditorLayout = () => {
                 {(showExportDialog || isExporting) && (
                     <div className="absolute inset-0 z-50 flex items-center justify-center p-8 animate-in fade-in duration-200 pointer-events-none">
 
-                        <div className="pointer-events-auto bg-white dark:bg-slate-900 rounded-xl shadow-2xl shadow-black/20 border border-slate-200 dark:border-slate-800 overflow-hidden w-full max-w-6xl flex h-[650px] animate-in zoom-in-95 duration-300">
+                        <div className="pointer-events-auto bg-white dark:bg-neutral-900 rounded-xl shadow-2xl shadow-black/20 border border-slate-200 dark:border-neutral-800 overflow-hidden w-full max-w-6xl flex h-[650px] animate-in zoom-in-95 duration-300">
 
                             {/* Left Ad Column */}
-                            <div className="w-72 bg-slate-50 dark:bg-slate-950 border-r border-slate-200 dark:border-slate-800 p-6 hidden lg:flex flex-col items-center justify-center">
+                            <div className="w-72 bg-slate-50 dark:bg-neutral-950 border-r border-slate-200 dark:border-neutral-800 p-6 hidden lg:flex flex-col items-center justify-center">
                                 <span className="text-[10px] uppercase font-bold text-slate-400 mb-4">Advertisement</span>
                                 <VerticalAd />
                             </div>

@@ -25,6 +25,30 @@ import VerticalAd from "../components/ads/VerticalAd.astro";
         <meta name="generator" content={Astro.generator} />
         <title>{title}</title>
 
+        <script is:inline>
+            // Check for saved theme or system preference
+            const theme = (() => {
+                if (
+                    typeof localStorage !== "undefined" &&
+                    localStorage.getItem("theme")
+                ) {
+                    return localStorage.getItem("theme");
+                }
+                if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
+                    return "dark";
+                }
+                return "light";
+            })();
+
+            if (theme === "light") {
+                document.documentElement.classList.remove("dark");
+            } else {
+                document.documentElement.classList.add("dark");
+            }
+
+            window.localStorage.setItem("theme", theme);
+        </script>
+
         <!-- Google AdSense -->
         <script
             async
@@ -55,7 +79,7 @@ import VerticalAd from "../components/ads/VerticalAd.astro";
         />
     </head>
     <body
-        class={`font-sans antialiased text-slate-900 bg-white ${isApp ? "h-full w-full overflow-hidden select-none" : ""}`}
+        class={`font-sans antialiased text-slate-900 bg-white dark:bg-neutral-950 dark:text-neutral-50 ${isApp ? "h-full w-full overflow-hidden select-none" : ""}`}
     >
         <!-- Ad Rails -->
         {

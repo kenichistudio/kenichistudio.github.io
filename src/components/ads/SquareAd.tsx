@@ -20,7 +20,7 @@ export const SquareAd = () => {
             width: '100%',
             aspectRatio: '1/1',
             minHeight: '250px',
-            backgroundColor: 'aliceblue',
+            // backgroundColor: 'aliceblue',
             border: '1px solid rgba(255, 255, 255, 0.1)',
             borderRadius: '8px',
             /* Removed flex/overflow/position relative */
@@ -28,7 +28,7 @@ export const SquareAd = () => {
             <div style={{
                 fontSize: '10px',
                 textTransform: 'uppercase',
-                color: 'rgba(29, 29, 29, 0.5)',
+                color: 'rgba(255, 255, 255, 0.5)',
                 marginBottom: '4px',
                 width: '100%',
                 textAlign: 'center',

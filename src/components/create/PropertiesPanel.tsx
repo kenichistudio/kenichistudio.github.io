@@ -134,22 +134,22 @@ export const PropertiesPanel = ({ engine, selectedId, exportConfig, setExportCon
     return (
         <div className="flex flex-col h-full">
             {/* Tabs */}
-            <div className="flex border-b border-slate-200 dark:border-slate-800">
+            <div className="flex border-b border-slate-200 dark:border-neutral-800">
                 <button
                     onClick={() => setActiveTab("properties")}
-                    className={`flex-1 py-3 text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-2 ${activeTab === "properties" ? "text-blue-600 border-b-2 border-blue-600" : "text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-800"}`}
+                    className={`flex-1 py-3 text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-2 ${activeTab === "properties" ? "text-blue-600 border-b-2 border-blue-600" : "text-slate-500 hover:bg-slate-50 dark:hover:bg-neutral-800"}`}
                 >
                     <Settings size={14} /> Inspector
                 </button>
                 <button
                     onClick={() => setActiveTab("layers")}
-                    className={`flex-1 py-3 text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-2 ${activeTab === "layers" ? "text-blue-600 border-b-2 border-blue-600" : "text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-800"}`}
+                    className={`flex-1 py-3 text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-2 ${activeTab === "layers" ? "text-blue-600 border-b-2 border-blue-600" : "text-slate-500 hover:bg-slate-50 dark:hover:bg-neutral-800"}`}
                 >
                     <Layers size={14} /> Layers
                 </button>
                 <button
                     onClick={() => setActiveTab("animations")}
-                    className={`flex-1 py-3 text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-2 ${activeTab === "animations" ? "text-blue-600 border-b-2 border-blue-600" : "text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-800"}`}
+                    className={`flex-1 py-3 text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-2 ${activeTab === "animations" ? "text-blue-600 border-b-2 border-blue-600" : "text-slate-500 hover:bg-slate-50 dark:hover:bg-neutral-800"}`}
                 >
                     <MonitorPlay size={14} /> Motion
                 </button>
@@ -175,7 +175,7 @@ export const PropertiesPanel = ({ engine, selectedId, exportConfig, setExportCon
                                     <div className="flex gap-2">
                                         <input
                                             type="color"
-                                            className="w-10 h-10 p-0.5 rounded cursor-pointer bg-transparent border border-slate-200 dark:border-slate-700"
+                                            className="w-10 h-10 p-0.5 rounded cursor-pointer bg-transparent border border-slate-200 dark:border-neutral-700"
                                             value={engine.scene.backgroundColor}
                                             onChange={(e) => {
                                                 engine.scene.backgroundColor = e.target.value;
@@ -186,7 +186,7 @@ export const PropertiesPanel = ({ engine, selectedId, exportConfig, setExportCon
                                         <div className="flex-1">
                                             <input
                                                 type="text"
-                                                className="w-full h-10 bg-slate-100 dark:bg-slate-800 border-none rounded px-3 text-xs text-slate-700 dark:text-slate-300 font-mono"
+                                                className="w-full h-10 bg-slate-100 dark:bg-neutral-800 border-none rounded px-3 text-xs text-slate-700 dark:text-neutral-300 font-mono"
                                                 value={engine.scene.backgroundColor}
                                                 onChange={(e) => {
                                                     engine.scene.backgroundColor = e.target.value;
@@ -198,7 +198,7 @@ export const PropertiesPanel = ({ engine, selectedId, exportConfig, setExportCon
                                     </div>
                                 </div>
 
-                                <div className="h-px bg-slate-200 dark:bg-slate-800 my-4" />
+                                <div className="h-px bg-slate-200 dark:bg-neutral-800 my-4" />
 
                                 {/* Resolution Settings */}
                                 <div className="space-y-2">
@@ -209,7 +209,7 @@ export const PropertiesPanel = ({ engine, selectedId, exportConfig, setExportCon
                                                 engine.resize(854, 480);
                                                 setForceUpdate(n => n + 1);
                                             }}
-                                            className={`py-2 px-3 rounded text-xs font-medium border transition-all ${engine.scene.height === 480 ? "bg-blue-50 border-blue-200 text-blue-600 dark:bg-blue-900/20 dark:border-blue-800 dark:text-blue-400" : "bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400 hover:border-blue-400"}`}
+                                            className={`py-2 px-3 rounded text-xs font-medium border transition-all ${engine.scene.height === 480 ? "bg-blue-50 border-blue-200 text-blue-600 dark:bg-blue-900/20 dark:border-blue-800 dark:text-blue-400" : "bg-white dark:bg-neutral-800 border-slate-200 dark:border-neutral-700 text-slate-600 dark:text-neutral-400 hover:border-blue-400"}`}
                                         >
                                             480p
                                         </button>
@@ -218,7 +218,7 @@ export const PropertiesPanel = ({ engine, selectedId, exportConfig, setExportCon
                                                 engine.resize(1280, 720);
                                                 setForceUpdate(n => n + 1);
                                             }}
-                                            className={`py-2 px-3 rounded text-xs font-medium border transition-all ${engine.scene.height === 720 ? "bg-blue-50 border-blue-200 text-blue-600 dark:bg-blue-900/20 dark:border-blue-800 dark:text-blue-400" : "bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400 hover:border-blue-400"}`}
+                                            className={`py-2 px-3 rounded text-xs font-medium border transition-all ${engine.scene.height === 720 ? "bg-blue-50 border-blue-200 text-blue-600 dark:bg-blue-900/20 dark:border-blue-800 dark:text-blue-400" : "bg-white dark:bg-neutral-800 border-slate-200 dark:border-neutral-700 text-slate-600 dark:text-neutral-400 hover:border-blue-400"}`}
                                         >
                                             720p
                                             <span className="opacity-50 ml-1 font-normal">(HD)</span>
@@ -228,7 +228,7 @@ export const PropertiesPanel = ({ engine, selectedId, exportConfig, setExportCon
                                                 engine.resize(1920, 1080);
                                                 setForceUpdate(n => n + 1);
                                             }}
-                                            className={`py-2 px-3 rounded text-xs font-medium border transition-all ${engine.scene.height === 1080 ? "bg-blue-50 border-blue-200 text-blue-600 dark:bg-blue-900/20 dark:border-blue-800 dark:text-blue-400" : "bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400 hover:border-blue-400"}`}
+                                            className={`py-2 px-3 rounded text-xs font-medium border transition-all ${engine.scene.height === 1080 ? "bg-blue-50 border-blue-200 text-blue-600 dark:bg-blue-900/20 dark:border-blue-800 dark:text-blue-400" : "bg-white dark:bg-neutral-800 border-slate-200 dark:border-neutral-700 text-slate-600 dark:text-neutral-400 hover:border-blue-400"}`}
                                         >
                                             1080p
                                             <span className="opacity-50 ml-1 font-normal">(FHD)</span>
@@ -238,7 +238,7 @@ export const PropertiesPanel = ({ engine, selectedId, exportConfig, setExportCon
                                                 engine.resize(3840, 2160);
                                                 setForceUpdate(n => n + 1);
                                             }}
-                                            className={`py-2 px-3 rounded text-xs font-medium border transition-all ${engine.scene.height === 2160 ? "bg-blue-50 border-blue-200 text-blue-600 dark:bg-blue-900/20 dark:border-blue-800 dark:text-blue-400" : "bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400 hover:border-blue-400"}`}
+                                            className={`py-2 px-3 rounded text-xs font-medium border transition-all ${engine.scene.height === 2160 ? "bg-blue-50 border-blue-200 text-blue-600 dark:bg-blue-900/20 dark:border-blue-800 dark:text-blue-400" : "bg-white dark:bg-neutral-800 border-slate-200 dark:border-neutral-700 text-slate-600 dark:text-neutral-400 hover:border-blue-400"}`}
                                         >
                                             4K
                                             <span className="opacity-50 ml-1 font-normal">(UHD)</span>
@@ -264,7 +264,7 @@ export const PropertiesPanel = ({ engine, selectedId, exportConfig, setExportCon
                                             <input
                                                 type="text"
                                                 disabled={isExporting}
-                                                className="w-full bg-slate-100 dark:bg-slate-800 border-none rounded px-2 py-1 text-xs text-slate-700 dark:text-slate-300 disabled:opacity-50"
+                                                className="w-full bg-slate-100 dark:bg-neutral-800 border-none rounded px-2 py-1 text-xs text-slate-700 dark:text-neutral-300 disabled:opacity-50"
                                                 value={exportConfig.filename}
                                                 onChange={(e) => setExportConfig({ ...exportConfig, filename: e.target.value })}
                                             />
@@ -275,7 +275,7 @@ export const PropertiesPanel = ({ engine, selectedId, exportConfig, setExportCon
                                                 <label className="text-[10px] uppercase text-slate-500 font-bold block mb-1">Format</label>
                                                 <select
                                                     disabled={isExporting}
-                                                    className="w-full bg-slate-100 dark:bg-slate-800 border-none rounded px-2 py-1 text-xs text-slate-700 dark:text-slate-300 disabled:opacity-50"
+                                                    className="w-full bg-slate-100 dark:bg-neutral-800 border-none rounded px-2 py-1 text-xs text-slate-700 dark:text-neutral-300 disabled:opacity-50"
                                                     value={exportConfig.format}
                                                     onChange={(e) => setExportConfig({ ...exportConfig, format: e.target.value as any })}
                                                 >
@@ -287,7 +287,7 @@ export const PropertiesPanel = ({ engine, selectedId, exportConfig, setExportCon
                                                 <label className="text-[10px] uppercase text-slate-500 font-bold block mb-1">Duration</label>
                                                 <select
                                                     disabled={isExporting}
-                                                    className="w-full bg-slate-100 dark:bg-slate-800 border-none rounded px-2 py-1 text-xs text-slate-700 dark:text-slate-300 disabled:opacity-50"
+                                                    className="w-full bg-slate-100 dark:bg-neutral-800 border-none rounded px-2 py-1 text-xs text-slate-700 dark:text-neutral-300 disabled:opacity-50"
                                                     value={exportConfig.useFullDuration ? "full" : "custom"}
                                                     onChange={(e) => setExportConfig({ ...exportConfig, useFullDuration: e.target.value === "full" })}
                                                 >
@@ -305,7 +305,7 @@ export const PropertiesPanel = ({ engine, selectedId, exportConfig, setExportCon
                                                     min={1}
                                                     max={60}
                                                     disabled={isExporting}
-                                                    className="w-full bg-slate-100 dark:bg-slate-800 border-none rounded px-2 py-1 text-xs text-slate-700 dark:text-slate-300 disabled:opacity-50"
+                                                    className="w-full bg-slate-100 dark:bg-neutral-800 border-none rounded px-2 py-1 text-xs text-slate-700 dark:text-neutral-300 disabled:opacity-50"
                                                     value={exportConfig.duration}
                                                     onChange={(e) => setExportConfig({ ...exportConfig, duration: Number(e.target.value) })}
                                                 />
@@ -327,7 +327,7 @@ export const PropertiesPanel = ({ engine, selectedId, exportConfig, setExportCon
                                                         <span className="text-[10px] text-blue-600 dark:text-blue-400 font-bold uppercase animate-pulse">Rendering...</span>
                                                         <span className="text-[10px] text-slate-500 font-mono">{Math.round(exportProgress)}%</span>
                                                     </div>
-                                                    <div className="h-2 w-full bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
+                                                    <div className="h-2 w-full bg-slate-100 dark:bg-neutral-800 rounded-full overflow-hidden">
                                                         <div
                                                             className="h-full bg-blue-600 transition-all duration-300 ease-out"
                                                             style={{ width: `${exportProgress}%` }}
@@ -343,7 +343,7 @@ export const PropertiesPanel = ({ engine, selectedId, exportConfig, setExportCon
                         ) : (
                             <div className="space-y-6">
                                 {/* Selected Object Header */}
-                                <div className="p-4 bg-slate-50 dark:bg-slate-800/50 rounded-xl border border-slate-100 dark:border-slate-800">
+                                <div className="p-4 bg-slate-50 dark:bg-neutral-800/50 rounded-xl border border-slate-100 dark:border-neutral-800">
                                     <div className="text-[10px] uppercase text-blue-500 font-bold mb-1 tracking-wider">Selected Layer</div>
                                     <div className="text-xl font-bold text-slate-900 dark:text-white truncate" title={obj.name}>
                                         {obj.name || "Untitled"}
@@ -360,7 +360,7 @@ export const PropertiesPanel = ({ engine, selectedId, exportConfig, setExportCon
                                             <label className="text-[10px] uppercase text-slate-500 font-bold block mb-1">X Position</label>
                                             <input
                                                 type="number"
-                                                className="w-full bg-slate-100 dark:bg-slate-800 border-none rounded px-2 py-1 text-xs text-slate-700 dark:text-slate-300"
+                                                className="w-full bg-slate-100 dark:bg-neutral-800 border-none rounded px-2 py-1 text-xs text-slate-700 dark:text-neutral-300"
                                                 value={Math.round(obj.x)}
                                                 onChange={(e) => handleChange("x", Number(e.target.value))}
                                             />
@@ -369,7 +369,7 @@ export const PropertiesPanel = ({ engine, selectedId, exportConfig, setExportCon
                                             <label className="text-[10px] uppercase text-slate-500 font-bold block mb-1">Y Position</label>
                                             <input
                                                 type="number"
-                                                className="w-full bg-slate-100 dark:bg-slate-800 border-none rounded px-2 py-1 text-xs text-slate-700 dark:text-slate-300"
+                                                className="w-full bg-slate-100 dark:bg-neutral-800 border-none rounded px-2 py-1 text-xs text-slate-700 dark:text-neutral-300"
                                                 value={Math.round(obj.y)}
                                                 onChange={(e) => handleChange("y", Number(e.target.value))}
                                             />
@@ -383,13 +383,13 @@ export const PropertiesPanel = ({ engine, selectedId, exportConfig, setExportCon
                                                     type="range"
                                                     min="10"
                                                     max="1920"
-                                                    className="flex-1 accent-blue-600 h-1 bg-slate-200 rounded-lg appearance-none cursor-pointer dark:bg-slate-700"
+                                                    className="flex-1 accent-blue-600 h-1 bg-slate-200 rounded-lg appearance-none cursor-pointer dark:bg-neutral-700"
                                                     value={Math.round(obj.width)}
                                                     onChange={(e) => handleChange("width", Number(e.target.value))}
                                                 />
                                                 <input
                                                     type="number"
-                                                    className="w-16 bg-slate-100 dark:bg-slate-800 border-none rounded px-2 py-1 text-xs text-slate-700 dark:text-slate-300 text-right"
+                                                    className="w-16 bg-slate-100 dark:bg-neutral-800 border-none rounded px-2 py-1 text-xs text-slate-700 dark:text-neutral-300 text-right"
                                                     value={Math.round(obj.width)}
                                                     onChange={(e) => handleChange("width", Number(e.target.value))}
                                                 />
@@ -402,13 +402,13 @@ export const PropertiesPanel = ({ engine, selectedId, exportConfig, setExportCon
                                                     type="range"
                                                     min="10"
                                                     max="1080"
-                                                    className="flex-1 accent-blue-600 h-1 bg-slate-200 rounded-lg appearance-none cursor-pointer dark:bg-slate-700"
+                                                    className="flex-1 accent-blue-600 h-1 bg-slate-200 rounded-lg appearance-none cursor-pointer dark:bg-neutral-700"
                                                     value={Math.round(obj.height)}
                                                     onChange={(e) => handleChange("height", Number(e.target.value))}
                                                 />
                                                 <input
                                                     type="number"
-                                                    className="w-16 bg-slate-100 dark:bg-slate-800 border-none rounded px-2 py-1 text-xs text-slate-700 dark:text-slate-300 text-right"
+                                                    className="w-16 bg-slate-100 dark:bg-neutral-800 border-none rounded px-2 py-1 text-xs text-slate-700 dark:text-neutral-300 text-right"
                                                     value={Math.round(obj.height)}
                                                     onChange={(e) => handleChange("height", Number(e.target.value))}
                                                 />
@@ -425,7 +425,7 @@ export const PropertiesPanel = ({ engine, selectedId, exportConfig, setExportCon
                                         <div>
                                             <label className="text-[10px] uppercase text-slate-500 font-bold block mb-1">Content</label>
                                             <textarea
-                                                className="w-full bg-slate-100 dark:bg-slate-800 border-none rounded px-2 py-2 text-xs text-slate-700 dark:text-slate-300 min-h-[60px]"
+                                                className="w-full bg-slate-100 dark:bg-neutral-800 border-none rounded px-2 py-2 text-xs text-slate-700 dark:text-neutral-300 min-h-[60px]"
                                                 value={obj.text}
                                                 onChange={(e) => handleChange("text", e.target.value)}
                                             />
@@ -447,13 +447,13 @@ export const PropertiesPanel = ({ engine, selectedId, exportConfig, setExportCon
                                                         type="range"
                                                         min="10"
                                                         max="400"
-                                                        className="flex-1 accent-blue-600 h-1 bg-slate-200 rounded-lg appearance-none cursor-pointer dark:bg-slate-700"
+                                                        className="flex-1 accent-blue-600 h-1 bg-slate-200 rounded-lg appearance-none cursor-pointer dark:bg-neutral-700"
                                                         value={obj.fontSize}
                                                         onChange={(e) => handleChange("fontSize", Number(e.target.value))}
                                                     />
                                                     <input
                                                         type="number"
-                                                        className="w-16 bg-slate-100 dark:bg-slate-800 border-none rounded px-2 py-1 text-xs text-slate-700 dark:text-slate-300 text-right"
+                                                        className="w-16 bg-slate-100 dark:bg-neutral-800 border-none rounded px-2 py-1 text-xs text-slate-700 dark:text-neutral-300 text-right"
                                                         value={obj.fontSize}
                                                         onChange={(e) => handleChange("fontSize", Number(e.target.value))}
                                                     />
@@ -464,7 +464,7 @@ export const PropertiesPanel = ({ engine, selectedId, exportConfig, setExportCon
                                         <div>
                                             <label className="text-[10px] uppercase text-slate-500 font-bold block mb-1">Font Family</label>
                                             <select
-                                                className="w-full bg-slate-100 dark:bg-slate-800 border-none rounded px-2 py-2 text-xs text-slate-700 dark:text-slate-300"
+                                                className="w-full bg-slate-100 dark:bg-neutral-800 border-none rounded px-2 py-2 text-xs text-slate-700 dark:text-neutral-300"
                                                 value={obj.fontFamily}
                                                 onChange={(e) => handleChange("fontFamily", e.target.value)}
                                             >
@@ -487,7 +487,7 @@ export const PropertiesPanel = ({ engine, selectedId, exportConfig, setExportCon
                                         <div>
                                             <label className="text-[10px] uppercase text-slate-500 font-bold block mb-1">Code</label>
                                             <textarea
-                                                className="w-full bg-slate-100 dark:bg-slate-800 border-none rounded px-2 py-2 text-xs text-slate-700 dark:text-slate-300 font-mono min-h-[100px]"
+                                                className="w-full bg-slate-100 dark:bg-neutral-800 border-none rounded px-2 py-2 text-xs text-slate-700 dark:text-neutral-300 font-mono min-h-[100px]"
                                                 value={obj.code}
                                                 onChange={(e) => handleChange("code", e.target.value)}
                                                 spellCheck={false}
@@ -497,7 +497,7 @@ export const PropertiesPanel = ({ engine, selectedId, exportConfig, setExportCon
                                             <div>
                                                 <label className="text-[10px] uppercase text-slate-500 font-bold block mb-1">Theme</label>
                                                 <select
-                                                    className="w-full bg-slate-100 dark:bg-slate-800 border-none rounded px-2 py-2 text-xs text-slate-700 dark:text-slate-300"
+                                                    className="w-full bg-slate-100 dark:bg-neutral-800 border-none rounded px-2 py-2 text-xs text-slate-700 dark:text-neutral-300"
                                                     value={obj.theme}
                                                     onChange={(e) => handleChange("theme", e.target.value)}
                                                 >
@@ -515,13 +515,13 @@ export const PropertiesPanel = ({ engine, selectedId, exportConfig, setExportCon
                                                         type="range"
                                                         min="8"
                                                         max="100"
-                                                        className="flex-1 accent-blue-600 h-1 bg-slate-200 rounded-lg appearance-none cursor-pointer dark:bg-slate-700"
+                                                        className="flex-1 accent-blue-600 h-1 bg-slate-200 rounded-lg appearance-none cursor-pointer dark:bg-neutral-700"
                                                         value={obj.fontSize}
                                                         onChange={(e) => handleChange("fontSize", Number(e.target.value))}
                                                     />
                                                     <input
                                                         type="number"
-                                                        className="w-16 bg-slate-100 dark:bg-slate-800 border-none rounded px-2 py-1 text-xs text-slate-700 dark:text-slate-300 text-right"
+                                                        className="w-16 bg-slate-100 dark:bg-neutral-800 border-none rounded px-2 py-1 text-xs text-slate-700 dark:text-neutral-300 text-right"
                                                         value={obj.fontSize}
                                                         onChange={(e) => handleChange("fontSize", Number(e.target.value))}
                                                     />
@@ -531,7 +531,7 @@ export const PropertiesPanel = ({ engine, selectedId, exportConfig, setExportCon
                                                 <label className="text-[10px] uppercase text-slate-500 font-bold block mb-1">Padding</label>
                                                 <input
                                                     type="number"
-                                                    className="w-full bg-slate-100 dark:bg-slate-800 border-none rounded px-2 py-1 text-xs text-slate-700 dark:text-slate-300"
+                                                    className="w-full bg-slate-100 dark:bg-neutral-800 border-none rounded px-2 py-1 text-xs text-slate-700 dark:text-neutral-300"
                                                     value={obj.padding || 0}
                                                     onChange={(e) => handleChange("padding", Number(e.target.value))}
                                                 />
@@ -540,7 +540,7 @@ export const PropertiesPanel = ({ engine, selectedId, exportConfig, setExportCon
                                                 <label className="text-[10px] uppercase text-slate-500 font-bold block mb-1">Start Line #</label>
                                                 <input
                                                     type="number"
-                                                    className="w-full bg-slate-100 dark:bg-slate-800 border-none rounded px-2 py-1 text-xs text-slate-700 dark:text-slate-300"
+                                                    className="w-full bg-slate-100 dark:bg-neutral-800 border-none rounded px-2 py-1 text-xs text-slate-700 dark:text-neutral-300"
                                                     value={obj.startLineNumber || 1}
                                                     onChange={(e) => handleChange("startLineNumber", Number(e.target.value))}
                                                 />
@@ -549,7 +549,7 @@ export const PropertiesPanel = ({ engine, selectedId, exportConfig, setExportCon
                                                 <label className="text-[10px] uppercase text-slate-500 font-bold block mb-1">Line Gap</label>
                                                 <input
                                                     type="number"
-                                                    className="w-full bg-slate-100 dark:bg-slate-800 border-none rounded px-2 py-1 text-xs text-slate-700 dark:text-slate-300"
+                                                    className="w-full bg-slate-100 dark:bg-neutral-800 border-none rounded px-2 py-1 text-xs text-slate-700 dark:text-neutral-300"
                                                     value={obj.lineNumberMargin || 15}
                                                     onChange={(e) => handleChange("lineNumberMargin", Number(e.target.value))}
                                                 />
@@ -558,7 +558,7 @@ export const PropertiesPanel = ({ engine, selectedId, exportConfig, setExportCon
                                                 <label className="text-[10px] uppercase text-slate-500 font-bold block mb-1">Highlight Lines (e.g. 1, 3-5)</label>
                                                 <input
                                                     type="text"
-                                                    className="w-full bg-slate-100 dark:bg-slate-800 border-none rounded px-2 py-1 text-xs text-slate-700 dark:text-slate-300"
+                                                    className="w-full bg-slate-100 dark:bg-neutral-800 border-none rounded px-2 py-1 text-xs text-slate-700 dark:text-neutral-300"
                                                     placeholder="1, 3-5"
                                                     defaultValue={(obj.highlightedLines || []).join(", ")}
                                                     onBlur={(e) => {
@@ -583,13 +583,13 @@ export const PropertiesPanel = ({ engine, selectedId, exportConfig, setExportCon
                                                 <div className="flex gap-2">
                                                     <input
                                                         type="color"
-                                                        className="w-8 h-8 cursor-pointer rounded bg-transparent border border-slate-200 dark:border-slate-700 p-0.5"
+                                                        className="w-8 h-8 cursor-pointer rounded bg-transparent border border-slate-200 dark:border-neutral-700 p-0.5"
                                                         value={obj.highlightColor || "#ffffff"}
                                                         onChange={(e) => handleChange("highlightColor", e.target.value)}
                                                     />
                                                     <input
                                                         type="text"
-                                                        className="flex-1 bg-slate-100 dark:bg-slate-800 border-none rounded px-2 py-1 text-xs text-slate-700 dark:text-slate-300 font-mono"
+                                                        className="flex-1 bg-slate-100 dark:bg-neutral-800 border-none rounded px-2 py-1 text-xs text-slate-700 dark:text-neutral-300 font-mono"
                                                         value={obj.highlightColor || "rgba(255,255,255,0.1)"}
                                                         onChange={(e) => handleChange("highlightColor", e.target.value)}
                                                     />
@@ -605,7 +605,7 @@ export const PropertiesPanel = ({ engine, selectedId, exportConfig, setExportCon
                                                     checked={obj.syntaxHighlighting}
                                                     onChange={(e) => handleChange("syntaxHighlighting", e.target.checked)}
                                                 />
-                                                <label htmlFor="syntax-toggle" className="text-xs text-slate-700 dark:text-slate-300 font-medium select-none cursor-pointer">
+                                                <label htmlFor="syntax-toggle" className="text-xs text-slate-700 dark:text-neutral-300 font-medium select-none cursor-pointer">
                                                     Enable Syntax Highlighting
                                                 </label>
                                             </div>
@@ -617,7 +617,7 @@ export const PropertiesPanel = ({ engine, selectedId, exportConfig, setExportCon
                                                     checked={obj.showLineNumbers !== false}
                                                     onChange={(e) => handleChange("showLineNumbers", e.target.checked)}
                                                 />
-                                                <label htmlFor="linenumbers-toggle" className="text-xs text-slate-700 dark:text-slate-300 font-medium select-none cursor-pointer">
+                                                <label htmlFor="linenumbers-toggle" className="text-xs text-slate-700 dark:text-neutral-300 font-medium select-none cursor-pointer">
                                                     Show Line Numbers
                                                 </label>
                                             </div>
