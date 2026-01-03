@@ -303,29 +303,29 @@ export const EditorLayout = () => {
                             </div>
 
                             {/* Center Content Column */}
-                            <div className="flex-1 flex flex-col relative bg-white dark:bg-slate-900">
+                            <div className="flex-1 flex flex-col relative bg-white dark:bg-neutral-900">
                                 {isExporting ? (
                                     <div className="flex-1 flex flex-col items-center justify-center p-8 text-center">
                                         <div className="w-24 h-24 mb-6 relative">
-                                            <div className="absolute inset-0 border-4 border-slate-100 dark:border-slate-800 rounded-full"></div>
+                                            <div className="absolute inset-0 border-4 border-slate-100 dark:border-neutral-800 rounded-full"></div>
                                             <div className="absolute inset-0 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
                                         </div>
                                         <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-2">Exporting Video...</h3>
-                                        <p className="text-slate-500 dark:text-slate-400 mb-8 max-w-xs mx-auto">Your animation is being rendered frame by frame. Please do not close this tab.</p>
+                                        <p className="text-slate-500 dark:text-neutral-400 mb-8 max-w-xs mx-auto">Your animation is being rendered frame by frame. Please do not close this tab.</p>
 
-                                        <div className="w-full max-w-md bg-slate-100 dark:bg-slate-800 rounded-full h-3 overflow-hidden">
+                                        <div className="w-full max-w-md bg-slate-100 dark:bg-neutral-800 rounded-full h-3 overflow-hidden">
                                             <div className="bg-blue-500 h-full rounded-full animate-pulse w-full origin-left"></div>
                                         </div>
                                     </div>
                                 ) : (
                                     <>
                                         {/* Dialog Header */}
-                                        <div className="p-6 border-b border-slate-200 dark:border-slate-800 flex justify-between items-center">
+                                        <div className="p-6 border-b border-slate-200 dark:border-neutral-800 flex justify-between items-center">
                                             <div>
                                                 <h3 className="text-xl font-bold text-slate-900 dark:text-white">Export Video</h3>
-                                                <p className="text-sm text-slate-500 dark:text-slate-400">Configure your export settings</p>
+                                                <p className="text-sm text-slate-500 dark:text-neutral-400">Configure your export settings</p>
                                             </div>
-                                            <button onClick={() => setShowExportDialog(false)} className="p-2 -mr-2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+                                            <button onClick={() => setShowExportDialog(false)} className="p-2 -mr-2 text-slate-400 hover:text-slate-600 dark:hover:text-neutral-200 rounded-full hover:bg-slate-100 dark:hover:bg-neutral-800 transition-colors">
                                                 <span className="sr-only">Close</span>
                                                 <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
                                             </button>
@@ -337,7 +337,7 @@ export const EditorLayout = () => {
                                                 <div className="space-y-6">
                                                     <div>
                                                         <label className="text-xs font-bold uppercase text-slate-500 mb-2 block">Filename</label>
-                                                        <div className="flex rounded-xl border border-slate-200 dark:border-slate-700 overflow-hidden focus-within:ring-2 focus-within:ring-blue-500 focus-within:border-blue-500 transition-all bg-white dark:bg-slate-800">
+                                                        <div className="flex rounded-xl border border-slate-200 dark:border-neutral-700 overflow-hidden focus-within:ring-2 focus-within:ring-blue-500 focus-within:border-blue-500 transition-all bg-white dark:bg-neutral-800">
                                                             <input
                                                                 type="text"
                                                                 className="flex-1 bg-transparent border-none px-4 py-3 text-slate-900 dark:text-white outline-none placeholder:text-slate-400"
@@ -345,7 +345,7 @@ export const EditorLayout = () => {
                                                                 onChange={(e) => setExportConfig({ ...exportConfig, filename: e.target.value })}
                                                                 placeholder="my-video"
                                                             />
-                                                            <div className="px-4 py-3 text-slate-400 font-mono text-sm border-l border-slate-100 dark:border-slate-700 bg-slate-50 dark:bg-slate-900/50">
+                                                            <div className="px-4 py-3 text-slate-400 font-mono text-sm border-l border-slate-100 dark:border-neutral-700 bg-slate-50 dark:bg-neutral-900/50">
                                                                 .{exportConfig.format}
                                                             </div>
                                                         </div>
@@ -356,17 +356,17 @@ export const EditorLayout = () => {
                                                         <div className="grid grid-cols-1 gap-3">
                                                             <button
                                                                 onClick={() => setExportConfig({ ...exportConfig, format: "webm" })}
-                                                                className={`p-4 rounded-xl border text-left transition-all ${exportConfig.format === "webm" ? "bg-blue-50 border-blue-500 ring-1 ring-blue-500" : "bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 hover:border-blue-400"}`}
+                                                                className={`p-4 rounded-xl border text-left transition-all ${exportConfig.format === "webm" ? "bg-blue-50 dark:bg-blue-900/20 border-blue-500 ring-1 ring-blue-500 dark:ring-blue-500/50" : "bg-white dark:bg-neutral-800 border-slate-200 dark:border-neutral-700 hover:border-blue-400"}`}
                                                             >
                                                                 <div className={`font-bold mb-1 ${exportConfig.format === "webm" ? "text-blue-700 dark:text-blue-400" : "text-slate-900 dark:text-white"}`}>WebM</div>
-                                                                <div className="text-xs text-slate-500 dark:text-slate-400">Best for web usage. Smaller file size, transparency support.</div>
+                                                                <div className="text-xs text-slate-500 dark:text-neutral-400">Best for web usage. Smaller file size, transparency support.</div>
                                                             </button>
                                                             <button
                                                                 onClick={() => setExportConfig({ ...exportConfig, format: "mp4" })}
-                                                                className={`p-4 rounded-xl border text-left transition-all ${exportConfig.format === "mp4" ? "bg-blue-50 border-blue-500 ring-1 ring-blue-500" : "bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 hover:border-blue-400"}`}
+                                                                className={`p-4 rounded-xl border text-left transition-all ${exportConfig.format === "mp4" ? "bg-blue-50 dark:bg-blue-900/20 border-blue-500 ring-1 ring-blue-500 dark:ring-blue-500/50" : "bg-white dark:bg-neutral-800 border-slate-200 dark:border-neutral-700 hover:border-blue-400"}`}
                                                             >
                                                                 <div className={`font-bold mb-1 ${exportConfig.format === "mp4" ? "text-blue-700 dark:text-blue-400" : "text-slate-900 dark:text-white"}`}>MP4</div>
-                                                                <div className="text-xs text-slate-500 dark:text-slate-400">Universal compatibility. Better for social media sharing.</div>
+                                                                <div className="text-xs text-slate-500 dark:text-neutral-400">Universal compatibility. Better for social media sharing.</div>
                                                             </button>
                                                         </div>
                                                     </div>
@@ -378,12 +378,12 @@ export const EditorLayout = () => {
                                                         <div className="flex flex-col gap-3">
                                                             <button
                                                                 onClick={() => setExportConfig({ ...exportConfig, useFullDuration: true })}
-                                                                className={`p-4 rounded-xl border text-left transition-all group ${exportConfig.useFullDuration ? "bg-blue-50 border-blue-500 ring-1 ring-blue-500" : "bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 hover:border-blue-400"}`}
+                                                                className={`p-4 rounded-xl border text-left transition-all group ${exportConfig.useFullDuration ? "bg-blue-50 dark:bg-blue-900/20 border-blue-500 ring-1 ring-blue-500 dark:ring-blue-500/50" : "bg-white dark:bg-neutral-800 border-slate-200 dark:border-neutral-700 hover:border-blue-400"}`}
                                                             >
                                                                 <div className="flex justify-between items-center">
                                                                     <div>
                                                                         <div className={`font-bold mb-1 ${exportConfig.useFullDuration ? "text-blue-700 dark:text-blue-400" : "text-slate-900 dark:text-white"}`}>Full Timeline</div>
-                                                                        <div className="text-xs text-slate-500 dark:text-slate-400">Export the entire duration of your project automatically.</div>
+                                                                        <div className="text-xs text-slate-500 dark:text-neutral-400">Export the entire duration of your project automatically.</div>
                                                                     </div>
                                                                     {exportConfig.useFullDuration && <div className="w-4 h-4 rounded-full bg-blue-500 border-2 border-blue-500 text-white flex items-center justify-center scale-90"><svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" /></svg></div>}
                                                                 </div>
@@ -391,12 +391,12 @@ export const EditorLayout = () => {
 
                                                             <button
                                                                 onClick={() => setExportConfig({ ...exportConfig, useFullDuration: false })}
-                                                                className={`p-4 rounded-xl border text-left transition-all group ${!exportConfig.useFullDuration ? "bg-blue-50 border-blue-500 ring-1 ring-blue-500" : "bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 hover:border-blue-400"}`}
+                                                                className={`p-4 rounded-xl border text-left transition-all group ${!exportConfig.useFullDuration ? "bg-blue-50 dark:bg-blue-900/20 border-blue-500 ring-1 ring-blue-500 dark:ring-blue-500/50" : "bg-white dark:bg-neutral-800 border-slate-200 dark:border-neutral-700 hover:border-blue-400"}`}
                                                             >
                                                                 <div className="flex justify-between items-start">
                                                                     <div>
                                                                         <div className={`font-bold mb-1 ${!exportConfig.useFullDuration ? "text-blue-700 dark:text-blue-400" : "text-slate-900 dark:text-white"}`}>Custom Segment</div>
-                                                                        <div className="text-xs text-slate-500 dark:text-slate-400">Specify a custom duration in seconds.</div>
+                                                                        <div className="text-xs text-slate-500 dark:text-neutral-400">Specify a custom duration in seconds.</div>
                                                                     </div>
                                                                     {!exportConfig.useFullDuration ? (
                                                                         <div className="flex items-center gap-2" onClick={(e) => e.stopPropagation()}>
@@ -406,12 +406,12 @@ export const EditorLayout = () => {
                                                                                 max={60}
                                                                                 value={exportConfig.duration}
                                                                                 onChange={(e) => setExportConfig({ ...exportConfig, duration: Number(e.target.value) })}
-                                                                                className="w-20 bg-white dark:bg-slate-900 border border-blue-200 dark:border-blue-500/30 text-blue-900 dark:text-blue-100 rounded-lg px-2 py-1 text-sm text-center font-bold outline-none ring-2 ring-blue-500/20"
+                                                                                className="w-20 bg-white dark:bg-neutral-900 border border-blue-200 dark:border-blue-500/30 text-blue-900 dark:text-blue-100 rounded-lg px-2 py-1 text-sm text-center font-bold outline-none ring-2 ring-blue-500/20"
                                                                             />
                                                                             <span className="text-xs font-bold text-blue-600 dark:text-blue-400">sec</span>
                                                                         </div>
                                                                     ) : (
-                                                                        <div className="w-4 h-4 rounded-full border-2 border-slate-300 dark:border-slate-600 group-hover:border-blue-400 transition-colors"></div>
+                                                                        <div className="w-4 h-4 rounded-full border-2 border-slate-300 dark:border-neutral-600 group-hover:border-blue-400 transition-colors"></div>
                                                                     )}
                                                                 </div>
                                                             </button>
@@ -433,14 +433,14 @@ export const EditorLayout = () => {
                                         </div>
 
                                         {/* Dialog Footer */}
-                                        <div className="p-6 border-t border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/50 flex justify-between items-center">
+                                        <div className="p-6 border-t border-slate-200 dark:border-neutral-800 bg-slate-50 dark:bg-neutral-800/50 flex justify-between items-center">
                                             <div className="text-xs text-slate-500 max-w-xs">
-                                                By exporting, you agree to our <a href="#" className="underline hover:text-slate-800 dark:hover:text-slate-200">Terms of Service</a>.
+                                                By exporting, you agree to our <a href="#" className="underline hover:text-slate-800 dark:hover:text-neutral-200">Terms of Service</a>.
                                             </div>
                                             <div className="flex gap-3">
                                                 <button
                                                     onClick={() => setShowExportDialog(false)}
-                                                    className="px-6 py-3 text-slate-600 dark:text-slate-400 font-bold text-sm hover:text-slate-900 dark:hover:text-white rounded-xl hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors"
+                                                    className="px-6 py-3 text-slate-600 dark:text-neutral-400 font-bold text-sm hover:text-slate-900 dark:hover:text-white rounded-xl hover:bg-slate-200 dark:hover:bg-neutral-700 transition-colors"
                                                 >
                                                     Cancel
                                                 </button>
@@ -458,7 +458,7 @@ export const EditorLayout = () => {
                             </div>
 
                             {/* Right Ad Column */}
-                            <div className="w-72 bg-slate-50 dark:bg-slate-950 border-l border-slate-200 dark:border-slate-800 p-6 hidden lg:flex flex-col items-center justify-center">
+                            <div className="w-72 bg-slate-50 dark:bg-neutral-950 border-l border-slate-200 dark:border-neutral-800 p-6 hidden lg:flex flex-col items-center justify-center">
                                 <span className="text-[10px] uppercase font-bold text-slate-400 mb-4">Advertisement</span>
                                 <VerticalAd />
                             </div>

@@ -16,13 +16,7 @@ export const VerticalAd = () => {
     }, []);
 
     return (
-        <div style={{
-            width: '160px',
-            minHeight: '600px',
-            backgroundColor: 'aliceblue',
-            borderRadius: '8px',
-            /* Removed flex and overflow:hidden to allow ad expansion */
-        }}>
+        <div className="w-[160px] min-h-[600px] bg-slate-100 dark:bg-neutral-800 border border-slate-200 dark:border-neutral-700 rounded-lg">
             <div style={{
                 fontSize: '10px',
                 textTransform: 'uppercase',
