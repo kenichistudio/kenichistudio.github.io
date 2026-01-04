@@ -370,7 +370,7 @@ export class Engine {
 
                 try {
                     this.pause();
-                    const totalFrames = Math.ceil(duration * fps);
+                    const totalFrames = Math.ceil((duration / 1000) * fps); // Fix: duration is in ms
                     const dt = 1000 / fps; // in ms
                     const frameDurationUs = 1000000 / fps;
 
@@ -418,13 +418,18 @@ export class Engine {
                             return reject(new Error("Export cancelled"));
                         }
 
+                        // Debug Performance
+                        const t0 = performance.now();
+
                         // Backpressure: Check often to prevent OOM
                         while (queueSize > 10) {
                             await new Promise(r => setTimeout(r, 10));
                         }
+                        const t1 = performance.now();
 
                         const time = i * dt;
                         this.seek(time); // Sets currentTime and calls render() synchronously
+                        const t2 = performance.now();
 
                         // Create Bitmap (Efficient snapshot)
                         // No need to wait for repaint/setTimeout(0) as render is synchronous
@@ -432,13 +437,14 @@ export class Engine {
                             resizeWidth: evenWidth,
                             resizeHeight: evenHeight
                         });
+                        const t3 = performance.now();
 
                         // Transfer to worker
                         worker.postMessage({
                             type: 'ENCODE_FRAME',
                             data: {
                                 bitmap,
-                                timestamp: i * frameDurationUs,
+                                timestamp: i * frameDurationUs, // Microseconds
                                 keyFrame: i % fps === 0
                             }
                         }, [bitmap]);
@@ -449,6 +455,18 @@ export class Engine {
                         // Yield to UI loop only once per batch
                         if (i % BATCH_SIZE === 0) {
                             await new Promise(r => setTimeout(r, 0));
+                        }
+                        const t4 = performance.now();
+
+                        if (i % 10 === 0) {
+                            console.log(`Frame ${i} Stats:`, {
+                                backpressure: (t1 - t0).toFixed(2),
+                                seek: (t2 - t1).toFixed(2),
+                                bitmap: (t3 - t2).toFixed(2),
+                                yield: (t4 - t3).toFixed(2),
+                                total: (t4 - t0).toFixed(2),
+                                queueSize
+                            });
                         }
                     }
 
