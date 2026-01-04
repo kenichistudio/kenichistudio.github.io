@@ -157,22 +157,22 @@ export const PropertiesPanel = ({ engine, selectedId, exportConfig, setExportCon
     return (
         <div className="flex flex-col h-full">
             {/* Tabs */}
-            <div className="flex border-b border-slate-200 dark:border-neutral-800">
+            <div className="inspector-tabs">
                 <button
                     onClick={() => setActiveTab("properties")}
-                    className={`flex-1 py-3 text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-2 ${activeTab === "properties" ? "text-blue-600 border-b-2 border-blue-600" : "text-slate-500 hover:bg-slate-50 dark:hover:bg-neutral-800"}`}
+                    className={`inspector-tab-item ${activeTab === "properties" ? "active" : ""}`}
                 >
                     <Settings size={14} /> Inspector
                 </button>
                 <button
                     onClick={() => setActiveTab("layers")}
-                    className={`flex-1 py-3 text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-2 ${activeTab === "layers" ? "text-blue-600 border-b-2 border-blue-600" : "text-slate-500 hover:bg-slate-50 dark:hover:bg-neutral-800"}`}
+                    className={`inspector-tab-item ${activeTab === "layers" ? "active" : ""}`}
                 >
                     <Layers size={14} /> Layers
                 </button>
                 <button
                     onClick={() => setActiveTab("animations")}
-                    className={`flex-1 py-3 text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-2 ${activeTab === "animations" ? "text-blue-600 border-b-2 border-blue-600" : "text-slate-500 hover:bg-slate-50 dark:hover:bg-neutral-800"}`}
+                    className={`inspector-tab-item ${activeTab === "animations" ? "active" : ""}`}
                 >
                     <MonitorPlay size={14} /> Motion
                 </button>
@@ -191,7 +191,7 @@ export const PropertiesPanel = ({ engine, selectedId, exportConfig, setExportCon
                                         <div className="flex justify-end items-center gap-2">
                                             <input
                                                 type="color"
-                                                className="w-8 h-8 p-0 border-none rounded-full overflow-hidden cursor-pointer shadow-sm"
+                                                className="inspector-input-color"
                                                 value={engine.scene.backgroundColor}
                                                 onChange={(e) => {
                                                     engine.scene.backgroundColor = e.target.value;
@@ -204,7 +204,7 @@ export const PropertiesPanel = ({ engine, selectedId, exportConfig, setExportCon
                                     </ControlRow>
 
                                     <ControlRow label="Resolution">
-                                        <div className="grid grid-cols-2 gap-2">
+                                        <div className="inspector-resolution-grid">
                                             {[
                                                 { w: 854, h: 480, label: "480p" },
                                                 { w: 1280, h: 720, label: "720p" },
@@ -217,13 +217,7 @@ export const PropertiesPanel = ({ engine, selectedId, exportConfig, setExportCon
                                                         engine.resize(res.w, res.h);
                                                         setForceUpdate(n => n + 1);
                                                     }}
-                                                    className={`
-                                                        py-2 px-3 rounded-lg text-xs font-medium border transition-all
-                                                        ${engine.scene.height === res.h
-                                                            ? "bg-blue-50 border-blue-500 text-blue-700 dark:bg-blue-900/30 dark:border-blue-500 dark:text-blue-300 ring-1 ring-blue-500"
-                                                            : "bg-white dark:bg-neutral-800 border-slate-200 dark:border-neutral-700 text-slate-600 dark:text-neutral-400 hover:border-slate-300"
-                                                        }
-                                                    `}
+                                                    className={`inspector-resolution-btn ${engine.scene.height === res.h ? "active" : ""}`}
                                                 >
                                                     {res.label}
                                                 </button>
@@ -241,7 +235,7 @@ export const PropertiesPanel = ({ engine, selectedId, exportConfig, setExportCon
                                             <input
                                                 type="text"
                                                 disabled={isExporting}
-                                                className="w-full bg-slate-100 dark:bg-neutral-800 border-none rounded-lg px-3 py-2 text-xs text-slate-700 dark:text-neutral-300 disabled:opacity-50 focus:ring-2 focus:ring-blue-500 outline-none"
+                                                className="inspector-input-text"
                                                 value={exportConfig.filename}
                                                 onChange={(e) => setExportConfig({ ...exportConfig, filename: e.target.value })}
                                             />
@@ -281,7 +275,7 @@ export const PropertiesPanel = ({ engine, selectedId, exportConfig, setExportCon
                                             {!isExporting ? (
                                                 <button
                                                     onClick={handleExport}
-                                                    className="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-bold shadow-lg shadow-blue-900/20 active:scale-95 transition-all flex items-center justify-center gap-2"
+                                                    className="inspector-btn-primary"
                                                 >
                                                     <span className="w-2 h-2 rounded-full bg-red-400 animate-pulse shadow-[0_0_10px_rgba(248,113,113,0.5)]" />
                                                     Export Video
@@ -307,24 +301,24 @@ export const PropertiesPanel = ({ engine, selectedId, exportConfig, setExportCon
                         ) : (
                             <div className="p-1 space-y-1">
                                 {/* Selected Object Header */}
-                                <div className="px-4 py-3 mb-2 bg-slate-50 dark:bg-neutral-800/50 rounded-xl border border-slate-100 dark:border-neutral-800 flex items-center justify-between">
+                                <div className="inspector-object-header">
                                     <div className="flex items-center gap-3 overflow-hidden">
-                                        <div className="w-8 h-8 rounded-lg bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 flex items-center justify-center">
+                                        <div className="inspector-object-icon">
                                             {obj instanceof ChartObject ? <BarChart size={16} /> :
                                                 obj instanceof TextObject ? <Type size={16} /> :
                                                     obj instanceof CodeBlockObject ? <Box size={16} /> :
                                                         <Square size={16} />}
                                         </div>
-                                        <div className="min-w-0">
-                                            <div className="text-xs font-bold text-slate-900 dark:text-white truncate max-w-[120px]" title={obj.name}>
+                                        <div className="inspector-object-info">
+                                            <div className="inspector-object-name" title={obj.name}>
                                                 {obj.name || "Untitled"}
                                             </div>
-                                            <div className="text-[10px] text-slate-500 font-mono truncate">
+                                            <div className="inspector-object-type">
                                                 {obj.constructor.name.replace('Object', '')}
                                             </div>
                                         </div>
                                     </div>
-                                    <div className="flex items-center gap-1">
+                                    <div className="inspector-object-actions">
                                         <button
                                             onClick={() => {
                                                 const newObj = obj.clone();
@@ -333,7 +327,7 @@ export const PropertiesPanel = ({ engine, selectedId, exportConfig, setExportCon
                                                 engine.scene.add(newObj);
                                                 setForceUpdate(n => n + 1);
                                             }}
-                                            className="p-2 text-slate-400 hover:text-blue-600 hover:bg-white dark:hover:bg-neutral-700 rounded-lg transition-colors"
+                                            className="inspector-action-btn"
                                             title="Duplicate"
                                         >
                                             <Copy size={14} />
@@ -343,7 +337,7 @@ export const PropertiesPanel = ({ engine, selectedId, exportConfig, setExportCon
                                                 engine.scene.remove(obj.id);
                                                 setForceUpdate(n => n + 1);
                                             }}
-                                            className="p-2 text-slate-400 hover:text-red-600 hover:bg-white dark:hover:bg-neutral-700 rounded-lg transition-colors"
+                                            className="inspector-action-btn delete"
                                             title="Delete"
                                         >
                                             <Trash2 size={14} />
@@ -353,21 +347,21 @@ export const PropertiesPanel = ({ engine, selectedId, exportConfig, setExportCon
 
                                 <PropertySection title="Layout">
                                     <ControlRow label="Position">
-                                        <div className="flex gap-2">
-                                            <div className="relative flex-1">
-                                                <span className="absolute left-2 top-1.5 text-[10px] font-bold text-slate-400">X</span>
+                                        <div className="inspector-labeled-input-group">
+                                            <div className="inspector-labeled-input-container">
+                                                <span className="inspector-input-label">X</span>
                                                 <input
                                                     type="number"
-                                                    className="inspector-input-number w-full bg-slate-100 dark:bg-neutral-800 border-none rounded-lg pl-6 pr-2 py-1.5 text-xs text-slate-700 dark:text-neutral-300 font-mono text-right focus:ring-1 focus:ring-blue-500 outline-none"
+                                                    className="inspector-input-number"
                                                     value={Math.round(obj.x)}
                                                     onChange={(e) => handleChange("x", Number(e.target.value))}
                                                 />
                                             </div>
-                                            <div className="relative flex-1">
-                                                <span className="absolute left-2 top-1.5 text-[10px] font-bold text-slate-400">Y</span>
+                                            <div className="inspector-labeled-input-container">
+                                                <span className="inspector-input-label">Y</span>
                                                 <input
                                                     type="number"
-                                                    className="inspector-input-number w-full bg-slate-100 dark:bg-neutral-800 border-none rounded-lg pl-6 pr-2 py-1.5 text-xs text-slate-700 dark:text-neutral-300 font-mono text-right focus:ring-1 focus:ring-blue-500 outline-none"
+                                                    className="inspector-input-number"
                                                     value={Math.round(obj.y)}
                                                     onChange={(e) => handleChange("y", Number(e.target.value))}
                                                 />
@@ -375,21 +369,21 @@ export const PropertiesPanel = ({ engine, selectedId, exportConfig, setExportCon
                                         </div>
                                     </ControlRow>
                                     <ControlRow label="Dimensions">
-                                        <div className="flex gap-2">
-                                            <div className="relative flex-1">
-                                                <span className="absolute left-2 top-1.5 text-[10px] font-bold text-slate-400">W</span>
+                                        <div className="inspector-labeled-input-group">
+                                            <div className="inspector-labeled-input-container">
+                                                <span className="inspector-input-label">W</span>
                                                 <input
                                                     type="number"
-                                                    className="inspector-input-number w-full bg-slate-100 dark:bg-neutral-800 border-none rounded-lg pl-6 pr-2 py-1.5 text-xs text-slate-700 dark:text-neutral-300 font-mono text-right focus:ring-1 focus:ring-blue-500 outline-none"
+                                                    className="inspector-input-number"
                                                     value={Math.round(obj.width)}
                                                     onChange={(e) => handleChange("width", Number(e.target.value))}
                                                 />
                                             </div>
-                                            <div className="relative flex-1">
-                                                <span className="absolute left-2 top-1.5 text-[10px] font-bold text-slate-400">H</span>
+                                            <div className="inspector-labeled-input-container">
+                                                <span className="inspector-input-label">H</span>
                                                 <input
                                                     type="number"
-                                                    className="inspector-input-number w-full bg-slate-100 dark:bg-neutral-800 border-none rounded-lg pl-6 pr-2 py-1.5 text-xs text-slate-700 dark:text-neutral-300 font-mono text-right focus:ring-1 focus:ring-blue-500 outline-none"
+                                                    className="inspector-input-number"
                                                     value={Math.round(obj.height)}
                                                     onChange={(e) => handleChange("height", Number(e.target.value))}
                                                 />
@@ -439,7 +433,7 @@ export const PropertiesPanel = ({ engine, selectedId, exportConfig, setExportCon
                                     <>
                                         <PropertySection title="Content">
                                             <textarea
-                                                className="inspector-textarea w-full bg-slate-100 dark:bg-neutral-800 border-none rounded-lg p-3 text-xs text-slate-700 dark:text-neutral-300 min-h-[80px] focus:ring-1 focus:ring-blue-500 outline-none resize-none"
+                                                className="inspector-textarea"
                                                 value={obj.text}
                                                 onChange={(e) => handleChange("text", e.target.value)}
                                                 placeholder="Type your text here..."
@@ -449,7 +443,7 @@ export const PropertiesPanel = ({ engine, selectedId, exportConfig, setExportCon
                                         <PropertySection title="Typography">
                                             <ControlRow label="Font Family">
                                                 <select
-                                                    className="inspector-select w-full bg-slate-100 dark:bg-neutral-800 border-none rounded-lg px-3 py-2 text-xs text-slate-700 dark:text-neutral-300 outline-none focus:ring-1 focus:ring-blue-500"
+                                                    className="inspector-select"
                                                     value={obj.fontFamily}
                                                     onChange={(e) => handleChange("fontFamily", e.target.value)}
                                                 >
@@ -468,7 +462,7 @@ export const PropertiesPanel = ({ engine, selectedId, exportConfig, setExportCon
                                                 <div className="flex justify-end gap-2 items-center">
                                                     <input
                                                         type="color"
-                                                        className="inspector-input-color w-8 h-8 p-0 border-none rounded-full overflow-hidden cursor-pointer shadow-sm"
+                                                        className="inspector-input-color"
                                                         value={obj.color}
                                                         onChange={(e) => handleChange("color", e.target.value)}
                                                     />
@@ -493,7 +487,7 @@ export const PropertiesPanel = ({ engine, selectedId, exportConfig, setExportCon
                                         <PropertySection title="Code Content">
                                             <div className="space-y-2">
                                                 <textarea
-                                                    className="inspector-textarea w-full bg-slate-100 dark:bg-neutral-800 border-none rounded-lg p-3 text-xs text-slate-700 dark:text-neutral-300 font-mono min-h-[120px] focus:ring-1 focus:ring-blue-500 outline-none resize-none"
+                                                    className="inspector-textarea font-mono"
                                                     value={obj.code}
                                                     onChange={(e) => handleChange("code", e.target.value)}
                                                     spellCheck={false}
@@ -530,7 +524,7 @@ export const PropertiesPanel = ({ engine, selectedId, exportConfig, setExportCon
                                         <PropertySection title="Syntax & Theme">
                                             <ControlRow label="Theme">
                                                 <select
-                                                    className="inspector-select w-full bg-slate-100 dark:bg-neutral-800 border-none rounded-lg px-3 py-2 text-xs text-slate-700 dark:text-neutral-300 outline-none focus:ring-1 focus:ring-blue-500"
+                                                    className="inspector-select"
                                                     value={obj.theme}
                                                     onChange={(e) => handleChange("theme", e.target.value)}
                                                 >
@@ -590,7 +584,7 @@ export const PropertiesPanel = ({ engine, selectedId, exportConfig, setExportCon
                                             <ControlRow label="Start Line #">
                                                 <input
                                                     type="number"
-                                                    className="inspector-input-number w-full bg-slate-100 dark:bg-neutral-800 border-none rounded-lg px-3 py-2 text-xs text-slate-700 dark:text-neutral-300 outline-none"
+                                                    className="inspector-input-number"
                                                     value={obj.startLineNumber || 1}
                                                     onChange={(e) => handleChange("startLineNumber", Number(e.target.value))}
                                                 />
@@ -602,7 +596,7 @@ export const PropertiesPanel = ({ engine, selectedId, exportConfig, setExportCon
                                                 <div className="flex justify-end gap-2 items-center">
                                                     <input
                                                         type="color"
-                                                        className="inspector-input-color w-8 h-8 p-0 border-none rounded-full overflow-hidden cursor-pointer shadow-sm"
+                                                        className="inspector-input-color"
                                                         value={obj.highlightColor || "#ffffff"}
                                                         onChange={(e) => handleChange("highlightColor", e.target.value)}
                                                     />
@@ -611,7 +605,7 @@ export const PropertiesPanel = ({ engine, selectedId, exportConfig, setExportCon
                                             <ControlRow label="Lines (e.g. 1, 3-5)">
                                                 <input
                                                     type="text"
-                                                    className="inspector-input-text w-full bg-slate-100 dark:bg-neutral-800 border-none rounded-lg px-3 py-2 text-xs text-slate-700 dark:text-neutral-300 outline-none focus:ring-1 focus:ring-blue-500 font-mono"
+                                                    className="inspector-input-text"
                                                     placeholder="1, 3-5"
                                                     defaultValue={(obj.highlightedLines || []).join(", ")}
                                                     onBlur={(e) => {
@@ -691,7 +685,7 @@ export const PropertiesPanel = ({ engine, selectedId, exportConfig, setExportCon
                                                 <div className="flex justify-end gap-2 items-center">
                                                     <input
                                                         type="color"
-                                                        className="inspector-input-color w-8 h-8 p-0 border-none rounded-full overflow-hidden cursor-pointer shadow-sm"
+                                                        className="inspector-input-color"
                                                         value={obj.axisColor}
                                                         onChange={(e) => handleChange("axisColor", e.target.value)}
                                                     />
@@ -703,7 +697,7 @@ export const PropertiesPanel = ({ engine, selectedId, exportConfig, setExportCon
                                             <ControlRow label="Values (comma separated)">
                                                 <input
                                                     type="text"
-                                                    className="inspector-input-text w-full bg-slate-100 dark:bg-neutral-800 border-none rounded-lg px-3 py-2 text-xs text-slate-700 dark:text-neutral-300 font-mono outline-none focus:ring-1 focus:ring-blue-500"
+                                                    className="inspector-input-text"
                                                     value={obj.data.join(", ")}
                                                     onChange={(e) => {
                                                         const val = e.target.value;
@@ -717,7 +711,7 @@ export const PropertiesPanel = ({ engine, selectedId, exportConfig, setExportCon
                                             <ControlRow label="Labels (comma separated)">
                                                 <input
                                                     type="text"
-                                                    className="inspector-input-text w-full bg-slate-100 dark:bg-neutral-800 border-none rounded-lg px-3 py-2 text-xs text-slate-700 dark:text-neutral-300 font-mono outline-none focus:ring-1 focus:ring-blue-500"
+                                                    className="inspector-input-text"
                                                     value={obj.labels.join(", ")}
                                                     onChange={(e) => {
                                                         const labels = e.target.value.split(",").map(s => s.trim());
@@ -740,19 +734,19 @@ export const PropertiesPanel = ({ engine, selectedId, exportConfig, setExportCon
 
                                             {!obj.useMultiColor ? (
                                                 <ControlRow label="Base Color" layout="horizontal">
-                                                    <div className="flex gap-2">
+                                                    <div className="inspector-palette-grid">
                                                         {['#3b82f6', '#ef4444', '#22c55e', '#eab308', '#a855f7', '#6366f1'].map(c => (
                                                             <button
                                                                 key={c}
                                                                 onClick={(e) => handleChange("color", c)}
-                                                                className={`w-6 h-6 rounded-full border-2 transition-transform hover:scale-110 shadow-sm ${obj.color === c ? 'border-slate-600 dark:border-white ring-1 ring-white dark:ring-slate-900' : 'border-transparent'}`}
+                                                                className={`inspector-color-swatch-btn ${obj.color === c ? 'active' : ''}`}
                                                                 style={{ backgroundColor: c }}
                                                             />
                                                         ))}
-                                                        <div className="relative group ml-1">
+                                                        <div className="inspector-color-input-wrapper group">
                                                             <input
                                                                 type="color"
-                                                                className="inspector-input-color w-6 h-6 rounded-full p-0 border-0 overflow-hidden cursor-pointer shadow-sm ring-1 ring-slate-200 dark:ring-slate-700 hover:ring-2 hover:ring-blue-500 transition-all opacity-0 absolute inset-0 z-10"
+                                                                className="inspector-input-color sm absolute inset-0 z-10 opacity-0"
                                                                 value={obj.color}
                                                                 onChange={(e) => handleChange("color", e.target.value)}
                                                             />
@@ -766,12 +760,12 @@ export const PropertiesPanel = ({ engine, selectedId, exportConfig, setExportCon
                                                     </div>
                                                 </ControlRow>
                                             ) : (
-                                                <div className="grid grid-cols-5 gap-2 pt-2">
+                                                <div className="inspector-palette-grid multi">
                                                     {obj.colorPalette.map((color: string, i: number) => (
                                                         <div key={i} className="relative group">
                                                             <input
                                                                 type="color"
-                                                                className="inspector-input-color w-8 h-8 rounded-full cursor-pointer p-0 border-none overflow-hidden shadow-sm"
+                                                                className="inspector-input-color"
                                                                 value={color}
                                                                 onChange={(e) => {
                                                                     const newPalette = [...obj.colorPalette];
@@ -793,7 +787,7 @@ export const PropertiesPanel = ({ engine, selectedId, exportConfig, setExportCon
                                                         </div>
                                                     ))}
                                                     <button
-                                                        className="w-8 h-8 rounded-full border border-dashed border-slate-300 dark:border-slate-700 flex items-center justify-center text-slate-400 hover:text-blue-500 hover:border-blue-500 transition-colors bg-slate-50 dark:bg-neutral-800"
+                                                        className="inspector-add-color-btn"
                                                         onClick={() => {
                                                             const newPalette = [...obj.colorPalette, "#888888"];
                                                             handleChange("colorPalette", newPalette);

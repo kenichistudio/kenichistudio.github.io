@@ -9,6 +9,8 @@ interface Props {
 const { title, showFooter = true, showAds = true, isApp = false } = Astro.props;
 import Footer from "../components/Footer.astro";
 import VerticalAd from "../components/ads/VerticalAd.astro";
+import "../styles/typography.css";
+import "../styles/inspector.css";
 ---
 
 <!doctype html>
@@ -61,10 +63,6 @@ import VerticalAd from "../components/ads/VerticalAd.astro";
         <link
             href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&family=Inter:wght@400;500;600;700&family=Kalam:wght@300;400;700&family=Outfit:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap"
             rel="stylesheet"
-        />
-        <link
-            rel="stylesheet"
-            href={`${import.meta.env.BASE_URL}src/styles/typography.css`}
         />
 
         <!-- PWA Meta -->
