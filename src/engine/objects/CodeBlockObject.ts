@@ -54,6 +54,30 @@ export class CodeBlockObject extends KinetixObject {
     draw(ctx: CanvasRenderingContext2D, time: number) {
         const theme = THEMES[this.theme] || THEMES["vscode-dark"];
 
+        ctx.save(); // Save state for transforms/opacity
+
+        // Generic Animation Logic
+        let animProgress = 0;
+        if (this.animation.type !== "none") {
+            const start = this.animation.delay || 0;
+            const duration = this.animation.duration || 1000;
+            animProgress = Math.max(0, Math.min(1, (time - start) / duration));
+        }
+
+        if (this.animation.type === "fadeIn") {
+            ctx.globalAlpha = this.opacity * animProgress;
+        } else if (this.animation.type === "slideUp") {
+            const offset = 50 * (1 - this.easeOutCubic(animProgress));
+            ctx.translate(0, offset);
+            ctx.globalAlpha = this.opacity * animProgress; // usually slide up includes fade
+        } else if (this.animation.type === "scaleIn") {
+            const s = this.easeOutBack(animProgress);
+            // Scale from center
+            ctx.translate(this.x + this.width / 2, this.y + this.height / 2);
+            ctx.scale(s, s);
+            ctx.translate(-(this.x + this.width / 2), -(this.y + this.height / 2));
+        }
+
         // Window Chrome
         ctx.fillStyle = theme.bg;
         ctx.beginPath();
@@ -134,6 +158,19 @@ export class CodeBlockObject extends KinetixObject {
 
             lineY += (this.fontSize * 1.5);
         });
+
+        ctx.restore(); // Restore state
+    }
+
+    // Easings
+    easeOutCubic(x: number): number {
+        return 1 - Math.pow(1 - x, 3);
+    }
+
+    easeOutBack(x: number): number {
+        const c1 = 1.70158;
+        const c3 = c1 + 1;
+        return 1 + c3 * Math.pow(x - 1, 3) + c1 * Math.pow(x - 1, 2);
     }
 
     // Simple Syntax Highlighting (Regex based)
