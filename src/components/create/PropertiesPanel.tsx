@@ -206,49 +206,84 @@ export const PropertiesPanel = ({ engine, selectedId, exportConfig, setExportCon
                                     <ControlRow label="Aspect Ratio">
                                         <div className="inspector-resolution-grid">
                                             {[
-                                                { label: "16:9", w: 1920, h: 1080 },
-                                                { label: "9:16", w: 1080, h: 1920 },
-                                                { label: "1:1", w: 1080, h: 1080 },
-                                                { label: "4:3", w: 1440, h: 1080 },
-                                                { label: "3:4", w: 1080, h: 1440 },
-                                            ].map((ratio) => (
-                                                <button
-                                                    key={ratio.label}
-                                                    onClick={() => {
-                                                        engine.resize(ratio.w, ratio.h);
-                                                        setForceUpdate(n => n + 1);
-                                                    }}
-                                                    className={`inspector-resolution-btn ${Math.abs((engine.scene.width / engine.scene.height) - (ratio.w / ratio.h)) < 0.01 ? "active" : ""}`}
-                                                >
-                                                    {ratio.label}
-                                                </button>
-                                            ))}
+                                                { label: "16:9", val: 16 / 9 },
+                                                { label: "9:16", val: 9 / 16 },
+                                                { label: "1:1", val: 1 },
+                                                { label: "4:3", val: 4 / 3 },
+                                                { label: "3:4", val: 3 / 4 },
+                                            ].map((ratio) => {
+                                                const currentRatio = engine.scene.width / engine.scene.height;
+                                                const isActive = Math.abs(currentRatio - ratio.val) < 0.01;
+                                                return (
+                                                    <button
+                                                        key={ratio.label}
+                                                        onClick={() => {
+                                                            // Maintain current quality (height or short edge based)
+                                                            // Heuristic: Quality is usually the smaller dimension or standard height like 1080
+                                                            // But simply: let's pick the 'quality base' from current height if 16:9, or width if 9:16?
+                                                            // Simpler: Just map current size to a "quality bucket" and re-apply.
+                                                            // Better: Define explicit Qualities.
+
+                                                            // Determine current quality class based on pixel count or short edge
+                                                            const shortEdge = Math.min(engine.scene.width, engine.scene.height);
+                                                            let quality = 1080; // default
+                                                            if (Math.abs(shortEdge - 480) < 50) quality = 480;
+                                                            if (Math.abs(shortEdge - 720) < 50) quality = 720;
+                                                            if (Math.abs(shortEdge - 1080) < 50) quality = 1080;
+                                                            if (Math.abs(shortEdge - 2160) < 50) quality = 2160;
+
+                                                            let w, h;
+                                                            if (ratio.val >= 1) { // Landscape or Square
+                                                                h = quality;
+                                                                w = Math.round(h * ratio.val);
+                                                            } else { // Portrait
+                                                                w = quality;
+                                                                h = Math.round(w / ratio.val);
+                                                            }
+
+                                                            engine.resize(w, h);
+                                                            setForceUpdate(n => n + 1);
+                                                        }}
+                                                        className={`inspector-resolution-btn ${isActive ? "active" : ""}`}
+                                                    >
+                                                        {ratio.label}
+                                                    </button>
+                                                )
+                                            })}
                                         </div>
                                     </ControlRow>
 
-                                    <ControlRow label="Resolution">
+                                    <ControlRow label="Resolution (Quality)">
                                         <div className="inspector-resolution-grid">
                                             {[
-                                                { w: 854, h: 480, label: "480p" },
-                                                { w: 1280, h: 720, label: "720p" },
-                                                { w: 1920, h: 1080, label: "1080p" },
-                                                { w: 3840, h: 2160, label: "4K" }
-                                            ].map((res) => {
-                                                // Adjust resolution based on current aspect ratio?
-                                                // For now, let's just keep standard 16:9 presets but maybe disable them if not 16:9?
-                                                // Or better: Let "Resolution" be just a quality selector scale?
-                                                // Current implementation is hardcoded 16:9 resolutions.
-                                                // Let's keep them but know they will reset to 16:9.
+                                                { label: "480p", base: 480 },
+                                                { label: "720p", base: 720 },
+                                                { label: "1080p", base: 1080 },
+                                                { label: "4K", base: 2160 }
+                                            ].map((qual) => {
+                                                // Check if active: Short edge matches base
+                                                const shortEdge = Math.min(engine.scene.width, engine.scene.height);
+                                                const isActive = Math.abs(shortEdge - qual.base) < 10;
+
                                                 return (
                                                     <button
-                                                        key={res.label}
+                                                        key={qual.label}
                                                         onClick={() => {
-                                                            engine.resize(res.w, res.h);
+                                                            const currentRatio = engine.scene.width / engine.scene.height;
+                                                            let w, h;
+                                                            if (currentRatio >= 1) {
+                                                                h = qual.base;
+                                                                w = Math.round(h * currentRatio);
+                                                            } else {
+                                                                w = qual.base;
+                                                                h = Math.round(w / currentRatio);
+                                                            }
+                                                            engine.resize(w, h);
                                                             setForceUpdate(n => n + 1);
                                                         }}
-                                                        className={`inspector-resolution-btn ${engine.scene.height === res.h && engine.scene.width === res.w ? "active" : ""}`}
+                                                        className={`inspector-resolution-btn ${isActive ? "active" : ""}`}
                                                     >
-                                                        {res.label}
+                                                        {qual.label}
                                                     </button>
                                                 )
                                             })}
