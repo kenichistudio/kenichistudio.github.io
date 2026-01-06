@@ -97,7 +97,8 @@ export const EditorLayout = () => {
         fps: 30
     });
 
-    const [exportTab, setExportTab] = useState<'standard' | 'pro'>('standard');
+    const [exportTab, setExportTab] = useState<'offline' | 'realtime'>('offline');
+
 
     const abortController = useRef<AbortController | null>(null);
 
@@ -436,16 +437,24 @@ export const EditorLayout = () => {
                                         {/* Dialog Body */}
                                         <div className="flex border-b border-slate-200 dark:border-neutral-800">
                                             <button
-                                                onClick={() => { setExportTab('standard'); setExportConfig({ ...exportConfig, format: 'webm' }); }}
-                                                className={`flex-1 py-4 text-sm font-bold border-b-2 transition-colors ${exportTab === 'standard' ? "border-blue-500 text-blue-600 dark:text-blue-400" : "border-transparent text-slate-500 hover:text-slate-800 dark:hover:text-neutral-300"}`}
+                                                onClick={() => {
+                                                    setExportTab('offline');
+                                                    setExportMode('offline');
+                                                    setExportConfig({ ...exportConfig, format: 'webm' });
+                                                }}
+                                                className={`flex-1 py-4 text-sm font-bold border-b-2 transition-colors ${exportMode === 'offline' ? "border-blue-500 text-blue-600 dark:text-blue-400" : "border-transparent text-slate-500 hover:text-slate-800 dark:hover:text-neutral-300"}`}
                                             >
-                                                Standard (WebM)
+                                                Offline Render (Best Quality)
                                             </button>
                                             <button
-                                                onClick={() => { setExportTab('pro'); setExportConfig({ ...exportConfig, format: 'mp4' }); setExportMode('offline'); }}
-                                                className={`flex-1 py-4 text-sm font-bold border-b-2 transition-colors ${exportTab === 'pro' ? "border-purple-500 text-purple-600 dark:text-purple-400" : "border-transparent text-slate-500 hover:text-slate-800 dark:hover:text-neutral-300"}`}
+                                                onClick={() => {
+                                                    setExportTab('realtime');
+                                                    setExportMode('realtime');
+                                                    setExportConfig({ ...exportConfig, format: 'webm' });
+                                                }}
+                                                className={`flex-1 py-4 text-sm font-bold border-b-2 transition-colors ${exportMode === 'realtime' ? "border-purple-500 text-purple-600 dark:text-purple-400" : "border-transparent text-slate-500 hover:text-slate-800 dark:hover:text-neutral-300"}`}
                                             >
-                                                Pro (MP4 / MOV)
+                                                Realtime Record (Fast)
                                             </button>
                                         </div>
 
@@ -468,27 +477,35 @@ export const EditorLayout = () => {
                                                         </div>
                                                     </div>
 
-                                                    {exportTab === 'pro' && (
-                                                        <div>
-                                                            <label className="text-xs font-bold uppercase text-slate-500 mb-2 block">Format</label>
-                                                            <div className="grid grid-cols-2 gap-3">
-                                                                <button
-                                                                    onClick={() => setExportConfig({ ...exportConfig, format: "mp4" })}
-                                                                    className={`p-3 rounded-xl border text-left transition-all ${exportConfig.format === "mp4" ? "bg-purple-50 dark:bg-purple-900/20 border-purple-500 ring-1 ring-purple-500 dark:ring-purple-500/50" : "bg-white dark:bg-neutral-800 border-slate-200 dark:border-neutral-700 hover:border-purple-400"}`}
-                                                                >
-                                                                    <div className={`font-bold mb-1 ${exportConfig.format === "mp4" ? "text-purple-700 dark:text-purple-400" : "text-slate-900 dark:text-white"}`}>MP4</div>
-                                                                    <div className="text-[10px] text-slate-500 dark:text-neutral-400">Universal compatibility.</div>
-                                                                </button>
-                                                                <button
-                                                                    onClick={() => setExportConfig({ ...exportConfig, format: "mov" })}
-                                                                    className={`p-3 rounded-xl border text-left transition-all ${exportConfig.format === "mov" ? "bg-purple-50 dark:bg-purple-900/20 border-purple-500 ring-1 ring-purple-500 dark:ring-purple-500/50" : "bg-white dark:bg-neutral-800 border-slate-200 dark:border-neutral-700 hover:border-purple-400"}`}
-                                                                >
-                                                                    <div className={`font-bold mb-1 ${exportConfig.format === "mov" ? "text-purple-700 dark:text-purple-400" : "text-slate-900 dark:text-white"}`}>MOV</div>
-                                                                    <div className="text-[10px] text-slate-500 dark:text-neutral-400">For QuickTime & Editing.</div>
-                                                                </button>
-                                                            </div>
+
+                                                    <div>
+                                                        <label className="text-xs font-bold uppercase text-slate-500 mb-2 block">Format</label>
+                                                        <div className="grid grid-cols-3 gap-2">
+                                                            <button
+                                                                onClick={() => setExportConfig({ ...exportConfig, format: "webm" })}
+                                                                className={`p-2 rounded-xl border text-center transition-all ${exportConfig.format === "webm" ? "bg-blue-50 dark:bg-blue-900/20 border-blue-500 ring-1 ring-blue-500 dark:ring-blue-500/50 text-blue-700 dark:text-blue-400" : "bg-white dark:bg-neutral-800 border-slate-200 dark:border-neutral-700 hover:border-blue-400 text-slate-900 dark:text-white"}`}
+                                                            >
+                                                                <div className="font-bold text-sm">WebM</div>
+                                                            </button>
+                                                            <button
+                                                                onClick={() => setExportConfig({ ...exportConfig, format: "mp4" })}
+                                                                className={`p-2 rounded-xl border text-center transition-all ${exportConfig.format === "mp4" ? "bg-blue-50 dark:bg-blue-900/20 border-blue-500 ring-1 ring-blue-500 dark:ring-blue-500/50 text-blue-700 dark:text-blue-400" : "bg-white dark:bg-neutral-800 border-slate-200 dark:border-neutral-700 hover:border-blue-400 text-slate-900 dark:text-white"}`}
+                                                            >
+                                                                <div className="font-bold text-sm">MP4</div>
+                                                            </button>
+                                                            <button
+                                                                onClick={() => setExportConfig({ ...exportConfig, format: "mov" })}
+                                                                className={`p-2 rounded-xl border text-center transition-all ${exportConfig.format === "mov" ? "bg-blue-50 dark:bg-blue-900/20 border-blue-500 ring-1 ring-blue-500 dark:ring-blue-500/50 text-blue-700 dark:text-blue-400" : "bg-white dark:bg-neutral-800 border-slate-200 dark:border-neutral-700 hover:border-blue-400 text-slate-900 dark:text-white"}`}
+                                                            >
+                                                                <div className="font-bold text-sm">MOV</div>
+                                                            </button>
                                                         </div>
-                                                    )}
+                                                        <div className="mt-2 text-xs text-slate-400 dark:text-neutral-500">
+                                                            {exportConfig.format === 'webm' && "Best for Web. Fastest export."}
+                                                            {exportConfig.format === 'mp4' && "Universal format. Works everywhere."}
+                                                            {exportConfig.format === 'mov' && "Best for video editing software."}
+                                                        </div>
+                                                    </div>
                                                 </div>
 
                                                 <div className="space-y-6">
@@ -537,40 +554,47 @@ export const EditorLayout = () => {
                                                 </div>
                                             </div>
 
-                                            {exportTab === 'standard' && (
-                                                <div className="flex items-center justify-between p-4 bg-slate-50 dark:bg-neutral-800/50 rounded-xl border border-slate-200 dark:border-neutral-700">
+                                            {exportMode === 'offline' && (
+                                                <div className="flex items-start gap-3 p-4 bg-yellow-50 dark:bg-yellow-900/20 rounded-xl border border-yellow-200 dark:border-yellow-700/50">
+                                                    <div className="w-5 h-5 text-yellow-600 dark:text-yellow-400 shrink-0 mt-0.5">ℹ️</div>
                                                     <div>
-                                                        <div className="font-bold text-slate-900 dark:text-white text-sm">High Quality (Slow)</div>
-                                                        <div className="text-xs text-slate-500 dark:text-neutral-400">Fixes export lag/stutter.</div>
-                                                    </div>
-                                                    <div
-                                                        onClick={() => setExportMode(exportMode === 'offline' ? 'realtime' : 'offline')}
-                                                        className={`w-12 h-6 rounded-full p-1 cursor-pointer transition-colors ${exportMode === 'offline' ? "bg-blue-500" : "bg-slate-300 dark:bg-neutral-600"}`}
-                                                    >
-                                                        <div className={`w-4 h-4 rounded-full bg-white shadow-sm transition-transform ${exportMode === 'offline' ? "translate-x-6" : "translate-x-0"}`} />
+                                                        <div className="font-bold text-yellow-900 dark:text-yellow-100 text-sm">Offline Render Mode</div>
+                                                        <div className="text-xs text-yellow-700 dark:text-yellow-300 mt-1">
+                                                            This mode forces a perfect 60 FPS by rendering frame-by-frame. It may take longer than the video duration, but guarantees no lag or stutter.
+                                                        </div>
                                                     </div>
                                                 </div>
                                             )}
 
-                                            {(exportMode === 'offline' || exportTab === 'pro') && (
-                                                <div className="space-y-2">
-                                                    <label className="text-xs font-bold uppercase text-slate-500 block">Frame Rate (FPS)</label>
-                                                    <div className="flex gap-2">
-                                                        {[12, 24, 30, 60].map(fps => (
-                                                            <button
-                                                                key={fps}
-                                                                onClick={() => setExportConfig({ ...exportConfig, fps })}
-                                                                className={`px-3 py-2 rounded-lg text-sm font-bold border transition-colors ${exportConfig.fps === fps
-                                                                    ? "bg-blue-50 dark:bg-blue-900/20 border-blue-500 text-blue-700 dark:text-blue-400"
-                                                                    : "bg-white dark:bg-neutral-800 border-slate-200 dark:border-neutral-700 text-slate-600 dark:text-neutral-400 hover:border-blue-400"
-                                                                    }`}
-                                                            >
-                                                                {fps}
-                                                            </button>
-                                                        ))}
+                                            {exportMode === 'realtime' && (
+                                                <div className="flex items-start gap-3 p-4 bg-purple-50 dark:bg-purple-900/20 rounded-xl border border-purple-200 dark:border-purple-700/50">
+                                                    <div className="w-5 h-5 text-purple-600 dark:text-purple-400 shrink-0 mt-0.5">⚡</div>
+                                                    <div>
+                                                        <div className="font-bold text-purple-900 dark:text-purple-100 text-sm">Realtime Record Mode</div>
+                                                        <div className="text-xs text-purple-700 dark:text-purple-300 mt-1">
+                                                            This mode captures the screen as it plays. It's faster (1x speed) but quality depends on playback smoothness.
+                                                        </div>
                                                     </div>
                                                 </div>
                                             )}
+
+                                            <div className="space-y-2">
+                                                <label className="text-xs font-bold uppercase text-slate-500 block">Frame Rate (FPS)</label>
+                                                <div className="flex gap-2">
+                                                    {[12, 24, 30, 60].map(fps => (
+                                                        <button
+                                                            key={fps}
+                                                            onClick={() => setExportConfig({ ...exportConfig, fps })}
+                                                            className={`px-3 py-2 rounded-lg text-sm font-bold border transition-colors ${exportConfig.fps === fps
+                                                                ? "bg-blue-50 dark:bg-blue-900/20 border-blue-500 text-blue-700 dark:text-blue-400"
+                                                                : "bg-white dark:bg-neutral-800 border-slate-200 dark:border-neutral-700 text-slate-600 dark:text-neutral-400 hover:border-blue-400"
+                                                                }`}
+                                                        >
+                                                            {fps}
+                                                        </button>
+                                                    ))}
+                                                </div>
+                                            </div>
                                         </div>
 
 

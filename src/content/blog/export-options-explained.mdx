@@ -1,0 +1,64 @@
+---
+title: "Kinetix Export Options Explained"
+description: "A deep dive into the differences between Offline Rendering and Realtime Recording, and when to use WebM vs MP4."
+pubDate: 2026-01-06
+tags: ["engineering", "export", "performance"]
+---
+
+# Export Options Explained
+
+Kinetix now offers two distinct ways to export your animations: **Offline Render** and **Realtime Record**. Understanding the difference is key to getting the best results for your needs.
+
+## 1. Offline Render (High Quality)
+
+This is the default and recommended mode for final production.
+
+### How it works
+The engine pauses the timeline and advances it frame-by-frame (e.g., exactly 1/60th of a second). For each frame, it takes a high-resolution snapshot and sends it to a background worker for encoding.
+
+### Pros
+- **Perfect Smoothness**: Guarantees a stable 60 FPS (or 30 FPS) regardless of your computer's speed.
+- **No Lag Artifacts**: If your animation is heavy and lags during playback, the offline render will still be silky smooth because it doesn't care about real-time performance.
+- **High Quality**: Uses 2-pass encoding (conceptually) or high-bitrate settings.
+
+### Cons
+- **Slower**: Takes longer than the actual video duration to render (usually 1.5x - 2x realtime).
+
+## 2. Realtime Record (Fast)
+
+This mode captures the canvas exactly as you see it during playback.
+
+### How it works
+The engine plays the animation at normal speed, and we capture the stream using the browser's `MediaRecorder` API or a `MediaStreamTrackProcessor`.
+
+### Pros
+- **Fast**: Exports exactly efficiently as the video duration (1x speed).
+- **Instant Feedback**: Good for quick "draft" shares to Discord or Slack.
+
+### Cons
+- **Performance Dependent**: If your computer lags during playback, the exported video will lag too.
+- **Variable Framerate**: Browsers might drop frames if the system is busy.
+
+---
+
+## Formats: WebM vs MP4 vs MOV
+
+### WebM
+- **Engine**: Native Browser Stack / `webm-muxer`.
+- **Pros**: Fastest to encode, open source, works great on web.
+- **Cons**: Not supported natively on iOS or QuickTime.
+
+### MP4 (H.264)
+- **Engine**: **MediaBunny**.
+- **Pros**: Universally compatible (Windows, Mac, iPhone, Android, Social Media).
+- **Cons**: Slower to encode than WebM.
+
+### MOV
+- **Engine**: **MediaBunny**.
+- **Pros**: Preferred for video editing workflows (Final Cut, Premiere).
+- **Cons**: Larger file sizes.
+
+## Recommendation
+
+- **For Final Polish**: Use **Offline Render** + **MP4**.
+- **For Quick Drafts**: Use **Realtime Record** + **WebM**.

@@ -291,75 +291,188 @@ export class Engine {
                 try {
                     const stream = this.canvas.captureStream(fps);
 
-                    // Use default codec for maximum compatibility
-                    // VP8/VP9 specific strings can fail on some systems/drivers
-                    const mimeType = "video/webm";
-                    console.log("Realtime Export MIME:", mimeType);
+                    if (engine === 'mediabunny' && format !== 'webm') {
+                        // Realtime MP4/MOV via MediaBunny Worker
+                        console.log("Starting Realtime MediaBunny Stream...");
 
-                    const recorder = new MediaRecorder(stream, {
-                        mimeType,
-                        videoBitsPerSecond: 5000000 // 5 Mbps
-                    });
+                        // Initialize Worker
+                        const worker = new Worker(new URL('./workers/mediabunny.worker.ts', import.meta.url), { type: 'module' });
 
-                    const chunks: Blob[] = [];
-                    recorder.ondataavailable = (e) => {
-                        if (e.data.size > 0) chunks.push(e.data);
-                    };
+                        worker.postMessage({
+                            type: 'CONFIG',
+                            data: {
+                                width: evenWidth,
+                                height: evenHeight,
+                                fps,
+                                bitrate: 5_000_000,
+                                duration,
+                                format
+                            }
+                        });
 
-                    recorder.onerror = (e) => {
-                        console.error("MediaRecorder Error:", e);
-                        this.isLooping = wasLooping; // Restore
-                        reject(new Error("MediaRecorder Error: " + e.error.message));
-                    };
+                        await new Promise<void>((resolveW, rejectW) => {
+                            const initHandler = (e: MessageEvent) => {
+                                if (e.data.type === 'READY') {
+                                    worker.removeEventListener('message', initHandler);
+                                    resolveW();
+                                }
+                            };
+                            worker.addEventListener('message', initHandler);
+                        });
 
-                    const stopPromise = new Promise<Blob>((resolveStop, rejectStop) => {
-                        recorder.onstop = () => {
-                            const blob = new Blob(chunks, { type: mimeType });
-                            console.log("Export Finished. Chunks:", chunks.length, "Total Size:", blob.size);
+                        // Pipe frames using MediaStreamTrackProcessor
+                        const track = stream.getVideoTracks()[0];
+                        // @ts-ignore
+                        const processor = new MediaStreamTrackProcessor({ track });
+                        const reader = processor.readable.getReader();
 
-                            if (blob.size === 0) {
-                                rejectStop(new Error("Export failed: Resulting video is empty (0 bytes)."));
-                            } else {
-                                resolveStop(blob);
+                        // Start Playback
+                        this.currentTime = 0;
+                        this.play();
+
+                        let frameCount = 0;
+                        const expectedFrames = (duration / 1000) * fps;
+
+                        const readLoop = async () => {
+                            while (true) {
+                                const { done, value } = await reader.read();
+                                if (done) break;
+
+                                if (value) {
+                                    worker.postMessage({
+                                        type: 'ENCODE_FRAME',
+                                        data: {
+                                            bitmap: value, // VideoFrame is transferrable
+                                            timestamp: value.timestamp, // Already in microseconds
+                                            duration: value.duration
+                                        }
+                                    }, [value]);
+
+                                    frameCount++;
+                                }
                             }
                         };
-                    });
 
-                    recorder.start(); // Standard recording (no timeslice)
+                        readLoop();
 
-                    // Realtime: Just play
-                    this.currentTime = 0;
-                    this.play();
-
-                    const checkInterval = setInterval(async () => {
-                        if (signal?.aborted) {
-                            clearInterval(checkInterval);
-                            this.pause();
-                            recorder.stop();
-                            this.isLooping = wasLooping; // Restore
-                            reject(new Error("Export cancelled"));
-                            return;
-                        }
-
-                        const progress = (this.currentTime / duration) * 100;
-                        onProgress(Math.min(progress, 99));
-
-                        // Check if stopped or reached end
-                        if (!this.isPlaying && this.currentTime >= duration) {
-                            clearInterval(checkInterval);
-                            recorder.stop();
-                            onProgress(100);
-
-                            try {
-                                const blob = await stopPromise;
-                                this.isLooping = wasLooping; // Restore
-                                resolve(blob);
-                            } catch (e) {
-                                this.isLooping = wasLooping; // Restore
-                                reject(e);
+                        // Monitor End
+                        const checkInterval = setInterval(async () => {
+                            if (signal?.aborted) {
+                                clearInterval(checkInterval);
+                                this.pause();
+                                worker.terminate();
+                                reject(new Error("Export cancelled"));
+                                return;
                             }
-                        }
-                    }, 100);
+
+                            const progress = (this.currentTime / duration) * 100;
+                            onProgress(Math.min(progress, 99));
+
+                            if (!this.isPlaying && this.currentTime >= duration) {
+                                clearInterval(checkInterval);
+                                onProgress(100);
+
+                                // Stop stream to end processor
+                                track.stop();
+
+                                // Finalize Worker
+                                worker.postMessage({ type: 'FINALIZE' });
+
+                                const completionPromise = new Promise<Blob>((resolveC) => {
+                                    worker.onmessage = (e) => {
+                                        if (e.data.type === 'COMPLETE') {
+                                            const blob = new Blob([e.data.data], { type: format === 'mp4' ? 'video/mp4' : 'video/quicktime' });
+                                            resolveC(blob);
+                                            worker.terminate();
+                                        } else if (e.data.type === 'ERROR') {
+                                            // Handle error
+                                            reject(new Error(e.data.error));
+                                        }
+                                    };
+                                });
+
+                                try {
+                                    const result = await completionPromise;
+                                    this.isLooping = wasLooping;
+                                    resolve(result);
+                                } catch (e) {
+                                    reject(e);
+                                }
+                            }
+                        }, 100);
+
+                    } else {
+                        // Standard Realtime WebM via MediaRecorder
+                        // Use default codec for maximum compatibility
+                        // VP8/VP9 specific strings can fail on some systems/drivers
+                        const mimeType = "video/webm";
+                        console.log("Realtime Export MIME:", mimeType);
+
+                        const recorder = new MediaRecorder(stream, {
+                            mimeType,
+                            videoBitsPerSecond: 5000000 // 5 Mbps
+                        });
+
+                        const chunks: Blob[] = [];
+                        recorder.ondataavailable = (e) => {
+                            if (e.data.size > 0) chunks.push(e.data);
+                        };
+
+                        recorder.onerror = (e) => {
+                            console.error("MediaRecorder Error:", e);
+                            this.isLooping = wasLooping; // Restore
+                            reject(new Error("MediaRecorder Error: " + e.error.message));
+                        };
+
+                        const stopPromise = new Promise<Blob>((resolveStop, rejectStop) => {
+                            recorder.onstop = () => {
+                                const blob = new Blob(chunks, { type: mimeType });
+                                console.log("Export Finished. Chunks:", chunks.length, "Total Size:", blob.size);
+
+                                if (blob.size === 0) {
+                                    rejectStop(new Error("Export failed: Resulting video is empty (0 bytes)."));
+                                } else {
+                                    resolveStop(blob);
+                                }
+                            };
+                        });
+
+                        recorder.start(); // Standard recording (no timeslice)
+
+                        // Realtime: Just play
+                        this.currentTime = 0;
+                        this.play();
+
+                        const checkInterval = setInterval(async () => {
+                            if (signal?.aborted) {
+                                clearInterval(checkInterval);
+                                this.pause();
+                                recorder.stop();
+                                this.isLooping = wasLooping; // Restore
+                                reject(new Error("Export cancelled"));
+                                return;
+                            }
+
+                            const progress = (this.currentTime / duration) * 100;
+                            onProgress(Math.min(progress, 99));
+
+                            // Check if stopped or reached end
+                            if (!this.isPlaying && this.currentTime >= duration) {
+                                clearInterval(checkInterval);
+                                recorder.stop();
+                                onProgress(100);
+
+                                try {
+                                    const blob = await stopPromise;
+                                    this.isLooping = wasLooping; // Restore
+                                    resolve(blob);
+                                } catch (e) {
+                                    this.isLooping = wasLooping; // Restore
+                                    reject(e);
+                                }
+                            }
+                        }, 100);
+                    }
                 } catch (e) {
                     this.isLooping = wasLooping; // Restore
                     reject(e);
