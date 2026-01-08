@@ -117,8 +117,11 @@ export class Engine {
         });
 
         window.addEventListener("mousemove", (e) => {
+            const { x, y } = this._getMousePos(e);
+            this.scene.mouseX = x;
+            this.scene.mouseY = y;
+
             if (this._isDragging && this.selectedObjectId) {
-                const { x, y } = this._getMousePos(e);
                 this._handleMove(x, y);
             }
         });

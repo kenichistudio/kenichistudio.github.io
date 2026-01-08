@@ -1,0 +1,145 @@
+<div class="flip-text-container">
+  <div id="container">
+    Make
+    <div id="flip">
+      <div><div>wOrK</div></div>
+      <div><div>lifeStyle</div></div>
+      <div><div>Everything</div></div>
+    </div>
+    AweSoMe!
+  </div>
+  <p class="credit">a css3 animation demo</p>
+</div>
+
+<style>
+  @import url("https://fonts.googleapis.com/css?family=Roboto:700");
+
+  .flip-text-container {
+    width: 100%;
+    height: 400px; /* Reduced height for embed */
+    position: relative;
+    background: #fff;
+    overflow: hidden;
+    font-family: "Roboto", sans-serif;
+    text-align: center;
+    border-radius: 8px;
+  }
+
+  /* Scoped IDs to classes or just used as is if scoped style works well, 
+     but IDs in pure CSS are risky if component is used twice. 
+     I'll keep IDs for fidelity to original but ensure container scoping.
+  */
+
+  #container {
+    color: #999;
+    text-transform: uppercase;
+    font-size: 36px;
+    font-weight: bold;
+    /* padding-top: 200px; removed to center properly in box */
+    position: absolute; /* changed from fixed */
+    width: 100%;
+    top: 50%;
+    left: 0;
+    transform: translateY(-50%);
+    display: block;
+    line-height: normal;
+  }
+
+  #flip {
+    height: 50px;
+    overflow: hidden;
+    display: inline-block;
+    vertical-align: bottom; /* align with text */
+    margin-bottom: -5px; /* slight adjustment for baseline */
+  }
+
+  #flip > div > div {
+    color: #fff;
+    padding: 4px 12px;
+    height: 45px;
+    margin-bottom: 45px;
+    display: block; /* Changed from inline-block to stack vertically for the margin trick? 
+                     Original had inline-block but inside a div that rotates? 
+                     Let's check original structure:
+                     #flip > div > div.
+                     Actually #flip > div (first child) is the one animating?
+                     No, #flip div:first-child animation.
+                     Wait, structure is:
+                     #flip
+                       div (wrapper?)
+                         div (text)
+                       div
+                         div
+                     
+                     The HTML provided:
+                     <div id=flip>
+                        <div><div>wOrK</div></div>
+                        <div><div>lifeStyle</div></div>
+                        <div><div>Everything</div></div>
+                      </div>
+
+                     CSS: 
+                     #flip div:first-child { animation: show ... }
+                     This targets the first pure DIV inside flip.
+                  */
+  }
+
+  #flip > div {
+      display: block; 
+  }
+
+  #flip > div > div {
+      display: inline-block; /* As per original */
+  }
+
+  #flip div:first-child {
+    animation: show 5s linear infinite;
+  }
+
+  #flip div div {
+    background: #42c58a;
+  }
+  #flip div:first-child div {
+    background: #4ec7f3;
+  }
+  #flip div:last-child div {
+    background: #dc143c;
+  }
+
+  @keyframes show {
+    0% {
+      margin-top: -270px;
+    }
+    5% {
+      margin-top: -180px;
+    }
+    33% {
+      margin-top: -180px;
+    }
+    38% {
+      margin-top: -90px;
+    }
+    66% {
+      margin-top: -90px;
+    }
+    71% {
+      margin-top: 0px;
+    }
+    99.99% {
+      margin-top: 0px;
+    }
+    100% {
+      margin-top: -270px; /* Loop back */
+    }
+  }
+
+  .credit {
+    position: absolute;
+    width: 100%;
+    bottom: 30px;
+    font-size: 12px;
+    color: #999;
+    margin: 0;
+    text-align: center;
+  }
+</style>

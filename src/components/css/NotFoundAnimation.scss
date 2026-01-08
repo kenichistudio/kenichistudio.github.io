@@ -1,0 +1,147 @@
+/* Scoped SCSS for Slot Machine Animation */
+.not-found-wrapper {
+  --hue: 223deg;
+  --gray1: hsl(var(--hue) 10% 95%);
+  --gray2: hsl(var(--hue) 10% 85%);
+  --gray3: hsl(var(--hue) 10% 75%);
+  --gray8: hsl(var(--hue) 10% 25%);
+  --gray9: hsl(var(--hue) 10% 15%);
+  --gray10: hsl(var(--hue) 10% 5%);
+  --primary3: hsl(var(--hue) 90% 75%);
+  --primary5: hsl(var(--hue) 90% 55%);
+  --primary6: hsl(var(--hue) 90% 45%);
+  --trans-dur: 0.3s;
+  color-scheme: light dark;
+  font-size: clamp(1rem, 0.95rem + 0.25vw, 1.25rem);
+
+  /* Container mimic */
+  background-color: light-dark(var(--gray1), var(--gray10));
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 400px;
+  width: 100%;
+  border-radius: 12px;
+  overflow: hidden;
+  position: relative;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+
+  * {
+    border: 0;
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  button {
+    color: light-dark(var(--gray10), var(--gray1));
+    font: 1em / 1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    transition:
+      background-color var(--trans-dur),
+      color var(--trans-dur);
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .main-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 3em 0;
+  }
+
+  .btn-link {
+    background-color: var(--primary5);
+    border-radius: 0.25em;
+    box-shadow: 0 0 0 3px transparent;
+    color: var(--gray1);
+    display: block;
+    padding: 0.5em 1em;
+    text-decoration: none;
+    transition:
+      background-color var(--trans-dur),
+      box-shadow var(--trans-dur),
+      color var(--trans-dur);
+    font-size: 1rem;
+
+    &:focus-visible {
+      box-shadow: 0 0 0 3px var(--primary3);
+    }
+
+    &:hover {
+      background-color: var(--primary6);
+    }
+  }
+
+  .slots {
+    --symbol-height: 7.5em; /* Scaled down slightly if needed, but 7.5em is big. */
+    --symbol-height: 5em; /* Adjusted for blog post embedding context */
+    font: {
+      size: 1em;
+      weight: 700;
+    };
+    gap: 1em;
+    height: var(--symbol-height);
+    margin-bottom: 3em;
+
+    &__slot,
+    &__sr {
+      overflow: hidden;
+    }
+
+    &__slot {
+      display: block;
+      width: calc(var(--symbol-height) * 2 / 3);
+      height: 100%;
+
+      &-inner {
+        display: flex;
+        flex-direction: column-reverse;
+      }
+    }
+
+    &__sr {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border-width: 0;
+    }
+
+    &,
+    &__symbol {
+      display: flex;
+      justify-content: center;
+    }
+
+    &__symbol {
+      align-items: center;
+      font-size: var(--symbol-height);
+      line-height: 1;
+      height: 1em;
+      -webkit-user-select: none;
+      user-select: none;
+
+      &--red {
+        color: hsl(343 90% 55%);
+      }
+
+      &--yellow {
+        color: hsl(43 90% 55%);
+      }
+
+      &--green {
+        color: hsl(163 90% 35%);
+        font-weight: 100;
+      }
+
+      &--blue {
+        color: hsl(223 90% 55%);
+      }
+    }
+  }
+}

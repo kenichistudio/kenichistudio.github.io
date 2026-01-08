@@ -13,6 +13,10 @@ import { TextObject } from "../../engine/objects/TextObject";
 import { CodeBlockObject } from "../../engine/objects/CodeBlockObject";
 import { ChartObject } from "../../engine/objects/ChartObject";
 import { BarChartRaceObject } from "../../engine/objects/BarChartRaceObject";
+import { CharacterObject } from "../../engine/objects/CharacterObject";
+import { LogoCharacterObject } from "../../engine/objects/LogoCharacterObject";
+import { ParticleTextObject } from "../../engine/objects/ParticleTextObject";
+import { User, Sparkles, Wand2 } from "lucide-react";
 interface SidebarProps {
     engine: Engine | null;
 }
@@ -131,6 +135,45 @@ export const Sidebar = ({ engine }: SidebarProps) => {
         race.y = engine.scene.height / 2 - 200;
         engine.scene.add(race);
         engine.render();
+        engine.scene.add(race);
+        engine.render();
+    };
+
+    const handleAddCharacter = () => {
+        if (!engine) return;
+        if (window.innerWidth < 1100) setActiveTab(null);
+        const name = getNextName("Character");
+        const char = new CharacterObject(`char-${Date.now()}`);
+        char.name = name;
+        char.x = engine.scene.width / 2 - 60;
+        char.y = engine.scene.height / 2 - 100;
+        engine.scene.add(char);
+        engine.render();
+    };
+
+    const handleAddLogo = () => {
+        if (!engine) return;
+        if (window.innerWidth < 1100) setActiveTab(null);
+        const name = getNextName("Header Logo");
+        const logo = new LogoCharacterObject(`logo-${Date.now()}`);
+        logo.name = name;
+        logo.x = engine.scene.width / 2 - 150;
+        logo.y = engine.scene.height / 2 - 150;
+        engine.scene.add(logo);
+        engine.render();
+    };
+
+    const handleAddParticleText = () => {
+        if (!engine) return;
+        if (window.innerWidth < 1100) setActiveTab(null);
+        const name = getNextName("Particles");
+        const obj = new ParticleTextObject(`ptext-${Date.now()}`);
+        obj.name = name;
+        obj.text = "PARTICLES";
+        obj.x = engine.scene.width / 2 - 300;
+        obj.y = engine.scene.height / 2 - 75;
+        engine.scene.add(obj);
+        engine.render();
     };
 
     return (
@@ -243,6 +286,21 @@ export const Sidebar = ({ engine }: SidebarProps) => {
                                         <span className="text-xl font-medium text-slate-700 dark:text-neutral-300 block mb-2">Subheading</span>
                                         <span className="text-xs text-slate-400">Inter Display, Medium</span>
                                     </button>
+
+                                    <button
+                                        onClick={handleAddParticleText}
+                                        className="w-full text-left p-6 bg-gradient-to-r from-violet-500/10 to-fuchsia-500/10 dark:from-violet-900/20 dark:to-fuchsia-900/20 rounded-xl shadow-sm border border-violet-200 dark:border-violet-900/30 hover:scale-105 hover:shadow-md transition-all group relative overflow-hidden"
+                                    >
+                                        <div className="absolute right-4 top-4 text-violet-500 opacity-20 group-hover:opacity-100 transition-opacity">
+                                            <Wand2 size={24} />
+                                        </div>
+                                        <span className="text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-violet-600 to-fuchsia-600 dark:from-violet-400 dark:to-fuchsia-400 block mb-2">
+                                            Particle Text
+                                        </span>
+                                        <span className="text-xs text-violet-600/70 dark:text-violet-400/70 block">
+                                            Explode, Assemble, Vortex FX
+                                        </span>
+                                    </button>
                                 </div>
                             )}
 
@@ -320,6 +378,32 @@ export const Sidebar = ({ engine }: SidebarProps) => {
                                             <span className="text-white">.log(</span>
                                             <span className="text-green-400">'Code Block'</span>
                                             <span className="text-white">)</span>
+                                        </div>
+                                    </button>
+
+                                    <button
+                                        onClick={handleAddCharacter}
+                                        className="w-full text-left p-4 bg-white dark:bg-neutral-800 rounded-xl shadow-sm border border-slate-200 dark:border-neutral-700 hover:scale-105 hover:shadow-md transition-all group flex items-center gap-4"
+                                    >
+                                        <div className="w-12 h-12 bg-blue-100 dark:bg-blue-900/40 rounded-full flex items-center justify-center text-blue-600 dark:text-blue-400">
+                                            <User size={24} />
+                                        </div>
+                                        <div>
+                                            <div className="font-bold text-slate-900 dark:text-white">Character</div>
+                                            <div className="text-xs text-slate-500 dark:text-neutral-400">Animated Persona</div>
+                                        </div>
+                                    </button>
+
+                                    <button
+                                        onClick={handleAddLogo}
+                                        className="w-full text-left p-4 bg-white dark:bg-neutral-800 rounded-xl shadow-sm border border-slate-200 dark:border-neutral-700 hover:scale-105 hover:shadow-md transition-all group flex items-center gap-4"
+                                    >
+                                        <div className="w-12 h-12 bg-orange-100 dark:bg-orange-900/40 rounded-full flex items-center justify-center text-orange-600 dark:text-orange-400">
+                                            <Sparkles size={24} />
+                                        </div>
+                                        <div>
+                                            <div className="font-bold text-slate-900 dark:text-white">Profile Logo</div>
+                                            <div className="text-xs text-slate-500 dark:text-neutral-400">Particle Text Effect</div>
                                         </div>
                                     </button>
                                     <div className="text-center text-xs text-slate-400 mt-2">More shapes coming soon...</div>

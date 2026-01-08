@@ -1,0 +1,264 @@
+<div class="twinbru-wrapper">
+    <div class="hero-container">
+        <div class="content">
+            <h2>Digital twins of<br />real fabrics</h2>
+            <p>
+                The 3D textures of our high performance fabrics simplify your
+                marketing process
+            </p>
+            <a href="#" class="btn">Browse free 3D fabric textures →</a>
+        </div>
+
+        <div class="visuals">
+            <div class="fabric-model">
+                {
+                    Array.from({ length: 120 }).map((_, i) => (
+                        <div class="blade" style={`--i: ${i}; --total: 120`} />
+                    ))
+                }
+            </div>
+
+            <div class="sphere sphere-1"></div>
+            <div class="sphere sphere-2"></div>
+            <div class="sphere sphere-3"></div>
+        </div>
+    </div>
+
+    <!-- SVG Filters for Fabric Texture -->
+    <svg width="0" height="0" style="position: absolute;">
+        <filter id="fabric-noise">
+            <feTurbulence
+                type="fractalNoise"
+                baseFrequency="0.8"
+                numOctaves="3"
+                stitchTiles="stitch"></feTurbulence>
+            <feColorMatrix type="saturate" values="0"></feColorMatrix>
+            <feComponentTransfer>
+                <feFuncA type="linear" slope="0.4"></feFuncA>
+            </feComponentTransfer>
+        </filter>
+    </svg>
+</div>
+
+<style lang="scss">
+    .twinbru-wrapper {
+        position: relative;
+        width: 100%;
+        height: 500px;
+        background-color: #f8cf7d; /* Matching the yellow from the user's screenshot closer */
+        background-image:
+            radial-gradient(circle at 10% 10%, #ffeebf, transparent 60%),
+            radial-gradient(circle at 90% 90%, #e6bd6b, transparent 60%);
+        border-radius: 12px;
+        overflow: hidden;
+        font-family: "Inter", sans-serif;
+        display: flex;
+        align-items: center;
+        perspective: 1200px;
+
+        * {
+            box-sizing: border-box;
+        }
+    }
+
+    .hero-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+        padding: 0 5%;
+        z-index: 2;
+        pointer-events: none; /* Let clicks pass through layout to potential interactive elements */
+    }
+
+    .content {
+        flex: 1;
+        max-width: 500px;
+        color: #fff;
+        pointer-events: auto;
+
+        h2 {
+            font-size: 3.5rem;
+            line-height: 1.1;
+            font-weight: 800;
+            margin-bottom: 1.5rem;
+            color: #fff;
+            filter: drop-shadow(0 4px 6px rgba(189, 137, 54, 0.4));
+        }
+
+        p {
+            font-size: 1.125rem;
+            line-height: 1.6;
+            margin-bottom: 2.5rem;
+            color: rgba(255, 255, 255, 0.95);
+            font-weight: 500;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            text-decoration: none;
+            color: #fff;
+            font-weight: 700;
+            font-size: 1rem;
+            transition: transform 0.3s ease;
+
+            &:hover {
+                transform: translateX(8px);
+            }
+        }
+    }
+
+    .visuals {
+        flex: 1;
+        height: 500px; /* Match wrapper height for absolute positioning context */
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 60%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 1;
+        perspective: 1000px;
+    }
+
+    /* --- 3D Fabric Model Construction --- */
+    .fabric-model {
+        position: relative;
+        width: 300px;
+        height: 300px;
+        transform-style: preserve-3d;
+        animation: model-spin 20s linear infinite;
+    }
+
+    .blade {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 140px;
+        height: 40px; /* Wider blades for pleat effect */
+        background: linear-gradient(
+            90deg,
+            rgba(163, 102, 44, 1) 0%,
+            rgba(219, 158, 88, 1) 40%,
+            rgba(102, 60, 20, 1) 100%
+        );
+        transform-origin: left center;
+        /* Complex transform to create the "Twisted Torus/Fan" look */
+        transform: rotateZ(calc(var(--i) * (360deg / var(--total))))
+            translateX(40px) rotateY(60deg) rotateX(15deg);
+
+        clip-path: polygon(
+            0% 40%,
+            100% 0%,
+            100% 100%,
+            0% 60%
+        ); /* Tapered shape */
+        box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+        will-change: transform;
+
+        /* Double-sided lighting trick */
+        &::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(
+                to right,
+                rgba(0, 0, 0, 0.3),
+                transparent
+            );
+            opacity: 0.5;
+        }
+    }
+
+    /* --- Floating Fabric Spheres --- */
+    .sphere {
+        position: absolute;
+        border-radius: 50%;
+        /* Base color matching the yellow theme */
+        background: radial-gradient(circle at 30% 30%, #e6beb0, #a06e5d);
+        box-shadow:
+            inset -10px -10px 20px rgba(0, 0, 0, 0.3),
+            15px 25px 40px rgba(160, 100, 50, 0.25);
+        filter: url(#fabric-noise) contrast(1.1);
+    }
+
+    /* Different colors for spheres to match reference varieties */
+    .sphere-1 {
+        width: 80px;
+        height: 80px;
+        top: 15%;
+        right: 15%;
+        background: radial-gradient(
+            circle at 30% 30%,
+            #f0d5a8,
+            #c49a50
+        ); /* Gold/Beige */
+        animation: float-1 6s ease-in-out infinite alternate;
+    }
+
+    .sphere-2 {
+        width: 120px;
+        height: 120px;
+        bottom: 12%;
+        right: 20%;
+        background: radial-gradient(
+            circle at 30% 30%,
+            #e8ba7d,
+            #ad7331
+        ); /* Darker Orange */
+        z-index: 5;
+        animation: float-2 8s ease-in-out infinite alternate-reverse;
+    }
+
+    .sphere-3 {
+        width: 200px;
+        height: 200px;
+        bottom: -60px;
+        left: 20%;
+        background: radial-gradient(
+            circle at 30% 30%,
+            #fdf3d6,
+            #d4b87e
+        ); /* Light Cream */
+        animation: float-3 10s ease-in-out infinite alternate;
+    }
+
+    /* --- Animations --- */
+    @keyframes model-spin {
+        0% {
+            transform: rotateX(15deg) rotateY(-10deg) rotateZ(0deg);
+        }
+        100% {
+            transform: rotateX(15deg) rotateY(-10deg) rotateZ(360deg);
+        }
+    }
+
+    @keyframes float-1 {
+        0% {
+            transform: translate(0, 0);
+        }
+        100% {
+            transform: translate(-15px, -20px);
+        }
+    }
+
+    @keyframes float-2 {
+        0% {
+            transform: translate(0, 0);
+        }
+        100% {
+            transform: translate(20px, -15px);
+        }
+    }
+
+    @keyframes float-3 {
+        0% {
+            transform: translate(0, 0);
+        }
+        100% {
+            transform: translate(-10px, 20px);
+        }
+    }
+</style>

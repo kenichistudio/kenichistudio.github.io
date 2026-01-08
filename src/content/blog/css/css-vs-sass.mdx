@@ -1,0 +1,88 @@
+---
+title: "CSS vs. SASS: What's the Difference?"
+description: "A comparison of standard CSS and the SASS preprocessor."
+pubDate: 2026-01-07
+heroImage: "/placeholders/css-vs-sass.png"
+tags: ["css", "sass", "scss", "web-development"]
+subject: "web-development"
+---
+
+also add these codepen animations https://codepen.io/ajerez/pen/EaEEOW  https://codepen.io/kevin_David_k/pen/eYNeQVY https://codepen.io/tdoughty/pen/bGGZWqg  https://codepen.io/amit_sheen/pen/QWGjRKR https://codepen.io/jsulpis/pen/VwBNoEb  https://codepen.io/tippyfodder/pen/OyXWpr  - with astro components 
+
+# CSS vs. SASS: Elevating Your Styles
+
+Cascading Style Sheets (CSS) is the backbone of web styling, but as projects grow, maintaining plain CSS can become cumbersome. Enter **SASS** (Syntactically Awesome Style Sheets), a preprocessor that extends CSS with powerful features like variables, nesting, and mixins.
+
+## Key Differences
+
+| Feature | CSS | SASS (SCSS) |
+| :--- | :--- | :--- |
+| **Variables** | Native CSS Variables (`--var-name`) | SASS Variables (`$var-name`) |
+| **Nesting** | Newly supported (native nesting) | Deeply supported and widely used |
+| **Mixins** | Not available (requires repeated code) | `@mixin` and `@include` for reusable blocks |
+| **Functions** | `calc()`, `min()`, `max()`, etc. | Custom functions + built-in color manipulation |
+
+## 1. Variables
+
+SASS variables are compiled away, while CSS variables remain in the DOM, allowing for dynamic changes (like theming).
+
+```scss
+// SCSS
+$primary-color: #3498db;
+
+.btn {
+  background: $primary-color;
+}
+```
+
+```css
+/* CSS */
+:root {
+  --primary-color: #3498db;
+}
+
+.btn {
+  background: var(--primary-color);
+}
+```
+
+## 2. Nesting
+
+Nesting in SASS mirrors the HTML structure, making code more readable.
+
+```scss
+// SCSS
+nav {
+  ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  li { display: inline-block; }
+
+  a {
+    display: block;
+    padding: 6px 12px;
+    text-decoration: none;
+  }
+}
+```
+
+## 3. Mixins
+
+Mixins allow you to define styles that can be re-used throughout your stylesheet.
+
+```scss
+@mixin transform($property) {
+  -webkit-transform: $property;
+  -ms-transform: $property;
+  transform: $property;
+}
+
+.box { @include transform(rotate(30deg)); }
+```
+
+## Conclusion
+
+While modern CSS is evolving rapidly with features like native nesting and variables, SASS still offers a robust set of tools for large-scale application development, particularly with its powerful mixin and function capabilities.

@@ -2,7 +2,9 @@
 import { Twitter, Github, Linkedin, Youtube, Instagram } from "lucide-react";
 ---
 
-<footer class="bg-slate-900 text-slate-300 py-16">
+<footer
+    class="bg-neutral-950 text-neutral-400 py-20 border-t border-neutral-900"
+>
     <div class="container mx-auto px-6">
         <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8 mb-12">
             {/* Brand Column */}
@@ -11,7 +13,7 @@ import { Twitter, Github, Linkedin, Youtube, Instagram } from "lucide-react";
                     class="flex items-center gap-2 mb-6 text-white text-xl font-bold font-display"
                 >
                     <div
-                        class="w-8 h-8 bg-white rounded-lg flex items-center justify-center text-slate-900"
+                        class="w-8 h-8 bg-white rounded-lg flex items-center justify-center text-neutral-950"
                     >
                         <svg
                             width="20"
@@ -28,11 +30,13 @@ import { Twitter, Github, Linkedin, Youtube, Instagram } from "lucide-react";
                     </div>
                     Kinetix
                 </div>
-                <p class="text-sm text-slate-400 mb-6 max-w-xs leading-relaxed">
+                <p
+                    class="text-sm text-neutral-500 mb-6 max-w-xs leading-relaxed"
+                >
                     The deterministic diagramming tool for professionals. Create
                     clear, editable visuals instantly from text.
                 </p>
-                <div class="text-xs text-slate-500">
+                <div class="text-xs text-neutral-600">
                     &copy; 2025 Kinetix AI. All rights reserved.
                 </div>
             </div>
@@ -40,7 +44,7 @@ import { Twitter, Github, Linkedin, Youtube, Instagram } from "lucide-react";
             {/* Product */}
             <div>
                 <h3 class="text-white font-bold mb-4">Product</h3>
-                <ul class="space-y-3 text-sm">
+                <ul class="space-y-4 text-sm">
                     <li>
                         <a href="#" class="hover:text-white transition-colors"
                             >How it works</a
@@ -49,11 +53,6 @@ import { Twitter, Github, Linkedin, Youtube, Instagram } from "lucide-react";
                     <li>
                         <a href="#" class="hover:text-white transition-colors"
                             >Use Cases</a
-                        >
-                    </li>
-                    <li>
-                        <a href="#" class="hover:text-white transition-colors"
-                            >Pricing</a
                         >
                     </li>
                     <li>
@@ -113,30 +112,32 @@ import { Twitter, Github, Linkedin, Youtube, Instagram } from "lucide-react";
         </div>
 
         {/* Socials */}
-        <div class="pt-8 border-t border-slate-800 flex justify-end gap-6">
+        <div
+            class="pt-8 border-t border-neutral-800 flex justify-end gap-6 mt-12"
+        >
             <a
                 href="#"
-                class="text-slate-400 hover:text-white transition-colors"
+                class="text-neutral-500 hover:text-white transition-colors"
                 ><Twitter size={20} /></a
             >
             <a
                 href="#"
-                class="text-slate-400 hover:text-white transition-colors"
+                class="text-neutral-500 hover:text-white transition-colors"
                 ><Github size={20} /></a
             >
             <a
                 href="#"
-                class="text-slate-400 hover:text-white transition-colors"
+                class="text-neutral-500 hover:text-white transition-colors"
                 ><Linkedin size={20} /></a
             >
             <a
                 href="#"
-                class="text-slate-400 hover:text-white transition-colors"
+                class="text-neutral-500 hover:text-white transition-colors"
                 ><Youtube size={20} /></a
             >
             <a
                 href="#"
-                class="text-slate-400 hover:text-white transition-colors"
+                class="text-neutral-500 hover:text-white transition-colors"
                 ><Instagram size={20} /></a
             >
         </div>

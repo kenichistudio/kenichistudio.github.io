@@ -1,0 +1,346 @@
+<div class="betterup-container">
+    <div class="gauge-wrapper">
+        <svg viewBox="0 0 100 55" class="gauge">
+            <!-- Background Track -->
+            <path
+                d="M 10 50 A 40 40 0 0 1 90 50"
+                fill="none"
+                stroke="#2c2c2c"
+                stroke-width="8"
+                stroke-linecap="round"></path>
+            <!-- Animated Progress (Blue) -->
+            <path
+                id="progress"
+                d="M 10 50 A 40 40 0 0 1 90 50"
+                fill="none"
+                stroke="#33C2FF"
+                stroke-width="8"
+                stroke-linecap="round"
+                stroke-dasharray="125.6"
+                stroke-dashoffset="125.6"></path>
+        </svg>
+        <div class="percentage">2%</div>
+    </div>
+    <p class="caption">
+        Leaders committed to <span class="highlight">boosting diversity</span> efforts
+        and prioritizing company culture, but just 2% say their investments moved
+        the needle.
+    </p>
+</div>
+
+<style>
+    .betterup-container {
+        background-color: #1a1a1a;
+        color: white;
+        padding: 3rem;
+        border-radius: 12px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        font-family: "Georgia", serif; /* Matching BetterUp's serif style */
+    }
+
+    .gauge-wrapper {
+        position: relative;
+        width: 200px;
+        height: 110px; /* Half height approx */
+        margin-bottom: 2rem;
+    }
+
+    .gauge {
+        width: 100%;
+        height: auto;
+        overflow: visible;
+    }
+
+    .percentage {
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        font-size: 2.5rem;
+        font-weight: bold;
+        color: #33c2ff;
+        opacity: 0;
+        animation: fadeIn 1s ease-out 1s forwards;
+    }
+
+    /* 
+    Arc Length Calculation:
+    Radius = 40
+    Circumference = 2 * pi * 40 ≈ 251.32
+    Half Circle (180 deg) = 125.66
+    
+    We want to show only a tiny bit (2%). 
+    2% of full circle (360) is small.
+    But visual gauge is 0-100% of the "half circle".
+    Let's assume the visual 2% is actually just a small segment of the arc.
+    
+    Wait, the text says "just 2% say...". 
+    Visually in the screenshot, the blue part covers about 40-45% of the semi-circle (which looks like a "pie" slice but here we do a stroke). 
+    Actually, looking at the screenshot provided earlier, it's a solid pie slice (sector), not just a stroke.
+    Let's try to mimic that exact look better with a filled path or thick stroke.
+    
+    The screenshot shows a filled semi-circle sector.
+    Let's switch to using a filled path for a more accurate look.
+  */
+</style>
+
+<!-- Re-writing the SVG to be a filled sector for creating a "Pie" look -->
+<div class="betterup-pie-container">
+    <div class="pie-wrapper">
+        <!-- Masking Circle -->
+        <div class="pie-mask"></div>
+        <!-- Rotating Sector -->
+        <div class="pie-sector"></div>
+
+        <!-- Overlay for the "cutout" if it was a donut, but it looks like a full pie sector -->
+    </div>
+    <p class="caption">
+        Leaders committed to <span class="highlight">boosting diversity</span> efforts
+        and prioritizing company culture, but just <span class="percent-text"
+            >2%</span
+        > say their investments moved the needle.
+    </p>
+</div>
+
+<style>
+    /* Resetting for the Pie Sector approach */
+    .betterup-pie-container {
+        background-color: #111; /* Very dark background */
+        color: #fff;
+        padding: 4rem 2rem;
+        border-radius: 8px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        font-family: serif;
+    }
+
+    .pie-wrapper {
+        width: 300px; /* Diameter */
+        height: 150px; /* Radius (Half circle) */
+        position: relative;
+        overflow: hidden; /* Hide bottom half */
+        margin-bottom: 2rem;
+    }
+
+    /* Background Semi-Circle (Outline) */
+    .pie-wrapper::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 300px;
+        height: 300px;
+        border: 2px solid #33c2ff;
+        border-radius: 50%;
+        box-sizing: border-box;
+        clip-path: polygon(
+            0 0,
+            100% 0,
+            100% 50%,
+            0 50%
+        ); /* Start visible, but likely just outline */
+        opacity: 0.3;
+    }
+
+    /* 
+  Animated Filled Sector 
+  We simulate a "wipe" effect.
+  A common pure CSS way for a pie chart is using conic-gradient or clip-path.
+  Given we want it to animate from 0 to ~40% (visually), clip-path is great.
+*/
+
+    .pie-sector {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 300px;
+        height: 300px;
+        background: #33c2ff;
+        border-radius: 50%;
+        /* Start with clip-path hiding everything except vertical line? No.
+       Let's use conic-gradient mask or transform with overflow
+    */
+        clip-path: polygon(
+            50% 50%,
+            0 50%,
+            0 0,
+            50% 0
+        ); /* Top-Left quadrant (0-90deg) roughly... wait */
+        /* 
+       Let's use a simpler approach: 
+       A Conic Gradient that rotates?
+       Or a rotation of a hidden half-circle?
+    */
+
+        /* Using transform on a half-circle inside a clipped box */
+        background: conic-gradient(
+            from 270deg,
+            #33c2ff 0%,
+            #33c2ff 135deg,
+            transparent 135deg
+        );
+        /* 135deg is approx 37.5% of 360, which fills a big chunk of the top half */
+
+        border-radius: 50%;
+        transform: rotate(-135deg); /* Start rotated back so it looks empty? */
+        animation: fillChart 2s ease-out forwards;
+    }
+
+    /* 
+   Actually, easiest way for "filling semi-circle" from left to right:
+   Have a solid blue semi-circle.
+   Cover it with a rectangle that slides away (or rotates).
+*/
+
+    .pie-sector-v2 {
+        width: 100%;
+        height: 200%; /* Full Circle height relative to wrapper */
+        background: #33c2ff;
+        border-radius: 50%;
+        transform-origin: 50% 50%;
+        /* Start rotated out of view? */
+        /* Let's try Conic Gradient again, it's modern and easiest for "Pie" */
+        background: conic-gradient(
+            from 270deg,
+            #33c2ff 0%,
+            #33c2ff var(--percentage, 40%),
+            transparent var(--percentage, 40%)
+        );
+
+        /* We can animate custom property with @property (modern) or just generic rotation/mask */
+
+        mask-image: linear-gradient(to bottom, black 50%, transparent 50%);
+        -webkit-mask-image: linear-gradient(
+            to bottom,
+            black 50%,
+            transparent 50%
+        );
+    }
+
+    /* Let's go with the SVG stroke approach but make it THICK so it looks like a pie slice.
+   Radius = 75 (150 width/2), Stroke Width = 75 (fills the center).
+   This creates a filled sector effect perfectly.
+*/
+</style>
+
+<div class="betterup-final">
+    <div class="svg-container">
+        <svg viewBox="0 0 200 100" class="pie-svg">
+            <!-- Background Outline (Thin) -->
+            <path
+                d="M 5 100 A 95 95 0 0 1 195 100"
+                fill="none"
+                stroke="#666"
+                stroke-width="1"
+                vector-effect="non-scaling-stroke"
+                style="opacity: 0.3"></path>
+
+            <!-- Filled Sector (Thick Stroke) 
+                 Radius of path should be half of the visual radius (approx 50) if stroke is 100?
+                 No, if we want radius 100 filled:
+                 Path Radius = 50. Stroke Width = 100.
+                 Path goes from Left (0) to Right (200). Center at 100,100.
+                 M 50 100 A 50 50 0 0 1 150 100
+            -->
+            <!-- Path for the filler. Radius 50. Center (100, 100). 
+                 Stoke-width=100 will cover from r=0 to r=100.
+            -->
+            <path
+                class="animated-slice"
+                d="M 50 100 A 50 50 0 0 1 150 100"
+                fill="none"
+                stroke="#33C2FF"
+                stroke-width="100"
+                stroke-dasharray="157"
+                stroke-dashoffset="157"></path>
+            <!-- pi * r(50) = 157.08 -->
+        </svg>
+    </div>
+    <h2 class="caption">
+        Leaders committed to <span class="highlight">boosting diversity</span> efforts
+        and prioritizing company culture, but just <span class="percent-text"
+            >2%</span
+        > say their investments moved the needle.
+    </h2>
+</div>
+
+<style>
+    .betterup-final {
+        background-color: #151515;
+        color: white;
+        padding: 3rem 2rem;
+        border-radius: 12px;
+        text-align: center;
+        font-family: "Georgia", serif;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .svg-container {
+        width: 300px;
+        height: 150px;
+        overflow: hidden;
+        margin-bottom: 2rem;
+    }
+
+    .pie-svg {
+        width: 100%;
+        height: 100%;
+    }
+
+    .animated-slice {
+        animation: fillSlice 2.5s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+        /* Determine the final offset based on "percentage".
+       Visual percentage in screenshot is ~40% of the semi-circle (135deg visually).
+       Full semi-circle length = 157.
+       We want to show ~40% of standard area? 
+       Let's say we want to show angle 130deg out of 180deg? 
+       Wait, the blue part is the LEFT side. 
+       Dasharray draws from Left to Right.
+       So if we want to show the first 40%, we stroke-dashoffset = 157 - (0.4 * 157).
+    */
+        --target-offset: 80; /* 157 - 77(visible) */
+    }
+
+    @keyframes fillSlice {
+        from {
+            stroke-dashoffset: 157;
+        }
+        to {
+            stroke-dashoffset: var(--target-offset);
+        }
+    }
+
+    .caption {
+        font-size: 1.5rem;
+        line-height: 1.4;
+        max-width: 600px;
+        font-weight: normal;
+    }
+
+    .highlight {
+        color: #33c2ff;
+        font-style: italic;
+        font-weight: bold;
+    }
+    .percent-text {
+        font-weight: bold;
+    }
+
+    @media (max-width: 600px) {
+        .svg-container {
+            width: 200px;
+            height: 100px;
+        }
+        .caption {
+            font-size: 1.2rem;
+        }
+    }
+</style>

@@ -3,6 +3,9 @@ import { Engine } from "../../engine/Core";
 import { TextObject } from "../../engine/objects/TextObject";
 import { CodeBlockObject } from "../../engine/objects/CodeBlockObject";
 import { ChartObject } from "../../engine/objects/ChartObject";
+import { CharacterObject } from "../../engine/objects/CharacterObject";
+import { LogoCharacterObject } from "../../engine/objects/LogoCharacterObject";
+import { ParticleTextObject } from "../../engine/objects/ParticleTextObject";
 
 import {
     PropertySection,
@@ -41,7 +44,10 @@ import {
     Circle,
     Square,
     ChevronUp,
-    Minimize
+    Minimize,
+    User,
+    Sparkles,
+    Wand2
 } from "lucide-react";
 
 interface ExportConfig {
@@ -417,7 +423,8 @@ export const PropertiesPanel = ({ engine, selectedId, exportConfig, setExportCon
                                             {obj instanceof ChartObject ? <BarChart size={16} /> :
                                                 obj instanceof TextObject ? <Type size={16} /> :
                                                     obj instanceof CodeBlockObject ? <Box size={16} /> :
-                                                        <Square size={16} />}
+                                                        obj instanceof CharacterObject ? <User size={16} /> :
+                                                            <Square size={16} />}
                                         </div>
                                         <div className="inspector-object-info">
                                             <div className="inspector-object-name" title={obj.name}>
@@ -540,6 +547,198 @@ export const PropertiesPanel = ({ engine, selectedId, exportConfig, setExportCon
 
                                 {/* Type Specific */}
                                 {/* Type Specific Properties */}
+                                {(obj instanceof CharacterObject) && (
+                                    <PropertySection title="Character">
+                                        <ControlRow label="Animation">
+                                            <select
+                                                className="inspector-select"
+                                                value={obj.currentAnimation}
+                                                onChange={(e) => handleChange("currentAnimation", e.target.value)}
+                                            >
+                                                <option value="idle">Idle</option>
+                                                <option value="wave">Wave</option>
+                                                <option value="think">Thinking</option>
+                                                <option value="walk">Walking</option>
+                                                <option value="explain">Explain</option>
+                                            </select>
+                                        </ControlRow>
+                                        <ControlRow label="Costume">
+                                            <select
+                                                className="inspector-select"
+                                                value={obj.costume}
+                                                onChange={(e) => handleChange("costume", e.target.value)}
+                                            >
+                                                <option value="casual">Casual (T-Shirt)</option>
+                                                <option value="suit">Business Suit</option>
+                                                <option value="superhero">Superhero</option>
+                                                <option value="mechanic">Mechanic</option>
+                                            </select>
+                                        </ControlRow>
+                                        <ControlRow label="Hair Style">
+                                            <select
+                                                className="inspector-select"
+                                                value={obj.hairStyle}
+                                                onChange={(e) => handleChange("hairStyle", e.target.value)}
+                                            >
+                                                <option value="messy">Messy (Raghav)</option>
+                                                <option value="short">Short</option>
+                                                <option value="ponytail">Ponytail</option>
+                                                <option value="bald">Bald</option>
+                                            </select>
+                                        </ControlRow>
+                                        <ControlRow label="Accessory">
+                                            <select
+                                                className="inspector-select"
+                                                value={obj.accessory}
+                                                onChange={(e) => handleChange("accessory", e.target.value)}
+                                            >
+                                                <option value="none">None</option>
+                                                <option value="glasses">Glasses</option>
+                                                <option value="cap">Red Cap</option>
+                                            </select>
+                                        </ControlRow>
+
+                                        <div className="h-px bg-slate-200 dark:bg-slate-800 my-2" />
+
+                                        <ControlRow label="Skin & Hair" layout="horizontal">
+                                            <div className="flex justify-end gap-2 items-center">
+                                                <div className="w-4 h-4 rounded-full bg-slate-200" title="Skin" />
+                                                <input
+                                                    type="color"
+                                                    className="inspector-input-color"
+                                                    value={obj.skinColor}
+                                                    onChange={(e) => handleChange("skinColor", e.target.value)}
+                                                />
+                                                <div className="w-4 h-4 rounded-full bg-slate-800 ml-2" title="Hair" />
+                                                <input
+                                                    type="color"
+                                                    className="inspector-input-color"
+                                                    value={obj.hairColor}
+                                                    onChange={(e) => handleChange("hairColor", e.target.value)}
+                                                />
+                                            </div>
+                                        </ControlRow>
+                                        <ControlRow label="Costume Color" layout="horizontal">
+                                            <div className="flex justify-end gap-2 items-center">
+                                                <input
+                                                    type="color"
+                                                    className="inspector-input-color"
+                                                    value={obj.costumeColor}
+                                                    onChange={(e) => handleChange("costumeColor", e.target.value)}
+                                                />
+                                            </div>
+                                        </ControlRow>
+                                    </PropertySection>
+                                )}
+
+                                {(obj instanceof LogoCharacterObject) && (
+                                    <PropertySection title="Logo Settings">
+                                        <ControlRow label="Name / Text">
+                                            <input
+                                                type="text"
+                                                className="inspector-input-text"
+                                                value={obj.text}
+                                                onChange={(e) => handleChange("text", e.target.value)}
+                                            />
+                                        </ControlRow>
+                                        <ControlRow label="Circle Color" layout="horizontal">
+                                            <input
+                                                type="color"
+                                                className="inspector-input-color"
+                                                value={obj.circleColor}
+                                                onChange={(e) => handleChange("circleColor", e.target.value)}
+                                            />
+                                        </ControlRow>
+                                        <ControlRow label="Text Color" layout="horizontal">
+                                            <input
+                                                type="color"
+                                                className="inspector-input-color"
+                                                value={obj.textColor}
+                                                onChange={(e) => handleChange("textColor", e.target.value)}
+                                            />
+                                        </ControlRow>
+                                    </PropertySection>
+                                )}
+
+                                {(obj instanceof ParticleTextObject) && (
+                                    <>
+                                        <PropertySection title="Text Content">
+                                            <textarea
+                                                className="inspector-textarea"
+                                                value={obj.text}
+                                                onChange={(e) => handleChange("text", e.target.value)}
+                                                placeholder="Type your text here..."
+                                            />
+                                        </PropertySection>
+                                        <PropertySection title="Particle Effects">
+                                            <ControlRow label="Animation Mode">
+                                                <select
+                                                    className="inspector-select"
+                                                    value={obj.animType}
+                                                    onChange={(e) => handleChange("animType", e.target.value)}
+                                                >
+                                                    <option value="none">Static</option>
+                                                    <option value="explode">Interactive Explode</option>
+                                                    <option value="assemble">Assemble (Intro)</option>
+                                                    <option value="float">Floating</option>
+                                                    <option value="vortex">Vortex</option>
+                                                </select>
+                                            </ControlRow>
+                                            <ControlRow label="Particle Size">
+                                                <SliderInput
+                                                    value={obj.particleSize}
+                                                    min={1}
+                                                    max={10}
+                                                    onChange={(v) => handleChange("particleSize", v)}
+                                                    formatValue={(v) => `${v}px`}
+                                                />
+                                            </ControlRow>
+                                            <ControlRow label="Density (Gap)">
+                                                <SliderInput
+                                                    value={obj.gap}
+                                                    min={1}
+                                                    max={10}
+                                                    onChange={(v) => handleChange("gap", v)}
+                                                    formatValue={(v) => `1/${v}`}
+                                                />
+                                                <div className="text-[10px] text-orange-500 mt-1">Lower gap = more CPU</div>
+                                            </ControlRow>
+                                            <ControlRow label="Color" layout="horizontal">
+                                                <input
+                                                    type="color"
+                                                    className="inspector-input-color"
+                                                    value={obj.color}
+                                                    onChange={(e) => handleChange("color", e.target.value)}
+                                                />
+                                            </ControlRow>
+                                        </PropertySection>
+
+                                        <PropertySection title="Typography">
+                                            <ControlRow label="Font Size">
+                                                <SliderInput
+                                                    value={obj.fontSize}
+                                                    min={20}
+                                                    max={300}
+                                                    onChange={(v) => handleChange("fontSize", v)}
+                                                    formatValue={(v) => `${v}px`}
+                                                />
+                                            </ControlRow>
+                                            <ControlRow label="Font Family">
+                                                <select
+                                                    className="inspector-select"
+                                                    value={obj.fontFamily}
+                                                    onChange={(e) => handleChange("fontFamily", e.target.value)}
+                                                >
+                                                    <option value="Inter">Inter</option>
+                                                    <option value="Arial">Arial</option>
+                                                    <option value="Impact">Impact</option>
+                                                    <option value="Times New Roman">Times New Roman</option>
+                                                </select>
+                                            </ControlRow>
+                                        </PropertySection>
+                                    </>
+                                )}
+
                                 {(obj instanceof TextObject || obj instanceof ChartObject) && (
                                     <>
                                         {obj instanceof TextObject && (

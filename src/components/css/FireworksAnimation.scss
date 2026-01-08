@@ -1,0 +1,241 @@
+/* @import "open-props/easings"; removed as package is missing. Fallbacks are defined below. */
+
+/* We need to use CSS modules or scoped styles. 
+   React CSS modules in Astro usually use .module.scss
+   However, since I don't see open-props installed in package.json, 
+   I should probably stick to standard CSS variables or check unrelated file. 
+   The user's code imported `https://unpkg.com/open-props...`. 
+   I should mimic the variables locally if open-props isn't available.
+*/
+
+:root {
+  /* Fallback vars if not available */
+  --ease-out-cubic: cubic-bezier(0.33, 1, 0.68, 1);
+  --ease-out-sine: cubic-bezier(0.61, 1, 0.88, 1);
+}
+
+.fireworks-root {
+  /* Container styles */
+  background-color: hsl(223, 90%, 10%);
+  color: hsl(223, 90%, 90%);
+  display: grid;
+  font: 1em / 1.5 sans-serif;
+  place-items: center;
+  /* Use explicit height/min-height */
+  min-height: 500px;
+  width: 100%;
+  border-radius: 12px;
+  overflow: hidden;
+  position: relative;
+}
+
+.fireworks {
+  --anim-dur: 0ms;
+  display: block;
+  width: 100%;
+  height: auto;
+  max-width: 800px; /* SVG constraints */
+}
+
+/* 
+  Nested CSS converted to standard CSS or kept as SCSS. 
+  Since the file extension will be .scss, nesting is fine.
+*/
+
+.fireworks__particle,
+.fireworks__ring,
+.fireworks__rocket {
+  animation-duration: var(--anim-dur);
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}
+
+.fireworks__particle--dashed {
+  animation-name: dashed-rotate-ccw, dashed-explode;
+  animation-timing-function: linear, var(--ease-out-cubic);
+}
+
+.fireworks__particle--dot {
+  animation-name: dot-scale;
+  animation-timing-function: var(--ease-out-cubic);
+}
+
+.fireworks__particle--ray {
+  animation-name: ray;
+}
+
+.fireworks__particle--ray-flip {
+  animation-name: ray-fade, ray-flip;
+}
+
+.fireworks__particle--quick-ray {
+  animation-name: quick-ray;
+}
+
+.fireworks__particle--quick-ray-flip {
+  animation-name: quick-ray-fade, quick-ray-flip;
+}
+
+.fireworks__ring--cw,
+.fireworks__ring--ccw {
+  animation-timing-function: var(--ease-out-cubic);
+}
+
+.fireworks__ring--cw {
+  animation-name: ring-rotate-cw;
+}
+
+.fireworks__ring--ccw {
+  animation-name: ring-rotate-ccw;
+}
+
+.fireworks__rocket {
+  animation-name: rocket-fade, rocket-fire;
+  animation-timing-function: linear, var(--ease-out-sine);
+}
+
+// Animations
+@keyframes dashed-explode {
+  from,
+  25% {
+    transform: scale(0);
+  }
+  to {
+    stroke-width: 0;
+    transform: scale(2);
+  }
+}
+
+@keyframes dashed-rotate-ccw {
+  from,
+  25% {
+    transform: rotate(0);
+    visibility: visible;
+  }
+  to {
+    transform: rotate(-22.5deg);
+    visibility: hidden;
+  }
+}
+
+@keyframes dot-scale {
+  from,
+  25% {
+    transform: scale(1);
+  }
+  to {
+    transform: scale(0);
+  }
+}
+
+@keyframes ring-rotate-cw {
+  from,
+  25% {
+    transform: scale(0) rotate(0);
+  }
+  to {
+    transform: scale(1) rotate(22.5deg);
+  }
+}
+
+@keyframes ring-rotate-ccw {
+  from,
+  25% {
+    transform: scale(0) rotate(0);
+  }
+  to {
+    transform: scale(1) rotate(-22.5deg);
+  }
+}
+
+@keyframes ray {
+  from,
+  25% {
+    transform: scale(1, 0);
+    visibility: visible;
+  }
+  40%,
+  to {
+    transform: scale(1, 1);
+    visibility: hidden;
+  }
+}
+
+@keyframes ray-fade {
+  from,
+  50% {
+    opacity: 1;
+  }
+  55%,
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes ray-flip {
+  from,
+  40% {
+    transform: scale(1, 1);
+    visibility: hidden;
+  }
+  55%,
+  to {
+    transform: scale(1, 0);
+    visibility: visible;
+  }
+}
+
+@keyframes quick-ray {
+  from,
+  32.5% {
+    transform: scale(1, 0);
+    visibility: visible;
+  }
+  42.5%,
+  to {
+    transform: scale(1, 1);
+    visibility: hidden;
+  }
+}
+
+@keyframes quick-ray-fade {
+  from,
+  50% {
+    opacity: 1;
+  }
+  52.5%,
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes quick-ray-flip {
+  from,
+  42.5% {
+    transform: scale(1, 1);
+    visibility: hidden;
+  }
+  52.5%,
+  to {
+    transform: scale(1, 0);
+    visibility: visible;
+  }
+}
+
+@keyframes rocket-fade {
+  from,
+  25% {
+    opacity: 1;
+  }
+  35%,
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes rocket-fire {
+  25%,
+  to {
+    stroke-dashoffset: 0;
+  }
+}

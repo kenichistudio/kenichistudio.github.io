@@ -1,0 +1,71 @@
+---
+title: "A Friendly Introduction to SVG"
+pubDate: 2026-01-06
+description: "Understanding the magic of Scalable Vector Graphics: from coordinate systems to CSS animation."
+tags: ["Design", "Web Development", "SVG", "Animation"]
+---
+
+Vectors are the unsung heroes of the modern web. In his article, *A Friendly Introduction to SVG*, Josh W. Comeau breaks down why SVGs are more than just "sharp images"—they are a powerful, code-accessible format that bridges the gap between design and development.
+
+## What is SVG?
+
+Unlike JPGs or PNGs, which are grids of colored pixels, **SVG (Scalable Vector Graphics)** is a document format. It's built with XML, just like HTML.
+
+Instead of saying "Pixel (0,0) is red," an SVG says "Draw a circle at (50, 50) with a radius of 20."
+
+## 1. The Power of Code
+
+Because SVGs are technically documents, they can be embedded directly into HTML. This makes them a "First-Class Citizen" of the DOM. 
+
+**Standard Image (.png)**
+Reviewing a `.png` is like looking at a photograph of a building. You can see it, but you can't open a window or repaint a specific wall.
+
+**Inline SVG**
+Reviewing an `.svg` is like having the blueprints. You can use CSS to change the color of the roof on hover, or JavaScript to make the windows slide open.
+
+## 2. Basic Shapes
+
+SVG comes with its own set of drawing primitives. If HTML has `<div>` and `<p>`, SVG has:
+
+*   **`<rect>`**: Rectangles defined by `x`, `y`, `width`, and `height`.
+*   **`<circle>`**: Defined by a center point (`cx`, `cy`) and radius (`r`).
+*   **`<line>`**: A straight path from `(x1, y1)` to `(x2, y2)`.
+*   **`<path>`**: The ultimate building block, capable of drawing complex curves and shapes using a sequence of commands.
+
+## 3. The ViewBox: An Infinite Canvas
+
+One of the most confusing parts of SVG is the `viewBox`. Josh explains it as a "camera" looking at an infinite coordinate plane.
+
+> **The ViewBox Analogy**
+>
+> Imagine an infinite piece of paper. You can draw a shape 1,000 miles to the right. The **ViewBox** determines where your camera is pointing and how much of that paper it can see.
+>
+> `viewBox="min-x min-y width height"`
+>
+> It decouples the *drawing coordinates* from the *screen size*. This is what makes SVGs "Scalable"—the internal math remains valid regardless of how big the image appears on screen.
+
+## 4. Presentational Attributes
+
+Styling in SVG feels distinct from standard CSS, though many concepts map over:
+*   **`fill`**: The background color of a shape.
+*   **`stroke`**: The border color.
+*   **`stroke-width`**: The thickness of the border.
+
+Because these are attributes, they can be controlled via CSS!
+
+```css
+circle {
+  fill: blue;
+  transition: fill 0.3s ease;
+}
+
+circle:hover {
+  fill: red;
+}
+```
+
+This interaction—hovering over a specific part of an illustration to trigger a change—is impossible with standard image formats.
+
+## Summary
+
+SVG is not just a file format; it's a language for describing graphics. By understanding its primitives and coordinate system, developers can create responsive, accessible, and highly interactive illustrations that go far beyond what is possible with raster images.

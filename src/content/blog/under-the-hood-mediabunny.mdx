@@ -1,64 +1,74 @@
 ---
-title: "Under the Hood: Implementing Multi-Format Video Export with MediaBunny"
-description: "How we re-engineered our export pipeline to support MP4, MOV, and WebM using a dual-engine architecture."
-pubDate: 2026-01-06
-tags: ["Engineering", "MediaBunny", "MP4", "Dev Log"]
+title: "Building a Better Export: Why We Chose MediaBunny"
+description: "How we achieved native-speed MP4 and MOV export in the browser using the open-source MediaBunny library."
+pubDate: 2026-01-08
+tags: ["Engineering", "MediaBunny", "WebCodecs", "Open Source"]
 ---
 
-# Under the Hood: Implementing Multi-Format Video Export with MediaBunny
+# Building a Better Export: Why We Chose MediaBunny
 
-Users have been asking for **MP4 export** since day one. While our original [WebM-based system](/blog/engineering-kinetix-export) was fast and efficient, limiting users to a single format was a major bottleneck for professional workflows.
+When building Kinetix, our "dream feature" was always **client-side MP4 export**. Users expect to download a video file that works everywhere—on their phone, in Premiere Pro, and on social media.
 
-Today, we are unveiling our new **Dual-Engine Export System**, integrated seamlessly into Kinetix.
+For years, the web has struggled with this. We were stuck with:
+1.  **WebM**: Great for the web, supported by browsers natively, but unsupported by iPhone and some editors.
+2.  **Server-Side Rendering**: Slow, expensive, and requires uploading private data.
+3.  **FFmpeg.wasm**: Powerful but heavy (20MB+), slow to load, and often slower to encode.
 
-## Why MediaBunny?
+Enter **[MediaBunny](https://mediabunny.dev/)**.
 
-We evaluated several options for bringing MP4 support to the browser:
+## What is MediaBunny?
 
-1.  **FFmpeg.wasm**: The standard choice, but it requires downloading ~25MB of code. Too slow for a nimble web editor.
-2.  **Server-Side Rendering**: Send the project data to a cloud server. Too expensive and breaks our "privacy-first, offline-capable" promise.
-3.  **MediaBunny**: A lightweight, pure-TypeScript library that utilizes the browser's built-in `WebCodecs` to write MP4 and MOV files natively.
+[MediaBunny](https://mediabunny.dev/) is a modern JavaScript library for reading, writing, and converting audio and video files directly in the browser.
 
-MediaBunny was the clear winner. It allows us to keep the app lightweight while unlocking professional container formats.
+Unlike other solutions, it's:
+*   **Blazing Fast**: It uses the browser's native `WebCodecs` API, which gives us near-native encoding speeds (often hardware accelerated).
+*   **Lightweight**: It has **zero dependencies** and is built from scratch for the web.
+*   **Format Rich**: It supports writing **MP4**, **MOV**, **WebM**, and even **MKV**.
 
-## The "Dual-Engine" Architecture
+![Mediabunny Homepage](/kinetix/mediabunny-hero.png)
 
-Instead of replacing our existing WebM engine (which is incredibly fast for quick previews), we decided to run both systems side-by-side.
+## How We Use It in Kinetix
 
-### 1. The Efficient Engine (WebM)
-*   **Library**: `webm-muxer`
-*   **Use Case**: Quick previews, Discord sharing, transparent videos.
-*   **Pros**: Ultra-fast, very low memory usage.
+We built a **Dual-Engine Export System** to give users the best of both worlds.
 
-### 2. The Universal Engine (MediaBunny)
-*   **Library**: `mediabunny`
-*   **Use Case**: Final production, YouTube, Client delivery.
-*   **Pros**: Supports **MP4**, **MOV**, and **MKV**. Fixes metadata issues like "missing duration" in some players.
+### 1. The "Efficient" Engine (WebM)
+For quick previews and Discord sharing, we use `webm-muxer`. It's lightweight and instant, perfect for checking your animation loop.
 
-## Designing the UI
+### 2. The "Universal" Engine (MediaBunny)
+When you're ready to publish, we switch to MediaBunny. This unlocks:
+*   **H.264 (MP4)**: Compatible with everything.
+*   **ProRes / MOV**: High-quality export for professional editors.
 
-We didn't want to overwhelm users with technical jargon. The new **Export Dialog** splits these engines into two simple Tabs:
+### Implementing it with Workers
+To ensure the UI never freezes while encoding 4K video, we run MediaBunny inside a dedicated [Web Worker](https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API).
 
-*   **Efficient**: Defaults to WebM. Simple controls.
-*   **Universal**: Defaults to MP4. Unlocks advanced codec options (H.264 vs H.265).
-
-## Non-Blocking Performance
-
-One critical requirement was **performance**. Encoding video is heavy work. If we ran MediaBunny on the main thread, the entire UI would freeze for seconds at a time.
-
-To solve this, we spawn a dedicated **Export Worker**.
+Here's a snippet of how simple it is to set up an encoder with MediaBunny:
 
 ```typescript
-// Core.ts
-if (engine === 'mediabunny') {
-  this.worker = new Worker(new URL('./workers/mediabunny.worker.ts', import.meta.url));
-} else {
-  this.worker = new Worker(new URL('./workers/export.worker.ts', import.meta.url));
-}
+import { Output, Mp4OutputFormat, VideoSampleSource } from 'mediabunny';
+
+// 1. Create an Output (the file container)
+const output = new Output({
+    target: new BufferTarget(), // Write to memory
+    format: new Mp4OutputFormat()
+});
+
+// 2. Create a Source (the video track)
+const source = new VideoSampleSource({
+    width: 1920,
+    height: 1080,
+    frameRate: 60,
+    codec: 'avc' // H.264
+});
+
+// 3. Add frames!
+await output.addVideoTrack(source);
+await output.start();
+// ... add samples ...
+await output.finalize();
 ```
 
-This ensures that even while your 4K MP4 is rendering, the Kinetix interface remains responsive.
+## Why Open Source Matters
+MediaBunny is open source, which means we can inspect the code, understand exactly how our bits are being written, and even contribute back. It's built by developers who care about the "Web Creative" ecosystem.
 
-## Conclusion
-
-With this update, Kinetix bridges the gap between web tools and desktop editors. You get the convenience of the cloud with the file compatibility of a native app.
+If you're building a video app on the web, stop fighting with FFmpeg builds and give [MediaBunny](https://mediabunny.dev/) a try. It's the missing piece of the modern web media stack.

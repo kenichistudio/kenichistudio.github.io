@@ -1,0 +1,187 @@
+---
+title: "Pure CSS Animations Collection"
+description: "A showcase of stunning pure CSS and SVG animations."
+pubDate: 2026-01-07
+heroImage: "/placeholders/cycling-animation.png"
+tags: ["css", "svg", "animation", "codepen", "betterup"]
+subject: "web-development"
+---
+
+import CyclingAnimation from "../../../components/css/CyclingAnimation.astro";
+import BetterUpAnimation from "../../../components/css/BetterUpAnimation.astro";
+import FlipTextAnimation from "../../../components/css/FlipTextAnimation.astro";
+import SparkleTextAnimation from "../../../components/css/SparkleTextAnimation.astro";
+import SecretCodeAnimation from "../../../components/css/SecretCodeAnimation.astro";
+import SingleKeyframeAnimations from "../../../components/css/SingleKeyframeAnimations.astro";
+import KeyboardAnimation from "../../../components/css/KeyboardAnimation.astro";
+import WormRadioAnimation from "../../../components/css/WormRadioAnimation.astro";
+import FireworksAnimation from "../../../components/css/FireworksAnimation";
+import FeedbackAnimation from "../../../components/css/FeedbackAnimation";
+import NotFoundAnimation from "../../../components/css/NotFoundAnimation";
+import ChineseCheckersAnimation from "../../../components/css/ChineseCheckersAnimation.astro";
+import DrawersAnimation from "../../../components/css/DrawersAnimation.astro";
+import DiceAnimation from "../../../components/css/DiceAnimation.astro";
+import NewtonsCradleAnimation from "../../../components/css/NewtonsCradleAnimation.astro";
+import LegoBricksAnimation from "../../../components/css/LegoBricksAnimation.astro";
+import CardStackAnimation from "../../../components/css/CardStackAnimation.astro";
+import TwinBruHeroAnimation from "../../../components/css/TwinBruHeroAnimation.astro";
+
+# Pure CSS & SVG Animations
+
+This post showcases powerful animations that don't rely on complex JavaScript libraries, using only CSS and SVG techniques.
+
+## 1. Cycling Animation
+
+Originally created by [Maria Duong](https://codepen.io/dmaristem) on CodePen, this animation uses SCSS to manage keyframes and complex element positioning.
+
+<div style="width: 100%; height: 600px; position: relative; overflow: hidden; border-radius: 8px; background-color: #ffd41c; margin-bottom: 2rem;">
+  <CyclingAnimation />
+</div>
+
+## 2. BetterUp "Insights" Gauge
+
+Inspired by the [BetterUp Insights Report](https://grow.betterup.com/resources/insights-report-inclusive-leadership), this animation demonstrates how to create a filling "pie chart" or gauge effect using a single SVG `<path>`.
+
+### The Technique
+Instead of using complex charting libraries, we use the `stroke-dasharray` and `stroke-dashoffset` properties on a thick SVG stroke.
+1.  **Path**: We draw an arc (semi-circle).
+2.  **Stroke Width**: We set the stroke width equal to the radius, effectively creating a filled sector.
+3.  **Animation**: We animate the `stroke-dashoffset` from the full length of the arc (invisible) to a partial length (visible slice).
+
+<div style="margin-bottom: 2rem;">
+  <BetterUpAnimation />
+</div>
+
+## 3. Simple Text Flip
+
+A clever text replacement animation using pure CSS `margin-top` transitions to cycle through words. Simple, effective, and lightweight.
+
+<div style="margin-bottom: 2rem;">
+  <FlipTextAnimation />
+</div>
+
+## 4. Sparkly Shiny Text
+
+A delightful hover effect that combines text shadows, glare gradients, and SVG sparkles for a premium feel.
+
+<div style="margin-bottom: 2rem;">
+  <SparkleTextAnimation />
+</div>
+
+## 5. Secret Code Reveal
+
+A sophisticated interaction using CSS `:has()`, trigonometric functions (`sin()`), and calc to create a "magnifying glass" blurring effect on hover.
+
+> [!NOTE]
+> This animation requires a modern browser that supports specific CSS math functions and the `:has()` selector.
+
+<div style="margin-bottom: 2rem;">
+  <SecretCodeAnimation />
+</div>
+
+## 6. Single Keyframe Tricks
+
+A comprehensive collection of single-keyframe animation tricks using modern CSS properties and easings. Click the buttons to toggle the animations!
+
+> [!TIP]
+> This example uses open-props easings for that snappy elastic feel.
+
+<div style="margin-bottom: 2rem;">
+  <SingleKeyframeAnimations />
+</div>
+
+## 7. Realistic CSS Keyboard
+
+A highly detailed Apple Magic Keyboard replica created entirely with CSS. It uses intricate box-shadows and borders to create depth and texture. Try tapping the Caps Lock key!
+
+<div style="margin-bottom: 2rem;">
+  <KeyboardAnimation />
+</div>
+
+## 8. Worm Hopping Radio
+
+A playful radio button selection animation where a little "worm" hops between your choices. This uses SCSS loops to generate the delays for each segment of the worm.
+
+<div style="margin-bottom: 2rem;">
+  <WormRadioAnimation />
+</div>
+
+## 9. SVG Fireworks
+
+A mesmerizing fireworks display using pure CSS animations on SVG elements. This example uses React to generate the complex SVG structure, demonstrating how to combine modern frameworks with advanced CSS animations.
+
+<div style="margin-bottom: 2rem;">
+  <FireworksAnimation client:visible />
+</div>
+
+## 10. Interactive Feedback UI
+
+A deeply interactive feedback component with state transitions, particle effects, and a polished dark/light mode adaptable design. It guides the user through rating, commenting, and submission with smooth animations for every step.
+
+<div style="margin-bottom: 2rem;">
+  <FeedbackAnimation client:visible />
+</div>
+
+## 11. Slot Machine 404
+
+A creative 404 page concept featuring a slot machine animation that eventually settles on "404". It uses the Web Animations API for the complex rolling sequences and logic.
+
+<div style="margin-bottom: 2rem;">
+  <NotFoundAnimation client:visible />
+</div>
+
+## 12. Chinese Checkers 3D
+
+A complex 3D-effect board animation created using pure CSS and SVG clip-paths. SCSS math is used to calculate the positions of holes and balls in a circle, and clip-paths handle the z-indexing illusion of balls going into holes.
+
+<div style="margin-bottom: 2rem;">
+  <ChineseCheckersAnimation />
+</div>
+
+## 13. CSS 3D Interactive Chest
+
+An incredible purely CSS 3D chest of drawers using `transform-style: preserve-3d`. It cleverly uses the HTML `details` and `summary` elements to handle the "click to open" interaction without any JavaScript state management.
+
+<div style="margin-bottom: 2rem;">
+  <DrawersAnimation />
+</div>
+
+## 14. 3D Spinning Dice
+
+A continuous 3D dice rotation animation. It uses `transform-style: preserve-3d` to create the cube, and complex keyframes to handle lighting changes, shadow flipping, and the rotation itself to ensure a realistic 3D effect.
+
+<div style="margin-bottom: 2rem;">
+  <DiceAnimation />
+</div>
+
+## 15. Newton's Cradle
+
+A classic physics demonstration recreated with CSS animations. It uses `transform-origin` to set the pivot point for the swinging balls and `ease-in`/`ease-out` timing functions to simulate the momentum transfer.
+
+<div style="margin-bottom: 2rem;">
+  <NewtonsCradleAnimation />
+</div>
+
+## 16. Jumping Lego Bricks
+
+A playful animation of a stack of Lego bricks jumping and rearranging themselves. It heavily utilizes SVG `symbol` for reusability and complex SCSS loops to generate color variations and staggered animations.
+
+<div style="margin-bottom: 2rem;">
+  <LegoBricksAnimation />
+</div>
+
+## 17. Infinite Card Stack
+
+A mesmerizing infinite loop of cards being stacked. It uses `transform-style: preserve-3d` and precise `translateZ` animations to creating the illusion of depth and continuous movement.
+
+<div style="margin-bottom: 2rem;">
+  <CardStackAnimation />
+</div>
+
+## 18. Abstract 3D Fabric Hero
+
+An artistic interpretation of the [Twinbru](https://twinbru.com/) hero section. It features a central sun-burst "fan" constructed from 90 individual rotated blades, paired with floating spheres that simulate fabric textures using SVG noise filters and radial gradients.
+
+<div style="margin-bottom: 2rem;">
+  <TwinBruHeroAnimation />
+</div>

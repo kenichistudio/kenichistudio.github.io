@@ -50,5 +50,8 @@
     "webm-muxer": "^5.1.4",
     "zod": "^4.3.5",
     "zustand": "^5.0.9"
+  },
+  "devDependencies": {
+    "sass": "^1.97.2"
   }
 }

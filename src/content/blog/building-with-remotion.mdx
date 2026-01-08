@@ -1,0 +1,56 @@
+---
+title: "Building the Next Generation of Video Tools with Remotion"
+description: "Why we chose Remotion as our rendering engine and how Kinetix improves upon the standard Editor Starter."
+pubDate: 2026-01-08
+tags: ["Engineering", "Remotion", "React Video", "Open Source"]
+---
+
+# Building the Next Generation of Video Tools with Remotion
+
+If you're a React developer looking to build video apps, there's only one serious contender in 2026: **[Remotion](https://www.remotion.dev/)**.
+
+At Kinetix, we use Remotion to power our entire rendering engine. But we didn't just use it out of the box—we built a custom architecture around it.
+
+Here is how Kinetix compares to the standard [Remotion Editor Starter](https://editor-starter.remotion.dev/).
+
+![Remotion Landing Page](/kinetix/remotion-landing.png)
+
+## The Foundation: Remotion Editor Starter
+
+The [Editor Starter](https://editor-starter.remotion.dev/) is an incredible boilerplate provided by the Remotion team. It gives you:
+*   **React-based Timeline**: A simple track-based editor.
+*   **Preview Player**: Using `@remotion/player`.
+*   **Basic Compisitions**: A "Hello World" example.
+
+It's using modern tech like **React 19**, **Tailwind CSS v4**, and **Vite**.
+
+![Remotion Editor Starter](/kinetix/remotion-editor.png)
+
+While powerful, it's designed as a starting point. It requires you to build your own rendering backend (usually via AWS Lambda) and doesn't handle complex non-linear editing out of the box.
+
+## How Kinetix Goes Further
+
+We took the core of Remotion (programmatic video rendering) and wrapped it in a full-featured creative suite.
+
+### 1. Two Specialized Editors
+Instead of a generic timeline, we split our tool into two:
+*   **[Kinetix Create](/kinetix/create)**: A generative diagramming tool. You type text, and we generate the Remotion composition for you using **Mermaid.js** and **Markmap**.
+*   **[Kinetix Animator](/kinetix/animator)**: A professional keyframe timeline. We built a custom state engine on top of `@remotion/player` to handle complex easings and nested sequences.
+
+### 2. Client-Side Rendering (No Servers!)
+The standard Remotion workflow relies on **Server-Side Rendering**. You send your props to a server, it launches a headless browser, records the screen, and sends back an MP4.
+
+This is robust but expensive and slow.
+
+**Kinetix does it differently.** We use **MediaBunny** (see our [previous post](/kinetix/blog/under-the-hood-mediabunny)) to capture the Remotion `<Player />` directly in your browser and encode it to MP4 using WebCodecs.
+
+This means:
+*   **Zero Cost**: Free high-res exports.
+*   **Privacy**: Your data never leaves your device.
+*   **Offline Support**: Export while on a plane.
+
+## Conclusion
+
+Remotion provides the primitives—the `<Sequence>`, the `useCurrentFrame`, the synchronization. Kinetix builds the house.
+
+If you're building a video app today, start with Remotion. It's the "React for Video" we've always dreamed of.

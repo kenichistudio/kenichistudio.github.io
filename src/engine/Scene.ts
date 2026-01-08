@@ -9,6 +9,10 @@ export class Scene {
     height: number = 1080;
     guideType: GuideType = 'none';
 
+    // Interaction State
+    mouseX: number = 0;
+    mouseY: number = 0;
+
     onUpdate?: () => void;
 
     add(obj: KinetixObject) {
