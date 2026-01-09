@@ -1,7 +1,7 @@
 import React from "react";
-import { Plus, SlidersHorizontal, Layers, Download, Check } from "lucide-react";
+import { Plus, SlidersHorizontal, Layers, Download, Type, Square, BarChart3, Terminal } from "lucide-react";
 
-export type BottomDockTab = "assets" | "edit" | "layers" | "export" | null;
+export type BottomDockTab = "assets" | "text" | "shapes" | "code" | "charts" | "edit" | "layers" | "export" | null;
 
 interface BottomDockProps {
     activeTab: BottomDockTab;
@@ -10,52 +10,60 @@ interface BottomDockProps {
 }
 
 export const BottomDock: React.FC<BottomDockProps> = ({ activeTab, onTabChange, hasSelection }) => {
+
+    const Button = ({ id, icon: Icon, label, disabled = false }: { id: BottomDockTab, icon: any, label: string, disabled?: boolean }) => (
+        <button
+            onClick={() => !disabled && onTabChange(activeTab === id ? null : id)}
+            disabled={disabled}
+            className={`flex flex-col items-center justify-center min-w-[3.5rem] h-full gap-1 transition-all
+                ${disabled ? "opacity-30 grayscale" : ""} 
+                ${activeTab === id ? "text-indigo-600 dark:text-indigo-400" : "text-slate-500 dark:text-slate-400"}`}
+        >
+            <div className={`p-2 rounded-full ${activeTab === id ? "bg-indigo-100 dark:bg-indigo-900/50" : ""}`}>
+                <Icon size={20} />
+            </div>
+            <span className="text-[9px] font-bold whitespace-nowrap">{label}</span>
+        </button>
+    );
+
     return (
-        <div className="lg:hidden fixed bottom-6 left-4 right-4 h-16 bg-white/90 dark:bg-slate-900/90 backdrop-blur-xl rounded-2xl shadow-2xl border border-white/20 ring-1 ring-black/5 flex items-center justify-between px-2 z-40 transition-transform duration-300">
-            {/* Assets */}
-            <button
-                onClick={() => onTabChange(activeTab === "assets" ? null : "assets")}
-                className={`flex flex-col items-center justify-center w-14 h-full gap-1 transition-colors ${activeTab === "assets" ? "text-indigo-600 dark:text-indigo-400" : "text-slate-500 dark:text-slate-400"}`}
-            >
-                <div className={`p-2 rounded-full ${activeTab === "assets" ? "bg-indigo-100 dark:bg-indigo-900/50" : ""}`}>
-                    <Plus size={20} />
-                </div>
-                <span className="text-[9px] font-bold">Add</span>
-            </button>
+        <>
+            <style>
+                {`
+                .no-scrollbar::-webkit-scrollbar {
+                    display: none;
+                }
+                .no-scrollbar {
+                    -ms-overflow-style: none;
+                    scrollbar-width: none;
+                }
+                `}
+            </style>
+            <div className="lg:hidden fixed bottom-0 left-0 right-0 h-16 bg-white/95 dark:bg-slate-900/95 border-t border-slate-200 dark:border-slate-800 flex items-center px-4 z-40 overflow-x-auto no-scrollbar gap-2 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)] dark:shadow-none">
 
-            {/* Edit (Contextual) */}
-            <button
-                onClick={() => hasSelection && onTabChange(activeTab === "edit" ? null : "edit")}
-                disabled={!hasSelection}
-                className={`flex flex-col items-center justify-center w-14 h-full gap-1 transition-all ${!hasSelection ? "opacity-30 grayscale" : ""} ${activeTab === "edit" ? "text-indigo-600 dark:text-indigo-400" : "text-slate-500 dark:text-slate-400"}`}
-            >
-                <div className={`p-2 rounded-full ${activeTab === "edit" ? "bg-indigo-100 dark:bg-indigo-900/50" : ""}`}>
-                    <SlidersHorizontal size={20} />
-                </div>
-                <span className="text-[9px] font-bold">Edit</span>
-            </button>
+                {/* Text */}
+                <Button id="text" icon={Type} label="Text" />
 
-            {/* Layers */}
-            <button
-                onClick={() => onTabChange(activeTab === "layers" ? null : "layers")}
-                className={`flex flex-col items-center justify-center w-14 h-full gap-1 transition-colors ${activeTab === "layers" ? "text-indigo-600 dark:text-indigo-400" : "text-slate-500 dark:text-slate-400"}`}
-            >
-                <div className={`p-2 rounded-full ${activeTab === "layers" ? "bg-indigo-100 dark:bg-indigo-900/50" : ""}`}>
-                    <Layers size={20} />
-                </div>
-                <span className="text-[9px] font-bold">Layers</span>
-            </button>
+                {/* Shapes */}
+                <Button id="shapes" icon={Square} label="Shapes" />
 
-            {/* Export */}
-            <button
-                onClick={() => onTabChange(activeTab === "export" ? null : "export")}
-                className={`flex flex-col items-center justify-center w-14 h-full gap-1 transition-colors ${activeTab === "export" ? "text-indigo-600 dark:text-indigo-400" : "text-slate-500 dark:text-slate-400"}`}
-            >
-                <div className={`p-2 rounded-full ${activeTab === "export" ? "bg-indigo-100 dark:bg-indigo-900/50" : ""}`}>
-                    <Download size={20} />
-                </div>
-                <span className="text-[9px] font-bold">Export</span>
-            </button>
-        </div>
+                {/* Code */}
+                <Button id="code" icon={Terminal} label="Code" />
+
+                {/* Charts */}
+                <Button id="charts" icon={BarChart3} label="Charts" />
+
+                <div className="w-px h-8 bg-slate-200 dark:bg-slate-800 shrink-0 mx-1" />
+
+                {/* Edit */}
+                <Button id="edit" icon={SlidersHorizontal} label="Edit" disabled={!hasSelection} />
+
+                {/* Layers */}
+                <Button id="layers" icon={Layers} label="Layers" />
+
+                {/* Export button removed */}
+
+            </div>
+        </>
     );
 };

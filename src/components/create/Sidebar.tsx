@@ -20,21 +20,26 @@ import { User, Sparkles, Wand2 } from "lucide-react";
 interface SidebarProps {
     engine: Engine | null;
     isMobileSheet?: boolean;
+    mobileActiveTab?: Tab;
 }
+
 import { SquareAd } from "../ads/SquareAd";
 
-type Tab = "templates" | "text" | "media" | "shapes" | null;
+export type Tab = "templates" | "text" | "media" | "shapes" | null;
 
-export const Sidebar = ({ engine, isMobileSheet = false }: SidebarProps) => {
-    const [activeTab, setActiveTab] = useState<Tab>("text");
+export const Sidebar = ({ engine, isMobileSheet = false, mobileActiveTab }: SidebarProps) => {
+    const [localActiveTab, setLocalActiveTab] = useState<Tab>("text");
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
+    // Use controlled tab on mobile, otherwise local state
+    const activeTab = (isMobileSheet && mobileActiveTab) ? mobileActiveTab : localActiveTab;
+
     const handleTabClick = (tab: Tab) => {
-        if (activeTab === tab) {
-            setActiveTab(null); // Toggle close
+        if (localActiveTab === tab) {
+            setLocalActiveTab(null); // Toggle close
             setIsMobileMenuOpen(false);
         } else {
-            setActiveTab(tab);
+            setLocalActiveTab(tab);
         }
     };
 
@@ -69,7 +74,7 @@ export const Sidebar = ({ engine, isMobileSheet = false }: SidebarProps) => {
 
     const handleAddText = (style: string) => {
         if (!engine) return;
-        if (window.innerWidth < 1100) setActiveTab(null);
+        if (window.innerWidth < 1100) setLocalActiveTab(null);
         const name = getNextName(style === "heading" ? "Heading" : "Subheading");
         const txt = new TextObject(`text-${Date.now()}`, {
             text: name, // Use the name as default text too? Or just "Big Heading"
@@ -86,7 +91,7 @@ export const Sidebar = ({ engine, isMobileSheet = false }: SidebarProps) => {
 
     const handleAddCode = () => {
         if (!engine) return;
-        if (window.innerWidth < 1100) setActiveTab(null);
+        if (window.innerWidth < 1100) setLocalActiveTab(null);
         const name = getNextName("Code");
         const code = new CodeBlockObject(`code-${Date.now()}`);
         code.name = name;
@@ -98,7 +103,7 @@ export const Sidebar = ({ engine, isMobileSheet = false }: SidebarProps) => {
 
     const handleAddChart = (type: "bar" | "line" | "area" | "scatter" | "pie" | "donut") => {
         if (!engine) return;
-        if (window.innerWidth < 1100) setActiveTab(null);
+        if (window.innerWidth < 1100) setLocalActiveTab(null);
 
         let nameBase = "Chart";
         if (type === "bar") nameBase = "Bar Chart";
@@ -128,7 +133,7 @@ export const Sidebar = ({ engine, isMobileSheet = false }: SidebarProps) => {
 
     const handleAddRace = () => {
         if (!engine) return;
-        if (window.innerWidth < 1100) setActiveTab(null);
+        if (window.innerWidth < 1100) setLocalActiveTab(null);
         const name = getNextName("Bar Race");
         const race = new BarChartRaceObject(`race-${Date.now()}`);
         race.name = name;
@@ -142,7 +147,7 @@ export const Sidebar = ({ engine, isMobileSheet = false }: SidebarProps) => {
 
     const handleAddCharacter = () => {
         if (!engine) return;
-        if (window.innerWidth < 1100) setActiveTab(null);
+        if (window.innerWidth < 1100) setLocalActiveTab(null);
         const name = getNextName("Character");
         const char = new CharacterObject(`char-${Date.now()}`);
         char.name = name;
@@ -154,7 +159,7 @@ export const Sidebar = ({ engine, isMobileSheet = false }: SidebarProps) => {
 
     const handleAddLogo = () => {
         if (!engine) return;
-        if (window.innerWidth < 1100) setActiveTab(null);
+        if (window.innerWidth < 1100) setLocalActiveTab(null);
         const name = getNextName("Header Logo");
         const logo = new LogoCharacterObject(`logo-${Date.now()}`);
         logo.name = name;
@@ -166,7 +171,7 @@ export const Sidebar = ({ engine, isMobileSheet = false }: SidebarProps) => {
 
     const handleAddParticleText = () => {
         if (!engine) return;
-        if (window.innerWidth < 1100) setActiveTab(null);
+        if (window.innerWidth < 1100) setLocalActiveTab(null);
         const name = getNextName("Particles");
         const obj = new ParticleTextObject(`ptext-${Date.now()}`);
         obj.name = name;
@@ -179,51 +184,53 @@ export const Sidebar = ({ engine, isMobileSheet = false }: SidebarProps) => {
 
     return (
         <div className="flex h-full z-10 shadow-xl shadow-slate-200 dark:shadow-neutral-900/50 relative">
-            {/* 1. Slim Activity Bar */}
-            <aside className={`w-16 bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 flex flex-col items-center py-4 gap-4 
+            {/* 1. Slim Activity Bar - Hide on Mobile Sheet */}
+            {!isMobileSheet && (
+                <aside className={`w-16 bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 flex flex-col items-center py-4 gap-4 
             fixed left-0 top-12 bottom-0 z-[60] transition-transform duration-300 lg:static lg:h-full lg:translate-x-0 lg:z-auto
             ${isMobileMenuOpen ? "translate-x-0" : "-translate-x-full"}`}>
-                <button
-                    onClick={() => handleTabClick("text")}
-                    className={`p-3 rounded-xl transition-all ${activeTab === "text" ? "bg-blue-50 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400" : "text-slate-500 hover:bg-slate-100 dark:hover:bg-neutral-800"}`}
-                    title="Typography"
-                >
-                    <Type size={22} />
-                </button>
-                <button
-                    onClick={() => handleTabClick("media")}
-                    className={`p-3 rounded-xl transition-all ${activeTab === "media" ? "bg-blue-50 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400" : "text-slate-500 hover:bg-slate-100 dark:hover:bg-neutral-800"}`}
-                    title="Charts & Media"
-                >
-                    <ImageIcon size={22} />
-                </button>
-                <button
-                    onClick={() => handleTabClick("shapes")}
-                    className={`p-3 rounded-xl transition-all ${activeTab === "shapes" ? "bg-blue-50 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400" : "text-slate-500 hover:bg-slate-100 dark:hover:bg-neutral-800"}`}
-                    title="Shapes & Code"
-                >
-                    <Square size={22} />
-                </button>
+                    <button
+                        onClick={() => handleTabClick("text")}
+                        className={`p-3 rounded-xl transition-all ${activeTab === "text" ? "bg-blue-50 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400" : "text-slate-500 hover:bg-slate-100 dark:hover:bg-neutral-800"}`}
+                        title="Typography"
+                    >
+                        <Type size={22} />
+                    </button>
+                    <button
+                        onClick={() => handleTabClick("media")}
+                        className={`p-3 rounded-xl transition-all ${activeTab === "media" ? "bg-blue-50 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400" : "text-slate-500 hover:bg-slate-100 dark:hover:bg-neutral-800"}`}
+                        title="Charts & Media"
+                    >
+                        <ImageIcon size={22} />
+                    </button>
+                    <button
+                        onClick={() => handleTabClick("shapes")}
+                        className={`p-3 rounded-xl transition-all ${activeTab === "shapes" ? "bg-blue-50 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400" : "text-slate-500 hover:bg-slate-100 dark:hover:bg-neutral-800"}`}
+                        title="Shapes & Code"
+                    >
+                        <Square size={22} />
+                    </button>
 
-                <div className="flex-1" />
+                    <div className="flex-1" />
 
-                {/* Ad Spot - Sponsor Slot */}
-                <div className="w-12 h-12 mb-2 bg-slate-100 dark:bg-neutral-800 rounded-lg flex flex-col items-center justify-center border border-slate-200 dark:border-neutral-700 overflow-hidden cursor-pointer group hover:border-blue-300 transition-colors">
-                    <span className="text-[8px] font-bold text-slate-400 uppercase tracking-tighter mb-0.5">AD</span>
-                    <div className="w-6 h-4 bg-gradient-to-br from-indigo-500 to-purple-500 rounded-sm group-hover:scale-110 transition-transform"></div>
-                </div>
+                    {/* Ad Spot - Sponsor Slot */}
+                    <div className="w-12 h-12 mb-2 bg-slate-100 dark:bg-neutral-800 rounded-lg flex flex-col items-center justify-center border border-slate-200 dark:border-neutral-700 overflow-hidden cursor-pointer group hover:border-blue-300 transition-colors">
+                        <span className="text-[8px] font-bold text-slate-400 uppercase tracking-tighter mb-0.5">AD</span>
+                        <div className="w-6 h-4 bg-gradient-to-br from-indigo-500 to-purple-500 rounded-sm group-hover:scale-110 transition-transform"></div>
+                    </div>
 
-                <button
-                    onClick={() => {
-                        setActiveTab(null);
-                        setIsMobileMenuOpen(false);
-                    }}
-                    className="p-3 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition-colors"
-                    title="Collapse"
-                >
-                    <ChevronLeft size={20} className={`transition-transform ${!activeTab ? "rotate-180" : ""}`} />
-                </button>
-            </aside>
+                    <button
+                        onClick={() => {
+                            setLocalActiveTab(null);
+                            setIsMobileMenuOpen(false);
+                        }}
+                        className="p-3 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition-colors"
+                        title="Collapse"
+                    >
+                        <ChevronLeft size={20} className={`transition-transform ${!activeTab ? "rotate-180" : ""}`} />
+                    </button>
+                </aside>
+            )}
 
 
             {/* Mobile Toggle Button (FAB) - Hide if in sheet */}
@@ -232,7 +239,7 @@ export const Sidebar = ({ engine, isMobileSheet = false }: SidebarProps) => {
                     onClick={() => {
                         if (isMobileMenuOpen) {
                             setIsMobileMenuOpen(false);
-                            setActiveTab(null);
+                            setLocalActiveTab(null);
                         } else {
                             setIsMobileMenuOpen(true);
                         }
@@ -258,7 +265,7 @@ export const Sidebar = ({ engine, isMobileSheet = false }: SidebarProps) => {
                         <div
                             className="fixed inset-0 z-40 lg:hidden bg-black/50 animate-in fade-in duration-200"
                             onClick={() => {
-                                setActiveTab(null);
+                                setLocalActiveTab(null);
                                 setIsMobileMenuOpen(false);
                             }}
                         />

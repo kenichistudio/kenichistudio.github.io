@@ -389,7 +389,7 @@ export const EditorLayout = () => {
                         />
 
                         {/* Timeline */}
-                        <div className="shrink-0 p-2 lg:p-4 z-10 bg-slate-100 dark:bg-[#020617]">
+                        <div className="shrink-0 p-2 lg:p-4 z-10 bg-slate-100 dark:bg-[#020617] border-slate-200 dark:border-slate-800">
                             <div className="h-auto lg:h-32">
                                 <Timeline
                                     currentTime={currentTime}
@@ -426,19 +426,29 @@ export const EditorLayout = () => {
 
                 {/* 1. ASSETS SHEET */}
                 <BottomSheet
-                    isOpen={activeBottomTab === 'assets'}
+                    isOpen={['assets', 'text', 'shapes', 'code', 'charts'].includes(activeBottomTab || '')}
                     onClose={() => setActiveBottomTab(null)}
-                    title="Assets"
+                    title={
+                        activeBottomTab === 'text' ? 'Typography' :
+                            activeBottomTab === 'shapes' ? 'Shapes' :
+                                activeBottomTab === 'code' ? 'Code Blocks' :
+                                    activeBottomTab === 'charts' ? 'Charts & Data' : 'Assets'
+                    }
                     initialSnap={0.5}
                     snaps={[0.5, 0.9]}
                 >
                     <div className="h-full">
-                        {/* We need to pass a prop to Sidebar to disable fixed positioning if needed, 
-                             but looking at Sidebar.tsx, it might handle itself. 
-                             Actually Sidebar uses fixed positioning on mobile. We need to override that.
-                             We'll modify Sidebar to accept a `className` or `mobileMode` prop context.
-                         */}
-                        <Sidebar engine={engine} isMobileSheet />
+                        <Sidebar
+                            engine={engine}
+                            isMobileSheet
+                            mobileActiveTab={
+                                activeBottomTab === 'text' ? 'text' :
+                                    activeBottomTab === 'shapes' ? 'shapes' :
+                                        activeBottomTab === 'code' ? 'shapes' : // Code is in shapes tab
+                                            activeBottomTab === 'charts' ? 'media' : // Charts are in media tab
+                                                undefined
+                            }
+                        />
                     </div>
                 </BottomSheet>
 
