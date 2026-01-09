@@ -19,12 +19,13 @@ import { ParticleTextObject } from "../../engine/objects/ParticleTextObject";
 import { User, Sparkles, Wand2 } from "lucide-react";
 interface SidebarProps {
     engine: Engine | null;
+    isMobileSheet?: boolean;
 }
 import { SquareAd } from "../ads/SquareAd";
 
 type Tab = "templates" | "text" | "media" | "shapes" | null;
 
-export const Sidebar = ({ engine }: SidebarProps) => {
+export const Sidebar = ({ engine, isMobileSheet = false }: SidebarProps) => {
     const [activeTab, setActiveTab] = useState<Tab>("text");
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
@@ -225,40 +226,48 @@ export const Sidebar = ({ engine }: SidebarProps) => {
             </aside>
 
 
-            {/* Mobile Toggle Button (FAB) */}
-            <button
-                onClick={() => {
-                    if (isMobileMenuOpen) {
-                        setIsMobileMenuOpen(false);
-                        setActiveTab(null);
-                    } else {
-                        setIsMobileMenuOpen(true);
-                    }
-                }}
-                className={`
-                    lg:hidden fixed top-20 right-4 z-[100] p-3 rounded-full shadow-xl transition-all duration-300
+            {/* Mobile Toggle Button (FAB) - Hide if in sheet */}
+            {!isMobileSheet && (
+                <button
+                    onClick={() => {
+                        if (isMobileMenuOpen) {
+                            setIsMobileMenuOpen(false);
+                            setActiveTab(null);
+                        } else {
+                            setIsMobileMenuOpen(true);
+                        }
+                    }}
+                    className={`
+                    lg:hidden fixed bottom-6 right-4 z-[100] p-4 rounded-full shadow-2xl transition-all duration-300
                     flex items-center justify-center border border-slate-200 dark:border-slate-700
                     ${isMobileMenuOpen
-                        ? "bg-white text-slate-900 dark:bg-neutral-800 dark:text-white"
-                        : "bg-blue-600 text-white hover:bg-blue-700"
-                    }
+                            ? "bg-white text-slate-900 dark:bg-neutral-800 dark:text-white"
+                            : "bg-blue-600 text-white hover:bg-blue-700"
+                        }
                 `}
-            >
-                {isMobileMenuOpen ? <X size={24} /> : <LayoutGrid size={24} />}
-            </button>
+                >
+                    {isMobileMenuOpen ? <X size={24} /> : <LayoutGrid size={24} />}
+                </button>
+            )}
 
             {/* 2. Expandable Drawer */}
             {activeTab && (
                 <>
-                    {/* Backdrop for mobile overlay */}
-                    <div
-                        className="fixed inset-0 z-40 lg:hidden bg-black/50 animate-in fade-in duration-200"
-                        onClick={() => {
-                            setActiveTab(null);
-                            setIsMobileMenuOpen(false);
-                        }}
-                    />
-                    <aside className="w-64 sm:w-72 bg-slate-50 dark:bg-slate-950 border-r border-slate-200 dark:border-slate-800 flex flex-col animate-in slide-in-from-left-4 duration-200 fixed left-16 top-12 bottom-0 lg:static lg:h-full z-50 shadow-2xl lg:shadow-none">
+                    {/* Backdrop for mobile overlay - Hide if in sheet */}
+                    {!isMobileSheet && (
+                        <div
+                            className="fixed inset-0 z-40 lg:hidden bg-black/50 animate-in fade-in duration-200"
+                            onClick={() => {
+                                setActiveTab(null);
+                                setIsMobileMenuOpen(false);
+                            }}
+                        />
+                    )}
+
+                    <aside className={`
+                        bg-slate-50 dark:bg-slate-950 border-r border-slate-200 dark:border-slate-800 flex flex-col animate-in slide-in-from-left-4 duration-200
+                        ${isMobileSheet ? 'w-full h-full relative border-none shadow-none z-0' : 'w-64 sm:w-72 fixed left-16 top-12 bottom-0 z-50 shadow-2xl lg:shadow-none lg:static lg:h-full'}
+                    `}>
                         <div className="p-4 border-b border-slate-200 dark:border-slate-800 flex justify-between items-center bg-white/50 dark:bg-slate-900/50 backdrop-blur-sm">
                             <span className="font-bold text-xs uppercase tracking-widest text-slate-500 dark:text-slate-400">
                                 {activeTab === "text" && "Typography"}

@@ -68,21 +68,21 @@ export const PropertySection: React.FC<PropertySectionProps> = ({ title, childre
     const [isOpen, setIsOpen] = useState(defaultOpen);
 
     return (
-        <div className={`border-b border-slate-100 dark:border-slate-800 last:border-0 ${compact ? 'py-1' : ''}`}>
+        <div className={`mb-3 border border-slate-200 dark:border-slate-800 rounded-xl overflow-hidden bg-white dark:bg-slate-900/40 shadow-sm transition-all ${compact ? 'py-0' : ''}`}>
             <div
-                className={`flex items-center justify-between cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors select-none rounded-md px-2 ${compact ? 'py-1.5' : 'py-3'}`}
+                className={`flex items-center justify-between cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-800/80 transition-colors select-none px-3 bg-slate-50/50 dark:bg-slate-900/60 border-b border-slate-100 dark:border-slate-800 ${compact ? 'py-2' : 'py-2.5'}`}
                 onClick={() => setIsOpen(!isOpen)}
             >
                 <div className="flex items-center gap-2">
-                    {isOpen ? <ChevronDown size={12} className="text-slate-400" /> : <ChevronRight size={12} className="text-slate-400" />}
-                    <span className={`font-bold text-slate-700 dark:text-slate-200 uppercase tracking-widest ${compact ? 'text-[10px]' : 'text-[11px]'}`}>
+                    {isOpen ? <ChevronDown size={14} className="text-slate-400" /> : <ChevronRight size={14} className="text-slate-400" />}
+                    <span className={`font-bold text-slate-700 dark:text-slate-200 uppercase tracking-wider ${compact ? 'text-[10px]' : 'text-[11px]'}`}>
                         {title}
                     </span>
                 </div>
                 {rightElement && <div onClick={e => e.stopPropagation()}>{rightElement}</div>}
             </div>
             {isOpen && (
-                <div className={`px-2 pb-4 pt-1 space-y-3 ${compact ? 'space-y-2' : ''}`}>
+                <div className={`px-3 py-3 space-y-3 ${compact ? 'space-y-2' : ''}`}>
                     {children}
                 </div>
             )}
@@ -260,6 +260,33 @@ export const IconGrid: React.FC<IconGridProps> = ({ options, value, onChange, co
                     </button>
                 );
             })}
+        </div>
+    );
+};
+
+interface ColorPickerProps {
+    value: string;
+    onChange: (val: string) => void;
+    label?: string;
+    size?: "sm" | "md";
+}
+
+export const ColorPicker: React.FC<ColorPickerProps> = ({ value, onChange, label, size = "md" }) => {
+    return (
+        <div className="flex items-center gap-2">
+            <div className="relative group cursor-pointer">
+                <input
+                    type="color"
+                    value={value}
+                    onChange={(e) => onChange(e.target.value)}
+                    className="absolute inset-0 opacity-0 w-full h-full cursor-pointer z-10"
+                />
+                <div
+                    className={`rounded-full shadow-sm ring-1 ring-slate-200 dark:ring-slate-700 overflow-hidden transition-transform group-hover:scale-110 ${size === 'sm' ? 'w-6 h-6' : 'w-8 h-8'}`}
+                    style={{ backgroundColor: value }}
+                />
+            </div>
+            {label && <span className="text-xs font-mono text-slate-500">{label}</span>}
         </div>
     );
 };

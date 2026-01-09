@@ -14,7 +14,8 @@ import {
     SliderInput,
     Toggle,
     SegmentedControl,
-    IconGrid
+    IconGrid,
+    ColorPicker
 } from "./InspectorUI";
 
 import {
@@ -56,12 +57,14 @@ import {
 interface PropertiesPanelProps {
     engine: Engine | null;
     selectedId: string | null;
+    isMobileSheet?: boolean;
+    initialTab?: "properties" | "layers" | "animations";
 }
 
 type Tab = "properties" | "layers" | "animations";
 
-export const PropertiesPanel = ({ engine, selectedId }: PropertiesPanelProps) => {
-    const [activeTab, setActiveTab] = useState<Tab>("properties");
+export const PropertiesPanel = ({ engine, selectedId, isMobileSheet = false, initialTab = "properties" }: PropertiesPanelProps) => {
+    const [activeTab, setActiveTab] = useState<Tab>(initialTab);
     const [editingLayerId, setEditingLayerId] = useState<string | null>(null);
     const [editName, setEditName] = useState("");
     const [_, setForceUpdate] = useState(0);
@@ -163,21 +166,19 @@ export const PropertiesPanel = ({ engine, selectedId }: PropertiesPanelProps) =>
                 {activeTab === "properties" && (
                     <>
                         {!obj ? (
-                            <div className="p-1">
+                            <div className="">
                                 <PropertySection title="Canvas Settings" defaultOpen={true}>
                                     <ControlRow label="Background Color" layout="horizontal">
                                         <div className="flex justify-end items-center gap-2">
-                                            <input
-                                                type="color"
-                                                className="inspector-input-color"
+                                            <ColorPicker
                                                 value={engine.scene.backgroundColor}
-                                                onChange={(e) => {
-                                                    engine.scene.backgroundColor = e.target.value;
+                                                onChange={(val) => {
+                                                    engine.scene.backgroundColor = val;
                                                     engine.render();
                                                     setForceUpdate(n => n + 1);
                                                 }}
+                                                label={engine.scene.backgroundColor}
                                             />
-                                            <span className="text-xs font-mono text-slate-500">{engine.scene.backgroundColor}</span>
                                         </div>
                                     </ControlRow>
 
@@ -285,9 +286,9 @@ export const PropertiesPanel = ({ engine, selectedId }: PropertiesPanelProps) =>
 
                             </div>
                         ) : (
-                            <div className="p-1 space-y-1">
+                            <div className="space-y-1">
                                 {/* Selected Object Header */}
-                                <div className="px-3 py-2 mb-2 bg-indigo-50/50 dark:bg-indigo-900/20 rounded-xl border border-indigo-100 dark:border-indigo-900/50 flex items-center justify-between">
+                                <div className="px-3 py-2 mb-3 bg-indigo-50/50 dark:bg-indigo-900/20 rounded-xl border border-indigo-100 dark:border-indigo-900/50 flex items-center justify-between">
                                     <div className="flex items-center gap-3 overflow-hidden">
                                         <div className="w-8 h-8 rounded-lg bg-indigo-100 dark:bg-indigo-900/50 text-indigo-600 dark:text-indigo-400 flex items-center justify-center shrink-0">
                                             {obj instanceof ChartObject ? <BarChart size={16} /> :
@@ -354,72 +355,62 @@ export const PropertiesPanel = ({ engine, selectedId }: PropertiesPanelProps) =>
                                         </div>
                                     </div>
 
-                                    <div className="grid grid-cols-2 gap-2 relative">
-                                        {/* Link Line Visual */}
-                                        {isRatioLocked && (
-                                            <div className="absolute left-[50%] top-1/2 -translate-x-1/2 -translate-y-1/2 w-6 h-4 border-t border-b border-slate-300 dark:border-slate-600 rounded-full pointer-events-none z-0" />
-                                        )}
-                                        {/* Lock Button (Centered) */}
-                                        <button
-                                            className={`absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-5 h-5 flex items-center justify-center bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-full z-10 transition-colors ${isRatioLocked ? "text-indigo-500 border-indigo-200 dark:border-indigo-900" : "text-slate-400"}`}
-                                            onClick={() => setIsRatioLocked(!isRatioLocked)}
-                                            title={isRatioLocked ? "Unlock Ratio" : "Lock Ratio"}
-                                        >
-                                            {isRatioLocked ? <Link2 size={10} /> : <Unlink2 size={10} />}
-                                        </button>
-
-                                        <div className="inspector-labeled-input-container z-10 bg-inherit">
-                                            <span className="inspector-input-label">W</span>
-                                            <input
-                                                type="number"
-                                                className="inspector-input-number"
-                                                value={Math.round(obj.width)}
-                                                onChange={(e) => {
-                                                    const val = Number(e.target.value);
-                                                    const oldW = obj.width;
-                                                    handleChange("width", val);
-                                                    if (isRatioLocked && oldW > 0) {
-                                                        const ratio = obj.height / oldW;
-                                                        handleChange("height", Math.round(val * ratio));
-                                                    }
-                                                }}
-                                            />
+                                    <div className="relative pt-2 pb-2">
+                                        {/* Aspect Ratio Lock UI */}
+                                        <div className="absolute right-0 -top-8 z-10">
+                                            <button
+                                                className={`p-1 rounded-md transition-colors ${isRatioLocked ? "text-indigo-500 bg-indigo-50 dark:bg-indigo-900/20" : "text-slate-400 hover:text-slate-600"}`}
+                                                onClick={() => setIsRatioLocked(!isRatioLocked)}
+                                                title={isRatioLocked ? "Unlock Ratio" : "Lock Ratio"}
+                                            >
+                                                {isRatioLocked ? <Link2 size={12} /> : <Unlink2 size={12} />}
+                                            </button>
                                         </div>
-                                        <div className="inspector-labeled-input-container z-10 bg-inherit">
-                                            <span className="inspector-input-label">H</span>
-                                            <input
-                                                type="number"
-                                                className="inspector-input-number"
-                                                value={Math.round(obj.height)}
-                                                onChange={(e) => {
-                                                    const val = Number(e.target.value);
-                                                    const oldH = obj.height;
-                                                    handleChange("height", val);
-                                                    if (isRatioLocked && oldH > 0) {
-                                                        const ratio = obj.width / oldH;
-                                                        handleChange("width", Math.round(val * ratio));
-                                                    }
-                                                }}
-                                            />
+
+                                        <div className="space-y-3">
+                                            {/* Width Slider */}
+                                            <div className="inspector-labeled-input-container">
+                                                <div className="flex items-center justify-between mb-1">
+                                                    <span className="text-[10px] font-bold text-slate-400 mt-0.5 ml-1">WIDTH</span>
+                                                </div>
+                                                <SliderInput
+                                                    value={Math.round(obj.width)}
+                                                    min={10}
+                                                    max={2000}
+                                                    onChange={(val) => {
+                                                        const oldW = obj.width;
+                                                        handleChange("width", val);
+                                                        if (isRatioLocked && oldW > 0) {
+                                                            const ratio = obj.height / oldW;
+                                                            handleChange("height", Math.round(val * ratio));
+                                                        }
+                                                    }}
+                                                />
+                                            </div>
+
+                                            {/* Height Slider */}
+                                            <div className="inspector-labeled-input-container">
+                                                <div className="flex items-center justify-between mb-1">
+                                                    <span className="text-[10px] font-bold text-slate-400 mt-0.5 ml-1">HEIGHT</span>
+                                                </div>
+                                                <SliderInput
+                                                    value={Math.round(obj.height)}
+                                                    min={10}
+                                                    max={2000}
+                                                    onChange={(val) => {
+                                                        const oldH = obj.height;
+                                                        handleChange("height", val);
+                                                        if (isRatioLocked && oldH > 0) {
+                                                            const ratio = obj.width / oldH;
+                                                            handleChange("width", Math.round(val * ratio));
+                                                        }
+                                                    }}
+                                                />
+                                            </div>
                                         </div>
                                     </div>
 
-                                    <div className="mt-3">
-                                        <ControlRow label="Scale" layout="horizontal">
-                                            <SliderInput
-                                                value={Math.round((obj.scaleX || 1) * 100)}
-                                                min={10}
-                                                max={200}
-                                                onChange={(v) => {
-                                                    const s = v / 100;
-                                                    obj.scaleX = s;
-                                                    obj.scaleY = s;
-                                                    setForceUpdate(n => n + 1);
-                                                }}
-                                                formatValue={(v) => `${v}%`}
-                                            />
-                                        </ControlRow>
-                                    </div>
+
                                 </PropertySection>
 
                                 <PropertySection title="Appearance" defaultOpen={false}>
@@ -443,8 +434,6 @@ export const PropertiesPanel = ({ engine, selectedId }: PropertiesPanelProps) =>
                                         />
                                     </ControlRow>
                                 </PropertySection>
-
-                                <div className="h-px bg-slate-200 dark:bg-slate-800 my-4" />
 
                                 {/* Type Specific */}
                                 {/* Type Specific Properties */}
@@ -503,29 +492,27 @@ export const PropertiesPanel = ({ engine, selectedId }: PropertiesPanelProps) =>
 
                                         <ControlRow label="Skin & Hair" layout="horizontal">
                                             <div className="flex justify-end gap-2 items-center">
-                                                <div className="w-4 h-4 rounded-full bg-slate-200" title="Skin" />
-                                                <input
-                                                    type="color"
-                                                    className="inspector-input-color"
+                                                <div className="w-4 h-4 rounded-full bg-slate-200 border border-slate-300 dark:border-slate-600" title="Skin" />
+                                                <ColorPicker
                                                     value={obj.skinColor}
-                                                    onChange={(e) => handleChange("skinColor", e.target.value)}
+                                                    onChange={(val) => handleChange("skinColor", val)}
+                                                    size="sm"
                                                 />
-                                                <div className="w-4 h-4 rounded-full bg-slate-800 ml-2" title="Hair" />
-                                                <input
-                                                    type="color"
-                                                    className="inspector-input-color"
+                                                <div className="w-px h-4 bg-slate-200 dark:bg-slate-800 mx-1" />
+                                                <div className="w-4 h-4 rounded-full bg-slate-800 border border-slate-600 dark:border-slate-500" title="Hair" />
+                                                <ColorPicker
                                                     value={obj.hairColor}
-                                                    onChange={(e) => handleChange("hairColor", e.target.value)}
+                                                    onChange={(val) => handleChange("hairColor", val)}
+                                                    size="sm"
                                                 />
                                             </div>
                                         </ControlRow>
                                         <ControlRow label="Costume Color" layout="horizontal">
                                             <div className="flex justify-end gap-2 items-center">
-                                                <input
-                                                    type="color"
-                                                    className="inspector-input-color"
+                                                <ColorPicker
                                                     value={obj.costumeColor}
-                                                    onChange={(e) => handleChange("costumeColor", e.target.value)}
+                                                    onChange={(val) => handleChange("costumeColor", val)}
+                                                    size="sm"
                                                 />
                                             </div>
                                         </ControlRow>
@@ -543,19 +530,15 @@ export const PropertiesPanel = ({ engine, selectedId }: PropertiesPanelProps) =>
                                             />
                                         </ControlRow>
                                         <ControlRow label="Circle Color" layout="horizontal">
-                                            <input
-                                                type="color"
-                                                className="inspector-input-color"
+                                            <ColorPicker
                                                 value={obj.circleColor}
-                                                onChange={(e) => handleChange("circleColor", e.target.value)}
+                                                onChange={(val) => handleChange("circleColor", val)}
                                             />
                                         </ControlRow>
                                         <ControlRow label="Text Color" layout="horizontal">
-                                            <input
-                                                type="color"
-                                                className="inspector-input-color"
+                                            <ColorPicker
                                                 value={obj.textColor}
-                                                onChange={(e) => handleChange("textColor", e.target.value)}
+                                                onChange={(val) => handleChange("textColor", val)}
                                             />
                                         </ControlRow>
                                     </PropertySection>
@@ -605,11 +588,9 @@ export const PropertiesPanel = ({ engine, selectedId }: PropertiesPanelProps) =>
                                                 <div className="text-[10px] text-orange-500 mt-1">Lower gap = more CPU</div>
                                             </ControlRow>
                                             <ControlRow label="Color" layout="horizontal">
-                                                <input
-                                                    type="color"
-                                                    className="inspector-input-color"
+                                                <ColorPicker
                                                     value={obj.color}
-                                                    onChange={(e) => handleChange("color", e.target.value)}
+                                                    onChange={(val) => handleChange("color", val)}
                                                 />
                                             </ControlRow>
                                         </PropertySection>
@@ -682,23 +663,12 @@ export const PropertiesPanel = ({ engine, selectedId }: PropertiesPanelProps) =>
                                             </ControlRow>
                                             <ControlRow label="Color" layout="horizontal">
                                                 <div className="flex justify-end gap-2 items-center">
-                                                    <input
-                                                        type="color"
-                                                        className="inspector-input-color"
+                                                    <ColorPicker
                                                         value={obj.color}
-                                                        onChange={(e) => handleChange("color", e.target.value)}
+                                                        onChange={(val) => handleChange("color", val)}
+                                                        label={obj.color}
                                                     />
-                                                    <span className="text-xs font-mono text-slate-500">{obj.color}</span>
                                                 </div>
-                                            </ControlRow>
-                                            <ControlRow label="Font Size">
-                                                <SliderInput
-                                                    value={obj.fontSize}
-                                                    min={10}
-                                                    max={400}
-                                                    onChange={(v) => handleChange("fontSize", v)}
-                                                    formatValue={(v) => `${v}px`}
-                                                />
                                             </ControlRow>
                                         </PropertySection>
                                     </>
@@ -1303,7 +1273,8 @@ export const PropertiesPanel = ({ engine, selectedId }: PropertiesPanelProps) =>
                         </div>
 
                         {/* Bottom Toolbar */}
-                        {selectedId && (
+                        {/* MOBILE: Persistent Bottom Toolbar */}
+                        {selectedId && !isMobileSheet && (
                             <div className="p-2 border-t border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900 grid grid-cols-4 gap-1">
                                 <button
                                     onClick={() => handleDuplicate(selectedId)}
@@ -1349,7 +1320,49 @@ export const PropertiesPanel = ({ engine, selectedId }: PropertiesPanelProps) =>
                         )}
                     </div>
                 )}
+
+                {/* MOBILE: Persistent Bottom Toolbar */}
+                {selectedId && !isMobileSheet && (
+                    <div className="lg:hidden sticky bottom-0 left-0 right-0 p-3 bg-white/90 dark:bg-slate-900/90 backdrop-blur-lg border-t border-slate-200 dark:border-slate-800 grid grid-cols-4 gap-2 z-50 animate-in slide-in-from-bottom-4 duration-300">
+                        <button
+                            onClick={() => handleDuplicate(selectedId)}
+                            className="flex flex-col items-center justify-center p-2 rounded-xl active:bg-slate-100 dark:active:bg-slate-800 text-slate-600 dark:text-slate-400 active:text-blue-600 dark:active:text-blue-400 transition-colors gap-1"
+                        >
+                            <Copy size={20} />
+                            <span className="text-[10px] font-bold">Clone</span>
+                        </button>
+                        <button
+                            onClick={() => {
+                                engine.scene.moveUp(selectedId);
+                                engine.render();
+                                setForceUpdate(n => n + 1);
+                            }}
+                            className="flex flex-col items-center justify-center p-2 rounded-xl active:bg-slate-100 dark:active:bg-slate-800 text-slate-600 dark:text-slate-400 active:text-blue-600 dark:active:text-blue-400 transition-colors gap-1"
+                        >
+                            <ArrowUp size={20} />
+                            <span className="text-[10px] font-bold">Up</span>
+                        </button>
+                        <button
+                            onClick={() => {
+                                engine.scene.moveDown(selectedId);
+                                engine.render();
+                                setForceUpdate(n => n + 1);
+                            }}
+                            className="flex flex-col items-center justify-center p-2 rounded-xl active:bg-slate-100 dark:active:bg-slate-800 text-slate-600 dark:text-slate-400 active:text-blue-600 dark:active:text-blue-400 transition-colors gap-1"
+                        >
+                            <ArrowDown size={20} />
+                            <span className="text-[10px] font-bold">Down</span>
+                        </button>
+                        <button
+                            onClick={() => handleDelete(selectedId)}
+                            className="flex flex-col items-center justify-center p-2 rounded-xl active:bg-red-50 dark:active:bg-red-900/20 text-slate-600 dark:text-slate-400 active:text-red-500 transition-colors gap-1"
+                        >
+                            <Trash2 size={20} />
+                            <span className="text-[10px] font-bold">Delete</span>
+                        </button>
+                    </div>
+                )}
             </div>
-        </div >
+        </div>
     )
 }

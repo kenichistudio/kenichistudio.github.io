@@ -9,6 +9,10 @@ export class CharacterObject extends KinetixObject {
     costumeColor: string = "#3b82f6"; // Default blue
     currentAnimation: CharacterAnimation = "idle";
 
+    hairStyle: "short" | "long" | "bald" = "short";
+    hairColor: string = "#334155";
+    accessory: "none" | "glasses" | "hat" = "none";
+
     // Internal animation state
     private _animOffset = 0;
 
@@ -73,19 +77,34 @@ export class CharacterObject extends KinetixObject {
             ctx.fill();
         }
 
-        // 3. HEAD
+        // 3. HEAD & HAIR
+        const headY = this.y + 35;
+        // Bobbing animation for head
+        const headBob = this.currentAnimation === "walk" ? Math.sin(time * 0.01) * 3 : 0;
+
+        // Hair (Back)
+        if (this.hairStyle === "long") {
+            ctx.fillStyle = this.hairColor;
+            ctx.fillRect(cx - 38, headY + headBob - 10, 76, 60);
+        }
+
         // Neck
         ctx.fillStyle = this.skinColor;
         ctx.fillRect(cx - 8, this.y + 60, 16, 15);
 
         // Head Circle
+        ctx.fillStyle = this.skinColor;
         ctx.beginPath();
-        const headY = this.y + 35;
-        // Bobbing animation for head
-        const headBob = this.currentAnimation === "walk" ? Math.sin(time * 0.01) * 3 : 0;
-
         ctx.arc(cx, headY + headBob, 35, 0, Math.PI * 2);
         ctx.fill();
+
+        // Hair (Top/Front)
+        if (this.hairStyle !== "bald") {
+            ctx.fillStyle = this.hairColor;
+            ctx.beginPath();
+            ctx.arc(cx, headY + headBob - 5, 36, Math.PI, 0); // Top half
+            ctx.fill();
+        }
 
         // Eyes (Blinking logic could go here)
         ctx.fillStyle = "#000000";
@@ -97,6 +116,29 @@ export class CharacterObject extends KinetixObject {
         ctx.beginPath();
         ctx.arc(cx + 12, headY + headBob - 5, 4, 0, Math.PI * 2);
         ctx.fill();
+
+        // Accessory: Glasses
+        if (this.accessory === "glasses") {
+            ctx.strokeStyle = "#334155";
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.arc(cx - 12, headY + headBob - 5, 8, 0, Math.PI * 2);
+            ctx.stroke();
+            ctx.beginPath();
+            ctx.arc(cx + 12, headY + headBob - 5, 8, 0, Math.PI * 2);
+            ctx.stroke();
+            ctx.beginPath();
+            ctx.moveTo(cx - 4, headY + headBob - 5);
+            ctx.lineTo(cx + 4, headY + headBob - 5);
+            ctx.stroke();
+        }
+
+        // Accessory: Hat
+        if (this.accessory === "hat") {
+            ctx.fillStyle = "#334155";
+            ctx.fillRect(cx - 40, headY + headBob - 30, 80, 10); // Brim
+            ctx.fillRect(cx - 25, headY + headBob - 60, 50, 30); // Top
+        }
 
         // Mouth (Smile)
         ctx.beginPath();
@@ -185,6 +227,9 @@ export class CharacterObject extends KinetixObject {
         c.skinColor = this.skinColor;
         c.costume = this.costume;
         c.costumeColor = this.costumeColor;
+        c.hairStyle = this.hairStyle;
+        c.hairColor = this.hairColor;
+        c.accessory = this.accessory;
         return c;
     }
 }

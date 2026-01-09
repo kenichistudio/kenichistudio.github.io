@@ -10,6 +10,8 @@ import { HardwareDetector, type HardwareInfo } from "../../utils/HardwareDetecto
 import { BrowserDetector } from "../../utils/BrowserDetector";
 import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { AlertTriangle } from "lucide-react";
+import { BottomSheet } from "./BottomSheet";
+import { BottomDock, type BottomDockTab } from "./BottomDock";
 
 // Use a simple local context or prop drilling for this "one-page app"
 // to keep it self-contained for now.
@@ -17,6 +19,7 @@ import { AlertTriangle } from "lucide-react";
 export const EditorLayout = () => {
     const rootRef = useRef<HTMLDivElement>(null);
     const canvasRef = useRef<HTMLCanvasElement>(null);
+    const mainCanvasContainerRef = useRef<HTMLDivElement>(null); // Ref for fullscreen
     const [engine, setEngine] = useState<Engine | null>(null);
     const [selectedId, setSelectedId] = useState<string | null>(null);
     const [currentTime, setCurrentTime] = useState(0);
@@ -26,6 +29,23 @@ export const EditorLayout = () => {
     const [canvasAspectRatio, setCanvasAspectRatio] = useState(16 / 9);
     const [exportMode, setExportMode] = useState<'realtime' | 'offline'>('offline');
     const [exportProgress, setExportProgress] = useState(0);
+    const [isFullscreen, setIsFullscreen] = useState(false);
+
+    // Mobile Bottom Sheet State
+    const [activeBottomTab, setActiveBottomTab] = useState<BottomDockTab>(null);
+
+    // When selection changes on mobile, verify if we should open edit sheet?
+    // YouTube Create behavior: selecting an object opens the tools.
+    // We can auto-open 'edit' tab if on mobile.
+    useEffect(() => {
+        if (selectedId && window.innerWidth < 1024) {
+            // Optional: Auto-open edit sheet or just show dock is active?
+            // YouTube Create: The bottom bar changes to tool options.
+            // For us: We highlight the Edit button or open the sheet.
+            // Let's just notify availability for now, or auto-open if desired.
+            // setActiveBottomTab('edit'); // Uncomment to auto-open
+        }
+    }, [selectedId]);
 
     // FIX: Remove injected 'height: auto !important' style to restore layout.
     useLayoutEffect(() => {
@@ -50,6 +70,14 @@ export const EditorLayout = () => {
         }
 
         return () => observer.disconnect();
+    }, []);
+
+    useEffect(() => {
+        const handleFullscreenChange = () => {
+            setIsFullscreen(!!document.fullscreenElement);
+        };
+        document.addEventListener("fullscreenchange", handleFullscreenChange);
+        return () => document.removeEventListener("fullscreenchange", handleFullscreenChange);
     }, []);
 
     // Initialize Engine
@@ -79,6 +107,14 @@ export const EditorLayout = () => {
         if (!engine) return;
         if (isPlaying) engine.pause();
         else engine.play();
+    };
+
+    const toggleFullscreen = () => {
+        if (!document.fullscreenElement) {
+            mainCanvasContainerRef.current?.requestFullscreen();
+        } else {
+            document.exitFullscreen();
+        }
     };
 
 
@@ -330,67 +366,125 @@ export const EditorLayout = () => {
 
             {/* Main Workspace */}
             <div className="flex-1 flex overflow-hidden relative min-h-0">
-                {/* Left Sidebar (Assets) */}
-                <Sidebar engine={engine} />
-
-                {/* Center Canvas */}
-                <div className="flex-1 flex flex-col min-w-0 min-h-0 bg-slate-100 dark:bg-[#020617] relative">
-                    <CanvasWorkspace ref={canvasRef} aspectRatio={canvasAspectRatio} />
-
-                    {/* Timeline */}
-                    <div className="shrink-0 p-2 lg:p-4 z-10">
-                        <div className="h-auto lg:h-32">
-                            <Timeline
-                                currentTime={currentTime}
-                                totalDuration={engine?.totalDuration || 5000}
-                                isPlaying={isPlaying}
-                                onPlayPause={handlePlayPause}
-                                onSeek={(t) => engine?.seek(t)}
-                            />
-                        </div>
-                    </div>
+                {/* Left Sidebar (Assets) - Desktop Only */}
+                <div className="hidden lg:flex h-full">
+                    <Sidebar engine={engine} />
                 </div>
 
-                {/* Mobile Floating Inspector Toggle */}
-                <button
-                    onClick={() => setRightSidebarOpen(!rightSidebarOpen)}
-                    className={`
-                        lg:hidden fixed bottom-8 transform left-1/2 -translate-x-1/2 z-40 
-                        flex items-center gap-2 px-6 py-3 rounded-full shadow-2xl 
-                        transition-all duration-300 font-bold text-sm
-                        ${rightSidebarOpen
-                            ? "bg-blue-600 text-white shadow-blue-500/50 scale-105 ring-2 ring-white/20"
-                            : "bg-white dark:bg-neutral-800 text-slate-900 dark:text-white border border-slate-200 dark:border-neutral-700 shadow-slate-200/50 dark:shadow-black/50 hover:bg-slate-50"
-                        }
-                    `}
-                >
-                    {rightSidebarOpen ? (
-                        <>
-                            <X size={18} />
-                            <span>Close</span>
-                        </>
-                    ) : (
-                        <>
-                            <SlidersHorizontal size={18} className="text-blue-600 dark:text-blue-400" />
-                            <span>Inspector</span>
-                        </>
-                    )}
-                </button>
+                {/* Center Content Area - Scrollable on Mobile */}
+                <div className="flex-1 flex flex-col min-w-0 lg:min-w-0 bg-slate-100 dark:bg-[#020617] relative overflow-y-auto lg:overflow-hidden">
 
-                {/* Mobile Backdrop */}
-                {rightSidebarOpen && (
+                    {/* Sticky Canvas Container (Mobile) / Flex Item (Desktop) */}
                     <div
-                        className="fixed inset-0 bg-black/50 z-20 lg:hidden animate-in fade-in duration-200"
-                        onClick={() => setRightSidebarOpen(false)}
-                    />
-                )}
+                        ref={mainCanvasContainerRef}
+                        className="sticky top-0 z-40 lg:relative flex-none lg:flex-1 flex flex-col min-w-0 min-h-0 bg-slate-100 dark:bg-[#020617] border-b border-slate-200 dark:border-slate-800 lg:border-none max-h-[55vh] lg:max-h-none"
+                    >
+                        <CanvasWorkspace
+                            ref={canvasRef}
+                            aspectRatio={canvasAspectRatio}
+                            isPlaying={isPlaying}
+                            onPlayPause={handlePlayPause}
+                            onToggleFullscreen={toggleFullscreen}
+                            isFullscreen={isFullscreen}
+                        />
 
-                {/* Right Sidebar */}
+                        {/* Timeline */}
+                        <div className="shrink-0 p-2 lg:p-4 z-10 bg-slate-100 dark:bg-[#020617]">
+                            <div className="h-auto lg:h-32">
+                                <Timeline
+                                    currentTime={currentTime}
+                                    totalDuration={engine?.totalDuration || 5000}
+                                    isPlaying={isPlaying}
+                                    onPlayPause={handlePlayPause}
+                                    onSeek={(t) => engine?.seek(t)}
+                                // onToggleFullscreen={toggleFullscreen} // Removed
+                                // isFullscreen={isFullscreen} // Removed
+                                />
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Mobile Properties Panel - MOVED TO BOTTOM SHEET */}
+                    {/* <div className="flex-1 lg:hidden p-4 bg-slate-50 dark:bg-slate-950"> ... </div> */}
+
+                </div>
+
+                {/* Mobile Bottom Dock */}
+                <BottomDock
+                    activeTab={activeBottomTab}
+                    onTabChange={(tab) => {
+                        if (tab === 'export') {
+                            setShowExportDialog(true);
+                        } else {
+                            setActiveBottomTab(tab);
+                        }
+                    }}
+                    hasSelection={!!selectedId}
+                />
+
+                {/* Mobile Bottom Sheets */}
+
+                {/* 1. ASSETS SHEET */}
+                <BottomSheet
+                    isOpen={activeBottomTab === 'assets'}
+                    onClose={() => setActiveBottomTab(null)}
+                    title="Assets"
+                    initialSnap={0.5}
+                    snaps={[0.5, 0.9]}
+                >
+                    <div className="h-full">
+                        {/* We need to pass a prop to Sidebar to disable fixed positioning if needed, 
+                             but looking at Sidebar.tsx, it might handle itself. 
+                             Actually Sidebar uses fixed positioning on mobile. We need to override that.
+                             We'll modify Sidebar to accept a `className` or `mobileMode` prop context.
+                         */}
+                        <Sidebar engine={engine} isMobileSheet />
+                    </div>
+                </BottomSheet>
+
+                {/* 2. EDIT SHEET */}
+                <BottomSheet
+                    isOpen={activeBottomTab === 'edit'}
+                    onClose={() => setActiveBottomTab(null)}
+                    title="Edit Properties"
+                    initialSnap={0.5}
+                    snaps={[0.5, 0.9]}
+                >
+                    <PropertiesPanel
+                        engine={engine}
+                        selectedId={selectedId}
+                        isMobileSheet // Pass this to disable the persistent toolbar we made earlier
+                    />
+                </BottomSheet>
+
+                {/* 3. LAYERS SHEET */}
+                <BottomSheet
+                    isOpen={activeBottomTab === 'layers'}
+                    onClose={() => setActiveBottomTab(null)}
+                    title="Layers"
+                    initialSnap={0.5}
+                    snaps={[0.5, 0.9]}
+                >
+                    <PropertiesPanel
+                        engine={engine}
+                        selectedId={selectedId}
+                        isMobileSheet
+                        initialTab="layers"
+                    />
+                </BottomSheet>
+
+
+                {/* Mobile Floating Inspector Toggle - REMOVED per redesign */}
+
+                {/* Mobile Backdrop - REMOVED per redesign */}
+
+                {/* Right Sidebar - Desktop Only */}
                 <div className={`
-                    w-80 border-l border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shrink-0 flex flex-col overflow-hidden min-h-0
-                    fixed right-0 top-14 bottom-0 z-30 shadow-2xl lg:relative lg:top-0 lg:shadow-none lg:z-auto lg:h-auto
+                    hidden lg:flex
+                    w-80 border-l border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shrink-0 flex-col overflow-hidden min-h-0
+                    relative z-auto h-auto
                     transition-transform duration-300 ease-in-out
-                    ${rightSidebarOpen ? 'translate-x-0' : 'translate-x-full lg:hidden'}
+                    ${rightSidebarOpen ? 'translate-x-0' : 'translate-x-full !w-0 border-none'}
                 `}>
                     <PropertiesPanel
                         engine={engine}
