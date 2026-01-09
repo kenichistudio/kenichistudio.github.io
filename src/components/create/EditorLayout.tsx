@@ -261,7 +261,7 @@ export const EditorLayout = () => {
                     {/* Sticky Canvas Container (Mobile) / Flex Item (Desktop) */}
                     <div
                         ref={mainCanvasContainerRef}
-                        className="sticky top-0 z-40 lg:relative flex flex-col w-full min-w-0 min-h-0 bg-slate-100 dark:bg-[#020617] border-b border-slate-200 dark:border-slate-800 lg:border-none"
+                        className="relative z-40 lg:relative flex flex-col w-full min-w-0 min-h-0 bg-slate-100 dark:bg-[#020617] border-b border-slate-200 dark:border-slate-800 lg:border-none"
                     >
                         <CanvasWorkspace
                             ref={canvasRef}
