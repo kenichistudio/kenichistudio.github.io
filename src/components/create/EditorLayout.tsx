@@ -374,12 +374,12 @@ export const EditorLayout = () => {
                 </div>
 
                 {/* Center Content Area - Scrollable on Mobile */}
-                <div className="flex-1 flex flex-col min-w-0 lg:min-w-0 bg-slate-100 dark:bg-[#020617] relative overflow-y-auto lg:overflow-hidden">
+                <div className="flex-1 flex flex-col min-w-0 lg:min-w-0 bg-slate-100 dark:bg-[#020617] relative overflow-y-auto lg:overflow-hidden pb-20 lg:pb-0">
 
                     {/* Sticky Canvas Container (Mobile) / Flex Item (Desktop) */}
                     <div
                         ref={mainCanvasContainerRef}
-                        className="sticky top-0 z-40 lg:relative flex-none lg:flex-1 flex flex-col min-w-0 min-h-0 bg-slate-100 dark:bg-[#020617] border-b border-slate-200 dark:border-slate-800 lg:border-none max-h-[55vh] lg:max-h-none"
+                        className="sticky top-0 z-40 lg:relative flex-1 flex flex-col min-w-0 min-h-0 bg-slate-100 dark:bg-[#020617] border-b border-slate-200 dark:border-slate-800 lg:border-none h-full lg:h-auto"
                     >
                         <CanvasWorkspace
                             ref={canvasRef}
@@ -414,7 +414,7 @@ export const EditorLayout = () => {
                         />
 
                         {/* Timeline */}
-                        <div className="shrink-0 p-2 lg:p-4 z-10 bg-slate-100 dark:bg-[#020617] border-slate-200 dark:border-slate-800">
+                        <div className="hidden lg:block shrink-0 p-2 lg:p-4 z-10 bg-slate-100 dark:bg-[#020617] border-slate-200 dark:border-slate-800">
                             <div className="h-auto lg:h-32">
                                 <Timeline
                                     currentTime={currentTime}
