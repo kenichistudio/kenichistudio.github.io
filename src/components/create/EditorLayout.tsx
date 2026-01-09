@@ -1,4 +1,4 @@
-import { Settings, Grid3x3, Coffee, Heart, RotateCcw, X, SlidersHorizontal, Camera, Download } from "lucide-react";
+import { Settings, Grid3x3, Coffee, Heart, RotateCcw, X, SlidersHorizontal, Camera, Download, FileVideo, Film, Monitor, Smartphone, Check, AlertCircle, ChevronDown, ChevronUp, Clapperboard } from "lucide-react";
 import { Sidebar } from "./Sidebar";
 import { VerticalAd } from "../ads/VerticalAd";
 import { CanvasWorkspace } from "./CanvasWorkspace";
@@ -35,6 +35,7 @@ export const EditorLayout = () => {
 
     // Mobile Bottom Sheet State
     const [activeBottomTab, setActiveBottomTab] = useState<BottomDockTab>(null);
+    const [showExportAdvanced, setShowExportAdvanced] = useState(false);
 
     // When selection changes on mobile, verify if we should open edit sheet?
     // YouTube Create behavior: selecting an object opens the tools.
@@ -246,23 +247,23 @@ export const EditorLayout = () => {
                         href="https://ko-fi.com"
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="hidden md:flex items-center gap-2 px-3 py-2 bg-amber-100 hover:bg-amber-200 text-amber-900 dark:bg-amber-900/20 dark:text-amber-500 dark:hover:bg-amber-900/40 rounded-lg text-xs font-bold transition-colors mr-2"
+                        className="flex items-center gap-2 px-2 py-2 md:px-3 bg-amber-100 hover:bg-amber-200 text-amber-900 dark:bg-amber-900/20 dark:text-amber-500 dark:hover:bg-amber-900/40 rounded-lg text-xs font-bold transition-colors mr-1 md:mr-2"
                     >
                         <Coffee size={14} className="text-amber-700 dark:text-amber-500" />
-                        <span>Buy me a coffee</span>
+                        <span className="hidden md:inline">Buy me a coffee</span>
                     </a>
                     <a
                         href="https://patreon.com"
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="hidden md:flex items-center gap-2 px-3 py-2 bg-red-100 hover:bg-red-200 text-red-900 dark:bg-red-900/20 dark:text-red-400 dark:hover:bg-red-900/40 rounded-lg text-xs font-bold transition-colors mr-4"
+                        className="flex items-center gap-2 px-2 py-2 md:px-3 bg-red-100 hover:bg-red-200 text-red-900 dark:bg-red-900/20 dark:text-red-400 dark:hover:bg-red-900/40 rounded-lg text-xs font-bold transition-colors mr-2 md:mr-4"
                     >
                         <Heart size={14} className="text-red-600 fill-red-600 dark:text-red-500 dark:fill-red-500" />
-                        <span>Patreon</span>
+                        <span className="hidden md:inline">Patreon</span>
                     </a>
 
                     {/* Guides Menu */}
-                    <div className="relative">
+                    <div className="relative hidden lg:block">
                         <button
                             onClick={() => setShowGuidesMenu(!showGuidesMenu)}
                             className={`p-2 rounded-lg transition-colors mr-1 ${currentGuide !== 'none' ? "bg-blue-50 text-blue-600 dark:bg-blue-900/20 dark:text-blue-400" : "text-slate-500 hover:bg-slate-100 dark:hover:bg-neutral-800"}`}
@@ -330,7 +331,7 @@ export const EditorLayout = () => {
                             engine?.selectObject(null);
                             setRightSidebarOpen(true);
                         }}
-                        className="p-2 text-slate-500 hover:bg-slate-100 dark:hover:bg-neutral-800 rounded-lg transition-colors mr-2"
+                        className="hidden lg:block p-2 text-slate-500 hover:bg-slate-100 dark:hover:bg-neutral-800 rounded-lg transition-colors mr-2"
                         title="Scene & Export Settings"
                     >
                         <Settings size={20} />
@@ -527,302 +528,262 @@ export const EditorLayout = () => {
                     />
                 </div>
 
-                {/* Export Dialog / Native Window Design */}
+                {/* Responsive Export Dialog */}
                 {(showExportDialog || isExporting) && (
-                    <div className="absolute inset-0 z-50 flex items-center justify-center p-8 animate-in fade-in duration-200 pointer-events-none">
+                    <div className="fixed inset-0 z-[100] flex items-end lg:items-center justify-center pointer-events-none">
+                        {/* Backdrop */}
+                        <div
+                            className="absolute inset-0 bg-black/60 backdrop-blur-sm pointer-events-auto animate-in fade-in duration-200"
+                            onClick={() => !isExporting && setShowExportDialog(false)}
+                        />
 
-                        <div className="pointer-events-auto bg-white dark:bg-neutral-900 rounded-xl shadow-2xl shadow-black/20 border border-slate-200 dark:border-neutral-800 overflow-hidden w-full max-w-6xl flex flex-col lg:flex-row h-auto max-h-[85vh] lg:h-[650px] animate-in zoom-in-95 duration-300">
-
-                            {/* Left Ad Column */}
-                            <div className="w-72 bg-slate-50 dark:bg-neutral-950 border-r border-slate-200 dark:border-neutral-800 p-6 hidden lg:flex flex-col items-center justify-center">
-                                <span className="text-[10px] uppercase font-bold text-slate-400 mb-4">Advertisement</span>
-                                <VerticalAd />
+                        {/* Dialog Container */}
+                        <div className={`
+                            pointer-events-auto relative 
+                            w-full lg:max-w-md bg-white dark:bg-[#0F172A] 
+                            rounded-t-2xl lg:rounded-2xl 
+                            shadow-2xl shadow-black/50 
+                            flex flex-col overflow-hidden
+                            max-h-[90vh] 
+                            animate-in slide-in-from-bottom-10 lg:zoom-in-95 duration-300
+                        `}>
+                            {/* Header */}
+                            <div className="flex items-center justify-between p-4 lg:p-6 border-b border-slate-100 dark:border-slate-800">
+                                <div>
+                                    <h3 className="text-lg lg:text-xl font-bold text-slate-900 dark:text-white">
+                                        {isExporting ? 'Exporting...' : 'Export Video'}
+                                    </h3>
+                                    {!isExporting && <p className="text-xs lg:text-sm text-slate-500 dark:text-slate-400">Save to your device</p>}
+                                </div>
+                                {!isExporting && (
+                                    <button
+                                        onClick={() => setShowExportDialog(false)}
+                                        className="p-2 -mr-2 text-slate-400 hover:text-slate-900 dark:hover:text-white rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+                                    >
+                                        <X size={20} />
+                                    </button>
+                                )}
                             </div>
 
-                            {/* Center Content Column */}
-                            <div className="flex-1 flex flex-col relative bg-white dark:bg-neutral-900 overflow-y-auto">
+                            {/* Content */}
+                            <div className="p-4 lg:p-6 overflow-y-auto custom-scrollbar">
                                 {isExporting ? (
-                                    <div className="flex-1 flex flex-col items-center justify-center p-8 text-center">
-                                        <div className="w-24 h-24 mb-6 relative">
-                                            <div className="absolute inset-0 border-4 border-slate-100 dark:border-neutral-800 rounded-full"></div>
-                                            <div className="absolute inset-0 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+                                    <div className="py-4 space-y-6 text-center">
+                                        <div className="relative w-20 h-20 mx-auto">
+                                            <svg className="w-full h-full -rotate-90" viewBox="0 0 36 36">
+                                                <path
+                                                    className="text-slate-100 dark:text-slate-800"
+                                                    d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                                                    fill="none"
+                                                    stroke="currentColor"
+                                                    strokeWidth="4"
+                                                />
+                                                <path
+                                                    className="text-blue-500 transition-all duration-300 ease-out"
+                                                    strokeDasharray={`${exportProgress}, 100`}
+                                                    d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                                                    fill="none"
+                                                    stroke="currentColor"
+                                                    strokeWidth="4"
+                                                />
+                                            </svg>
+                                            <div className="absolute inset-0 flex items-center justify-center font-bold text-sm text-blue-500">
+                                                {Math.round(exportProgress)}%
+                                            </div>
                                         </div>
-                                        <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-2">Exporting Video...</h3>
-                                        <p className="text-slate-500 dark:text-neutral-400 mb-8 max-w-xs mx-auto">Your animation is being rendered frame by frame. Please do not close this tab.</p>
 
-                                        <div className="flex justify-between w-full max-w-md mb-2">
-                                            <span className="text-xs font-bold text-slate-400 uppercase">Rendering</span>
-                                            <span className="text-xs font-bold text-slate-900 dark:text-white">{Math.round(exportProgress)}%</span>
-                                        </div>
-                                        <div className="w-full max-w-md bg-slate-100 dark:bg-neutral-800 rounded-full h-3 overflow-hidden mb-8">
-                                            <div
-                                                className="bg-blue-500 h-full rounded-full transition-all duration-300 ease-out"
-                                                style={{ width: `${exportProgress}%` }}
-                                            />
-                                        </div>
+                                        <p className="text-sm text-slate-600 dark:text-slate-300">
+                                            Rendering your masterpiece.<br />
+                                            <span className="text-xs text-slate-400">Please keep this tab open.</span>
+                                        </p>
 
-                                        <button
-                                            onClick={handleCancelExport}
-                                            className="px-6 py-2 rounded-xl bg-slate-100 dark:bg-neutral-800 text-slate-600 dark:text-neutral-400 font-bold hover:bg-slate-200 dark:hover:bg-neutral-700 transition-colors"
-                                        >
-                                            Cancel
-                                        </button>
-
-                                        {/* Export Logs Terminal */}
-                                        <div className="w-full max-w-md mt-6 bg-slate-900 rounded-lg p-3 h-32 overflow-y-auto text-left border border-slate-800 font-mono text-[10px] text-slate-400">
+                                        {/* Simplified Logs */}
+                                        <div className="w-full bg-slate-50 dark:bg-slate-900/50 rounded-lg p-3 h-24 overflow-y-auto text-left font-mono text-[10px] text-slate-500">
                                             {exportLogs.length === 0 ? (
-                                                <div className="text-slate-600 italic">Waiting for logs...</div>
+                                                <div className="italic opacity-50">Initializing...</div>
                                             ) : (
                                                 exportLogs.map((log, i) => (
                                                     <div key={i} className="whitespace-nowrap">{log}</div>
                                                 ))
                                             )}
                                         </div>
+
+                                        <button
+                                            onClick={handleCancelExport}
+                                            className="text-sm font-medium text-red-500 hover:text-red-600 dark:text-red-400 hover:underline"
+                                        >
+                                            Cancel Export
+                                        </button>
                                     </div>
                                 ) : (
-                                    <>
-                                        {/* Dialog Header */}
-                                        <div className="p-4 lg:p-6 border-b border-slate-200 dark:border-neutral-800 flex justify-between items-center">
-                                            <div>
-                                                <h3 className="text-xl font-bold text-slate-900 dark:text-white">Export Video</h3>
-                                                <p className="text-sm text-slate-500 dark:text-neutral-400">Configure your export settings</p>
+                                    <div className="space-y-6">
+                                        {/* Filename Input */}
+                                        <div className="space-y-2">
+                                            <label className="text-xs font-bold uppercase text-slate-500">Filename</label>
+                                            <div className="flex bg-slate-100 dark:bg-slate-800 rounded-xl overflow-hidden border border-transparent focus-within:border-blue-500 transition-colors">
+                                                <input
+                                                    type="text"
+                                                    value={exportConfig.filename}
+                                                    onChange={(e) => setExportConfig({ ...exportConfig, filename: e.target.value })}
+                                                    className="flex-1 bg-transparent border-none px-4 py-3 text-sm font-medium text-slate-900 dark:text-white placeholder:text-slate-400 focus:ring-0"
+                                                    placeholder="my-video"
+                                                />
+                                                <div className="px-4 py-3 text-sm text-slate-400 bg-slate-200/50 dark:bg-slate-700/50">
+                                                    .{exportConfig.format}
+                                                </div>
                                             </div>
-                                            <button onClick={() => setShowExportDialog(false)} className="p-2 -mr-2 text-slate-400 hover:text-slate-600 dark:hover:text-neutral-200 rounded-full hover:bg-slate-100 dark:hover:bg-neutral-800 transition-colors">
-                                                <span className="sr-only">Close</span>
-                                                <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
-                                            </button>
                                         </div>
 
-                                        {/* Dialog Body */}
-                                        <div className="flex border-b border-slate-200 dark:border-neutral-800">
-                                            <button
-                                                onClick={() => {
-                                                    setExportTab('offline');
-                                                    setExportMode('offline');
-                                                    setExportConfig({ ...exportConfig, format: 'webm' });
-                                                }}
-                                                className={`flex-1 py-4 text-sm font-bold border-b-2 transition-colors ${exportMode === 'offline' ? "border-blue-500 text-blue-600 dark:text-blue-400" : "border-transparent text-slate-500 hover:text-slate-800 dark:hover:text-neutral-300"}`}
-                                            >
-                                                Offline Render (Best Quality)
-                                            </button>
-                                            <button
-                                                onClick={() => {
-                                                    setExportTab('realtime');
-                                                    setExportMode('realtime');
-                                                    setExportConfig({ ...exportConfig, format: 'webm' });
-                                                }}
-                                                className={`flex-1 py-4 text-sm font-bold border-b-2 transition-colors ${exportMode === 'realtime' ? "border-purple-500 text-purple-600 dark:text-purple-400" : "border-transparent text-slate-500 hover:text-slate-800 dark:hover:text-neutral-300"}`}
-                                            >
-                                                Realtime Record (Fast)
-                                            </button>
+                                        {/* Format Selection */}
+                                        <div className="space-y-2">
+                                            <label className="text-xs font-bold uppercase text-slate-500">Format</label>
+                                            <div className="grid grid-cols-3 gap-2">
+                                                <button
+                                                    onClick={() => setExportConfig({ ...exportConfig, format: 'mp4' })}
+                                                    className={`
+                                                        relative p-3 rounded-xl border-2 text-center transition-all group
+                                                        ${exportConfig.format === 'mp4'
+                                                            ? 'bg-blue-50 dark:bg-blue-900/10 border-blue-500 text-blue-700 dark:text-blue-400'
+                                                            : 'bg-white dark:bg-slate-800 border-transparent hover:border-slate-200 dark:hover:border-slate-700 text-slate-600 dark:text-slate-300'
+                                                        }
+                                                    `}
+                                                >
+                                                    <Film size={20} className="mx-auto mb-1.5" />
+                                                    <div className="font-bold text-xs">MP4</div>
+                                                    {exportConfig.format === 'mp4' && <div className="absolute top-1 right-1 text-blue-500"><Check size={12} /></div>}
+                                                </button>
+
+                                                <button
+                                                    onClick={() => setExportConfig({ ...exportConfig, format: 'webm' })}
+                                                    className={`
+                                                        relative p-3 rounded-xl border-2 text-center transition-all group
+                                                        ${exportConfig.format === 'webm'
+                                                            ? 'bg-blue-50 dark:bg-blue-900/10 border-blue-500 text-blue-700 dark:text-blue-400'
+                                                            : 'bg-white dark:bg-slate-800 border-transparent hover:border-slate-200 dark:hover:border-slate-700 text-slate-600 dark:text-slate-300'
+                                                        }
+                                                    `}
+                                                >
+                                                    <FileVideo size={20} className="mx-auto mb-1.5" />
+                                                    <div className="font-bold text-xs">WebM</div>
+                                                    {exportConfig.format === 'webm' && <div className="absolute top-1 right-1 text-blue-500"><Check size={12} /></div>}
+                                                </button>
+
+                                                <button
+                                                    onClick={() => setExportConfig({ ...exportConfig, format: 'mov' })}
+                                                    className={`
+                                                        relative p-3 rounded-xl border-2 text-center transition-all group
+                                                        ${exportConfig.format === 'mov'
+                                                            ? 'bg-blue-50 dark:bg-blue-900/10 border-blue-500 text-blue-700 dark:text-blue-400'
+                                                            : 'bg-white dark:bg-slate-800 border-transparent hover:border-slate-200 dark:hover:border-slate-700 text-slate-600 dark:text-slate-300'
+                                                        }
+                                                    `}
+                                                >
+                                                    <Clapperboard size={20} className="mx-auto mb-1.5" />
+                                                    <div className="font-bold text-xs">MOV</div>
+                                                    {exportConfig.format === 'mov' && <div className="absolute top-1 right-1 text-blue-500"><Check size={12} /></div>}
+                                                </button>
+                                            </div>
                                         </div>
 
-                                        <div className="p-3 lg:p-8 space-y-6 lg:space-y-8 flex-1 overflow-y-auto min-h-0">
-                                            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                                                <div className="space-y-6">
-                                                    <div>
-                                                        <label className="text-xs font-bold uppercase text-slate-500 mb-2 block">Filename</label>
-                                                        <div className="flex rounded-xl border border-slate-200 dark:border-neutral-700 overflow-hidden focus-within:ring-2 focus-within:ring-blue-500 focus-within:border-blue-500 transition-all bg-white dark:bg-neutral-800">
-                                                            <input
-                                                                type="text"
-                                                                className="flex-1 bg-transparent border-none px-3 py-2 lg:px-4 lg:py-3 text-sm lg:text-base text-slate-900 dark:text-white outline-none placeholder:text-slate-400"
-                                                                value={exportConfig.filename}
-                                                                onChange={(e) => setExportConfig({ ...exportConfig, filename: e.target.value })}
-                                                                placeholder="my-video"
-                                                            />
-                                                            <div className="px-3 py-2 lg:px-4 lg:py-3 text-slate-400 font-mono text-xs lg:text-sm border-l border-slate-100 dark:border-neutral-700 bg-slate-50 dark:bg-neutral-900/50 flex items-center">
-                                                                .{exportConfig.format}
-                                                            </div>
-                                                        </div>
-                                                    </div>
+                                        {/* Quality/Mode Selection */}
+                                        <div className="space-y-2">
+                                            <label className="text-xs font-bold uppercase text-slate-500">Process</label>
+                                            <div className="grid grid-cols-2 gap-3">
+                                                <button
+                                                    onClick={() => {
+                                                        setExportMode('offline');
+                                                        setExportConfig({ ...exportConfig, fps: 60 });
+                                                    }}
+                                                    className={`
+                                                        relative p-4 rounded-xl border-2 text-left transition-all group
+                                                        ${exportMode === 'offline'
+                                                            ? 'bg-purple-50 dark:bg-purple-900/10 border-purple-500 text-purple-700 dark:text-purple-400'
+                                                            : 'bg-white dark:bg-slate-800 border-transparent hover:border-slate-200 dark:hover:border-slate-700 text-slate-600 dark:text-slate-300'
+                                                        }
+                                                    `}
+                                                >
+                                                    <Monitor size={24} className="mb-2" />
+                                                    <div className="font-bold text-sm">Render</div>
+                                                    <div className="text-[10px] opacity-70">High Quality (Slow)</div>
+                                                    {exportMode === 'offline' && <div className="absolute top-3 right-3 text-purple-500"><Check size={16} /></div>}
+                                                </button>
+
+                                                <button
+                                                    onClick={() => {
+                                                        setExportMode('realtime');
+                                                        setExportConfig({ ...exportConfig, fps: 30 });
+                                                    }}
+                                                    className={`
+                                                        relative p-4 rounded-xl border-2 text-left transition-all group
+                                                        ${exportMode === 'realtime'
+                                                            ? 'bg-orange-50 dark:bg-orange-900/10 border-orange-500 text-orange-700 dark:text-orange-400'
+                                                            : 'bg-white dark:bg-slate-800 border-transparent hover:border-slate-200 dark:hover:border-slate-700 text-slate-600 dark:text-slate-300'
+                                                        }
+                                                    `}
+                                                >
+                                                    <Smartphone size={24} className="mb-2" />
+                                                    <div className="font-bold text-sm">Record</div>
+                                                    <div className="text-[10px] opacity-70">Realtime (Fast)</div>
+                                                    {exportMode === 'realtime' && <div className="absolute top-3 right-3 text-orange-500"><Check size={16} /></div>}
+                                                </button>
+                                            </div>
+                                        </div>
 
 
-                                                    <div>
-                                                        <label className="text-xs font-bold uppercase text-slate-500 mb-2 block">Format</label>
+                                        {/* Advanced Options Toggle */}
+                                        <div className="pt-2">
+                                            <button
+                                                onClick={() => setShowExportAdvanced(!showExportAdvanced)}
+                                                className="flex items-center gap-2 text-xs font-bold text-slate-500 hover:text-slate-900 dark:hover:text-white transition-colors"
+                                            >
+                                                {showExportAdvanced ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
+                                                <span>Advanced Options</span>
+                                            </button>
+
+                                            {/* Collapsible Content */}
+                                            {showExportAdvanced && (
+                                                <div className="mt-4 space-y-4 animate-in slide-in-from-top-2 duration-200">
+                                                    <div className="space-y-2">
+                                                        <label className="text-xs font-bold uppercase text-slate-500">Frame Rate</label>
                                                         <div className="grid grid-cols-3 gap-2">
-                                                            <button
-                                                                onClick={() => setExportConfig({ ...exportConfig, format: "webm" })}
-                                                                className={`p-2 rounded-xl border text-center transition-all ${exportConfig.format === "webm" ? "bg-blue-50 dark:bg-blue-900/20 border-blue-500 ring-1 ring-blue-500 dark:ring-blue-500/50 text-blue-700 dark:text-blue-400" : "bg-white dark:bg-neutral-800 border-slate-200 dark:border-neutral-700 hover:border-blue-400 text-slate-900 dark:text-white"}`}
-                                                            >
-                                                                <div className="font-bold text-sm">WebM</div>
-                                                            </button>
-                                                            <button
-                                                                onClick={() => setExportConfig({ ...exportConfig, format: "mp4" })}
-                                                                className={`p-2 rounded-xl border text-center transition-all ${exportConfig.format === "mp4" ? "bg-blue-50 dark:bg-blue-900/20 border-blue-500 ring-1 ring-blue-500 dark:ring-blue-500/50 text-blue-700 dark:text-blue-400" : "bg-white dark:bg-neutral-800 border-slate-200 dark:border-neutral-700 hover:border-blue-400 text-slate-900 dark:text-white"}`}
-                                                            >
-                                                                <div className="font-bold text-sm">MP4</div>
-                                                            </button>
-                                                            <button
-                                                                onClick={() => setExportConfig({ ...exportConfig, format: "mov" })}
-                                                                className={`p-2 rounded-xl border text-center transition-all ${exportConfig.format === "mov" ? "bg-blue-50 dark:bg-blue-900/20 border-blue-500 ring-1 ring-blue-500 dark:ring-blue-500/50 text-blue-700 dark:text-blue-400" : "bg-white dark:bg-neutral-800 border-slate-200 dark:border-neutral-700 hover:border-blue-400 text-slate-900 dark:text-white"}`}
-                                                            >
-                                                                <div className="font-bold text-sm">MOV</div>
-                                                            </button>
-                                                        </div>
-                                                        <div className="mt-2 text-xs text-slate-400 dark:text-neutral-500">
-                                                            {exportConfig.format === 'webm' && "Best for Web. Fastest export."}
-                                                            {exportConfig.format === 'mp4' && "Universal format. Works everywhere."}
-                                                            {exportConfig.format === 'mov' && "Best for video editing software."}
-                                                        </div>
-                                                    </div>
-                                                </div>
-
-                                                <div className="space-y-6">
-                                                    <div>
-                                                        <label className="text-xs font-bold uppercase text-slate-500 mb-2 block">Duration</label>
-                                                        <div className="flex flex-col gap-2 lg:gap-3">
-                                                            <button
-                                                                onClick={() => setExportConfig({ ...exportConfig, useFullDuration: true })}
-                                                                className={`p-3 lg:p-4 rounded-xl border text-left transition-all group ${exportConfig.useFullDuration ? "bg-blue-50 dark:bg-blue-900/20 border-blue-500 ring-1 ring-blue-500 dark:ring-blue-500/50" : "bg-white dark:bg-neutral-800 border-slate-200 dark:border-neutral-700 hover:border-blue-400"}`}
-                                                            >
-                                                                <div className="flex justify-between items-center">
-                                                                    <div>
-                                                                        <div className={`font-bold mb-0.5 lg:mb-1 ${exportConfig.useFullDuration ? "text-blue-700 dark:text-blue-400" : "text-slate-900 dark:text-white"}`}>Full Timeline</div>
-                                                                        <div className="text-xs text-slate-500 dark:text-neutral-400 hidden lg:block">Export entire project.</div>
-                                                                    </div>
-                                                                    {exportConfig.useFullDuration && <div className="w-4 h-4 rounded-full bg-blue-500 border-border-blue-500 text-white flex items-center justify-center scale-90">✓</div>}
-                                                                </div>
-                                                            </button>
-
-                                                            <button
-                                                                onClick={() => setExportConfig({ ...exportConfig, useFullDuration: false })}
-                                                                className={`p-3 lg:p-4 rounded-xl border text-left transition-all group ${!exportConfig.useFullDuration ? "bg-blue-50 dark:bg-blue-900/20 border-blue-500 ring-1 ring-blue-500 dark:ring-blue-500/50" : "bg-white dark:bg-neutral-800 border-slate-200 dark:border-neutral-700 hover:border-blue-400"}`}
-                                                            >
-                                                                <div className="flex justify-between items-center">
-                                                                    <div>
-                                                                        <div className={`font-bold mb-0.5 lg:mb-1 ${!exportConfig.useFullDuration ? "text-blue-700 dark:text-blue-400" : "text-slate-900 dark:text-white"}`}>Custom Segment</div>
-                                                                        <div className="text-xs text-slate-500 dark:text-neutral-400 hidden lg:block">Specify seconds.</div>
-                                                                    </div>
-                                                                    {!exportConfig.useFullDuration && (
-                                                                        <div className="flex items-center gap-2" onClick={(e) => e.stopPropagation()}>
-                                                                            <input
-                                                                                type="number"
-                                                                                min={1}
-                                                                                max={60}
-                                                                                value={exportConfig.duration}
-                                                                                onChange={(e) => setExportConfig({ ...exportConfig, duration: Number(e.target.value) })}
-                                                                                className="w-16 bg-white dark:bg-neutral-900 border border-blue-200 dark:border-blue-500/30 text-blue-900 dark:text-blue-100 rounded-lg px-2 py-1 text-sm text-center font-bold outline-none ring-2 ring-blue-500/20"
-                                                                            />
-                                                                            <span className="text-xs font-bold text-blue-600 dark:text-blue-400">s</span>
-                                                                        </div>
-                                                                    )}
-                                                                </div>
-                                                            </button>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            {isBrowserWarning && (
-                                                <div className="flex items-start gap-3 p-4 bg-orange-50 dark:bg-orange-900/20 rounded-xl border border-orange-200 dark:border-orange-700/50 mb-4">
-                                                    <div className="w-5 h-5 text-orange-600 dark:text-orange-400 shrink-0 mt-0.5">⚠️</div>
-                                                    <div>
-                                                        <div className="font-bold text-orange-900 dark:text-orange-100 text-sm">Browser Recommendation</div>
-                                                        <div className="text-xs text-orange-700 dark:text-orange-300 mt-1 leading-relaxed">
-                                                            You are using <b>{BrowserDetector.getBrowserName()}</b>. Video export is experimental on this browser.
-                                                            <br />
-                                                            For 20x faster exports and better stability, please use <b>Google Chrome</b> or <b>Microsoft Edge</b>.
+                                                            {[24, 30, 60].map(fps => (
+                                                                <button
+                                                                    key={fps}
+                                                                    onClick={() => setExportConfig({ ...exportConfig, fps })}
+                                                                    className={`
+                                                                        py-2 px-3 rounded-lg text-sm font-bold border transition-colors
+                                                                        ${exportConfig.fps === fps
+                                                                            ? "bg-slate-900 dark:bg-white text-white dark:text-slate-900 border-transparent"
+                                                                            : "bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:border-slate-300"
+                                                                        }
+                                                                    `}
+                                                                >
+                                                                    {fps} FPS
+                                                                </button>
+                                                            ))}
                                                         </div>
                                                     </div>
                                                 </div>
                                             )}
-
-                                            {exportMode === 'offline' && (
-                                                <div className="flex items-start gap-3 p-4 bg-yellow-50 dark:bg-yellow-900/20 rounded-xl border border-yellow-200 dark:border-yellow-700/50">
-                                                    <div className="w-5 h-5 text-yellow-600 dark:text-yellow-400 shrink-0 mt-0.5">ℹ️</div>
-                                                    <div>
-                                                        <div className="font-bold text-yellow-900 dark:text-yellow-100 text-sm">Offline Render Mode</div>
-                                                        <div className="text-xs text-yellow-700 dark:text-yellow-300 mt-1">
-                                                            This mode forces a perfect 60 FPS by rendering frame-by-frame. It may take longer than the video duration, but guarantees no lag or stutter.
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            )}
-
-                                            {exportMode === 'realtime' && (
-                                                <div className="flex items-start gap-3 p-4 bg-purple-50 dark:bg-purple-900/20 rounded-xl border border-purple-200 dark:border-purple-700/50">
-                                                    <div className="w-5 h-5 text-purple-600 dark:text-purple-400 shrink-0 mt-0.5">⚡</div>
-                                                    <div>
-                                                        <div className="font-bold text-purple-900 dark:text-purple-100 text-sm">Realtime Record Mode</div>
-                                                        <div className="text-xs text-purple-700 dark:text-purple-300 mt-1">
-                                                            This mode captures the screen as it plays. It's faster (1x speed) but quality depends on playback smoothness.
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            )}
-
-                                            {isPerformanceWarning && (
-                                                <div className="flex items-start gap-3 p-4 bg-orange-50 dark:bg-orange-900/20 rounded-xl border border-orange-200 dark:border-orange-700/50">
-                                                    <div className="w-5 h-5 text-orange-600 dark:text-orange-400 shrink-0 mt-0.5">
-                                                        <AlertTriangle size={20} />
-                                                    </div>
-                                                    <div>
-                                                        <div className="font-bold text-orange-900 dark:text-orange-100 text-sm">Performance Warning</div>
-                                                        <div className="text-xs text-orange-700 dark:text-orange-300 mt-1">
-                                                            Your device seems to have limited hardware acceleration. Exporting at 60 FPS or High Resolution might cause freezing or crashes. Try 30 FPS if issues occur.
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            )}
-
-                                            <div className="space-y-2">
-                                                <label className="text-xs font-bold uppercase text-slate-500 block">Frame Rate (FPS)</label>
-                                                <div className="flex gap-2">
-                                                    {[30, 60].map(fps => (
-                                                        <button
-                                                            key={fps}
-                                                            onClick={() => setExportConfig({ ...exportConfig, fps })}
-                                                            className={`
-                                                                flex-1 py-2 rounded-xl text-sm font-bold border transition-all
-                                                                ${exportConfig.fps === fps
-                                                                    ? "bg-blue-50 dark:bg-blue-900/20 border-blue-500 text-blue-700 dark:text-blue-400 ring-1 ring-blue-500"
-                                                                    : "bg-white dark:bg-neutral-800 border-slate-200 dark:border-neutral-700 hover:border-blue-400 text-slate-700 dark:text-neutral-300"
-                                                                }
-                                                                ${fps === 60 && hardwareInfo?.tier === 'low' ? "opacity-90 ring-2 ring-orange-500/20 border-orange-200" : ""}
-                                                            `}
-                                                        >
-                                                            {fps} FPS
-                                                            {fps === 60 && <span className="ml-1 text-[10px] text-slate-400 font-normal opacity-70">(High Quality)</span>}
-                                                        </button>
-                                                    ))}
-                                                </div>
-                                            </div>
-
-
                                         </div>
 
-                                        {/* Dialog Footer */}
-                                        <div className="p-4 lg:p-6 border-t border-slate-200 dark:border-neutral-800 bg-slate-50 dark:bg-neutral-800/50 flex justify-between items-center">
-                                            <div className="text-xs text-slate-500 max-w-xs hidden sm:block">
-                                                By exporting, you agree to our <a href="#" className="underline hover:text-slate-800 dark:hover:text-neutral-200">Terms of Service</a>.
-                                            </div>
-                                            <div className="flex gap-2 lg:gap-3 w-full sm:w-auto justify-end">
-                                                <button
-                                                    onClick={() => setShowExportDialog(false)}
-                                                    className="px-4 py-2 lg:px-6 lg:py-3 text-slate-600 dark:text-neutral-400 font-bold text-xs lg:text-sm hover:text-slate-900 dark:hover:text-white rounded-xl hover:bg-slate-200 dark:hover:bg-neutral-700 transition-colors"
-                                                >
-                                                    Cancel
-                                                </button>
-                                                <button
-                                                    onClick={handleExport}
-                                                    className="px-6 py-2 lg:px-8 lg:py-3 bg-blue-600 text-white rounded-xl font-bold text-xs lg:text-sm hover:bg-blue-700 transition-all shadow-xl shadow-blue-500/20 hover:shadow-blue-500/40 active:scale-95 flex items-center gap-2"
-                                                >
-                                                    <span>Export</span>
-                                                    <svg className="w-3 h-3 lg:w-4 lg:h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" /></svg>
-                                                </button>
-                                            </div>
+                                        {/* Action Button */}
+                                        <button
+                                            onClick={handleExport}
+                                            className="w-full py-4 mt-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-bold text-base shadow-lg shadow-blue-500/30 active:scale-95 transition-all flex items-center justify-center gap-2"
+                                        >
+                                            <span>Export Video</span>
+                                            <Download size={18} />
+                                        </button>
+
+                                        <div className="text-center">
+                                            <p className="text-[10px] text-slate-400 dark:text-slate-500">
+                                                By continuing, you likely agree to our <a href="#" className="underline">Terms</a>.
+                                            </p>
                                         </div>
-                                    </>
+                                    </div>
                                 )}
                             </div>
-
-
-                            {/* Right Ad Column */}
-                            <div className="w-72 bg-slate-50 dark:bg-neutral-950 border-l border-slate-200 dark:border-neutral-800 p-6 hidden lg:flex flex-col items-center justify-center">
-                                <span className="text-[10px] uppercase font-bold text-slate-400 mb-4">Advertisement</span>
-                                <VerticalAd />
-                            </div>
-
                         </div>
                     </div>
                 )}

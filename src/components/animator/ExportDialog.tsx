@@ -3,6 +3,7 @@ import { useAnimatorStore } from '../../store/animatorStore';
 import { Player, type PlayerRef } from '@remotion/player';
 import { toBlob } from 'html-to-image';
 import download from 'downloadjs';
+import { FileVideo, Film, Check, X, Download, Smartphone, Monitor } from 'lucide-react';
 
 interface ExportDialogProps {
     playerRef: React.RefObject<PlayerRef | null>;
@@ -20,7 +21,11 @@ const ExportDialog: React.FC<ExportDialogProps> = ({ durationInFrames, component
     const [status, setStatus] = useState<'idle' | 'rendering' | 'encoding' | 'complete' | 'error'>('idle');
     const [videoBlob, setVideoBlob] = useState<Blob | null>(null);
     const [exportLogs, setExportLogs] = useState<string[]>([]);
+
+    // Configuration State
     const [isMp4, setIsMp4] = useState(true);
+    const [qualityScale, setQualityScale] = useState(1); // 1 = Original, 0.66 = ~720p if 1080p source
+
     const workerRef = useRef<Worker | null>(null);
 
     // Dedicated ref for the off-screen export player
@@ -65,17 +70,22 @@ const ExportDialog: React.FC<ExportDialogProps> = ({ durationInFrames, component
         const fps = 30;
         const durationInMs = (durationInFrames / fps) * 1000;
 
+        // Calculate Output Resolution based on Quality Scale
+        // Ensure even numbers for encoders usually
+        const outWidth = Math.round((width * qualityScale) / 2) * 2;
+        const outHeight = Math.round((height * qualityScale) / 2) * 2;
+
         // 1. Configure Worker
-        setExportLogs(['Starting Export...', `Resolution: ${width}x${height}`]);
+        setExportLogs(['Starting Export...', `Resolution: ${outWidth}x${outHeight}`]);
 
         const format = isMp4 ? 'mp4' : 'webm';
         workerRef.current?.postMessage({
             type: 'CONFIG',
             data: {
-                width,
-                height,
+                width: outWidth,
+                height: outHeight,
                 fps,
-                bitrate: 6_000_000,
+                bitrate: outHeight >= 1080 ? 8_000_000 : 4_000_000,
                 duration: durationInMs,
                 format // 'mp4' or 'webm'
             }
@@ -112,19 +122,31 @@ const ExportDialog: React.FC<ExportDialogProps> = ({ durationInFrames, component
 
                 if (containerToCapture) {
                     const blob = await toBlob(containerToCapture, {
-                        width: width,
+                        width: outWidth, // Capture at output resolution? Or capture high and downscale? 
+                        // html-to-image is better at capturing exact size.
+                        // But if we resize the container, layout might break.
+                        // Approach: Capture at FULL logical resolution, but draw to bitmap at OUTPUT resolution.
+                        // Actually, simpler to just capture at intended size. Video encoders handle size.
+                        // But html-to-image needs to render the pixels.
+                        // Let's rely on the player scaling.
+                        width: width, // Capture full res
                         height: height,
                         skipFonts: true,
                         style: {
                             visibility: 'visible',
-                            transform: 'none', // Ensure nans logic
+                            transform: 'none',
                             margin: '0',
                             padding: '0'
                         }
                     });
 
                     if (blob) {
-                        const bitmap = await createImageBitmap(blob);
+                        const bitmap = await createImageBitmap(blob, {
+                            resizeWidth: outWidth,
+                            resizeHeight: outHeight,
+                            resizeQuality: 'high'
+                        });
+
                         workerRef.current?.postMessage({
                             type: 'ENCODE_FRAME',
                             data: {
@@ -157,18 +179,39 @@ const ExportDialog: React.FC<ExportDialogProps> = ({ durationInFrames, component
 
     if (!isExportOpen) return null;
 
+    // Helper for Option Cards
+    const OptionCard = ({ selected, onClick, icon: Icon, title, desc }: any) => (
+        <button
+            onClick={onClick}
+            className={`flex-1 flex flex-col items-center p-3 sm:p-4 rounded-xl border-2 transition-all ${selected
+                    ? "bg-indigo-50 dark:bg-indigo-900/20 border-indigo-500 text-indigo-700 dark:text-indigo-400"
+                    : "bg-slate-50 dark:bg-slate-800/50 border-transparent hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200"
+                }`}
+        >
+            <Icon size={24} className="mb-2" strokeWidth={2} />
+            <span className="font-bold text-xs sm:text-sm">{title}</span>
+            <span className="text-[10px] opacity-70">{desc}</span>
+        </button>
+    );
+
     return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm">
+        <div className="fixed inset-0 z-[100] flex items-end sm:items-center justify-center pointer-events-none">
+            {/* Backdrop */}
+            <div
+                className="absolute inset-0 bg-black/60 backdrop-blur-sm pointer-events-auto"
+                onClick={() => setIsExportOpen(false)}
+            />
+
             {/* Off-Screen Player for Rendering */}
             <div
                 style={{
                     position: 'fixed',
                     top: 0,
-                    left: '200vw', // Move WAY off-screen, right? Or just 100vw.
+                    left: '200vw',
                     width: `${width}px`,
                     height: `${height}px`,
                     zIndex: -9999,
-                    visibility: 'visible', // Must be visible for html-to-image
+                    visibility: 'visible',
                     background: 'black',
                     pointerEvents: 'none'
                 }}
@@ -189,60 +232,114 @@ const ExportDialog: React.FC<ExportDialogProps> = ({ durationInFrames, component
                 </div>
             </div>
 
-            <div className="w-full max-w-md bg-[#1E293B] border border-slate-700 rounded-xl p-6 shadow-2xl relative">
-                <button
-                    onClick={() => setIsExportOpen(false)}
-                    className="absolute top-4 right-4 text-slate-500 hover:text-white"
-                >
-                    ✕
-                </button>
-
-                <h2 className="text-xl font-bold text-white mb-2">Export Video</h2>
-                <p className="text-slate-400 text-sm mb-6">
-                    Rendering locally using your device power.
-                    <br />
-                    <span className="text-xs text-slate-500 font-mono">Output: {width}x{height} @ 30fps</span>
-                </p>
+            {/* Panel */}
+            <div className={`
+                relative w-full sm:max-w-md bg-white dark:bg-[#1E293B] 
+                border-t sm:border border-slate-200 dark:border-slate-700 
+                rounded-t-2xl sm:rounded-2xl 
+                p-6 shadow-2xl z-10 pointer-events-auto 
+                max-h-[90vh] overflow-y-auto
+                animate-in slide-in-from-bottom-10 fade-in duration-300
+            `}>
+                <div className="flex items-center justify-between mb-6">
+                    <div>
+                        <h2 className="text-xl font-bold text-slate-900 dark:text-white">Export Video</h2>
+                        <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+                            Save your animation to device
+                        </p>
+                    </div>
+                    <button
+                        onClick={() => setIsExportOpen(false)}
+                        className="p-2 rounded-full hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-500 transition-colors"
+                    >
+                        <X size={20} />
+                    </button>
+                </div>
 
                 {status === 'idle' && (
-                    <div className="space-y-4">
-                        <div className="flex gap-2 bg-slate-800 p-1 rounded-lg">
+                    <div className="space-y-6">
+
+                        {/* Format Section */}
+                        <div className="space-y-2">
+                            <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">Format</label>
+                            <div className="flex gap-3">
+                                <OptionCard
+                                    selected={isMp4}
+                                    onClick={() => setIsMp4(true)}
+                                    icon={Film}
+                                    title="MP4"
+                                    desc="Best Quality"
+                                />
+                                <OptionCard
+                                    selected={!isMp4}
+                                    onClick={() => setIsMp4(false)}
+                                    icon={FileVideo}
+                                    title="WebM"
+                                    desc="Web Optimized"
+                                />
+                            </div>
+                        </div>
+
+                        {/* Quality Section */}
+                        <div className="space-y-2">
+                            <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">Resolution</label>
+                            <div className="flex gap-3">
+                                <OptionCard
+                                    selected={qualityScale === 1}
+                                    onClick={() => setQualityScale(1)}
+                                    icon={Monitor}
+                                    title="Original"
+                                    desc={`${width}x${height}`}
+                                />
+                                <OptionCard
+                                    selected={qualityScale === 0.5}
+                                    onClick={() => setQualityScale(0.5)}
+                                    icon={Smartphone}
+                                    title="Data Saver"
+                                    desc={`${Math.round(width / 2)}x${Math.round(height / 2)}`}
+                                />
+                            </div>
+                        </div>
+
+                        {/* Action */}
+                        <div className="pt-2">
                             <button
-                                onClick={() => setIsMp4(true)}
-                                className={`flex-1 py-2 rounded-md font-bold text-sm transition-all ${isMp4 ? 'bg-sky-500 text-white shadow-lg' : 'text-slate-400 hover:text-white'}`}
+                                onClick={startExport}
+                                className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-4 rounded-xl transition-all shadow-lg flex items-center justify-center gap-2 group"
                             >
-                                MP4 (Best)
-                            </button>
-                            <button
-                                onClick={() => setIsMp4(false)}
-                                className={`flex-1 py-2 rounded-md font-bold text-sm transition-all ${!isMp4 ? 'bg-sky-500 text-white shadow-lg' : 'text-slate-400 hover:text-white'}`}
-                            >
-                                WebM (Web)
+                                <span>Start Export</span>
+                                <Download size={18} className="group-hover:translate-y-0.5 transition-transform" />
                             </button>
                         </div>
-                        <button
-                            onClick={startExport}
-                            className="w-full bg-sky-500 hover:bg-sky-400 text-white font-bold py-3 rounded-lg transition-all shadow-[0_0_20px_-5px_rgba(14,165,233,0.4)]"
-                        >
-                            Start Render
-                        </button>
                     </div>
                 )}
 
                 {(status === 'rendering' || status === 'encoding') && (
-                    <div className="space-y-4">
-                        <div className="w-full bg-slate-800 h-2 rounded-full overflow-hidden">
-                            <div
-                                className="bg-sky-500 h-full transition-all duration-300 transform origin-left"
-                                style={{ width: `${progress}%` }}
-                            />
+                    <div className="space-y-6 py-4">
+                        <div className="relative pt-1">
+                            <div className="flex mb-2 items-center justify-between">
+                                <div>
+                                    <span className="text-xs font-semibold inline-block py-1 px-2 uppercase rounded-full text-indigo-600 bg-indigo-200">
+                                        {status === 'rendering' ? 'Rendering' : 'Encoding'}
+                                    </span>
+                                </div>
+                                <div className="text-right">
+                                    <span className="text-xs font-semibold inline-block text-indigo-600">
+                                        {progress}%
+                                    </span>
+                                </div>
+                            </div>
+                            <div className="overflow-hidden h-2 mb-4 text-xs flex rounded bg-indigo-200">
+                                <div style={{ width: `${progress}%` }} className="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-indigo-500 transition-all duration-300"></div>
+                            </div>
                         </div>
-                        <p className="text-center text-sm text-sky-400 animate-pulse font-mono">
-                            {status === 'rendering' ? `Processing Frame ${Math.round(progress * 1.2)}...` : 'Finalizing...'}
+
+                        <p className="text-center text-sm text-slate-500 animate-pulse font-mono">
+                            This relies on your browser performance.<br />Please keep this tab open.
                         </p>
 
-                        {/* Log Terminal */}
-                        <div className="w-full bg-black/50 rounded-lg p-2 h-24 overflow-y-auto font-mono text-[10px] text-slate-400 border border-slate-700/50">
+                        {/* Console logs */}
+                        <div className="bg-black/80 rounded-lg p-3 h-32 overflow-y-auto font-mono text-[10px] text-green-400 border border-slate-700/50 shadow-inner">
                             {exportLogs.map((log, i) => (
                                 <div key={i} className="whitespace-nowrap">{log}</div>
                             ))}
@@ -252,26 +349,38 @@ const ExportDialog: React.FC<ExportDialogProps> = ({ durationInFrames, component
                 )}
 
                 {status === 'complete' && (
-                    <div className="space-y-4 text-center">
-                        <div className="w-16 h-16 bg-green-500/20 text-green-400 rounded-full flex items-center justify-center mx-auto mb-4">
-                            ✓
+                    <div className="space-y-6 text-center py-4">
+                        <div className="w-20 h-20 bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400 rounded-full flex items-center justify-center mx-auto mb-2 animate-in zoom-in duration-300">
+                            <Check size={40} />
                         </div>
-                        <p className="text-slate-200">Export Ready!</p>
+                        <div>
+                            <h3 className="text-lg font-bold text-slate-900 dark:text-white">Export Complete!</h3>
+                            <p className="text-sm text-slate-500">Your video is ready to download.</p>
+                        </div>
+
                         <button
                             onClick={handleDownload}
-                            className="w-full bg-green-600 hover:bg-green-500 text-white font-bold py-3 rounded-lg transition-colors"
+                            className="w-full bg-green-600 hover:bg-green-500 text-white font-bold py-4 rounded-xl transition-colors shadow-lg flex items-center justify-center gap-2"
                         >
-                            Download .webm
+                            <Download size={20} />
+                            <span>Save to Device</span>
                         </button>
                     </div>
                 )}
 
                 {status === 'error' && (
-                    <div className="space-y-4 text-center">
-                        <p className="text-red-400">Rendering Failed.</p>
+                    <div className="space-y-6 text-center py-4">
+                        <div className="w-20 h-20 bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400 rounded-full flex items-center justify-center mx-auto mb-2">
+                            <X size={40} />
+                        </div>
+                        <div>
+                            <h3 className="text-lg font-bold text-slate-900 dark:text-white">Export Failed</h3>
+                            <p className="text-sm text-slate-500">Something went wrong during rendering.</p>
+                        </div>
+
                         <button
                             onClick={() => setStatus('idle')}
-                            className="text-slate-400 underline hover:text-white"
+                            className="text-slate-500 hover:text-slate-900 dark:hover:text-white underline"
                         >
                             Try Again
                         </button>
