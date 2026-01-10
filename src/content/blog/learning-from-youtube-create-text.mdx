@@ -1,0 +1,59 @@
+---
+title: "Learning from YouTube Create: The Perfect Mobile Text Inspector"
+description: "Analyzing the specialized text editing workflows in YouTube Create and how we're adapting them for Kinetix."
+pubDate: 2024-01-09
+tags: ["ux", "mobile", "case-study"]
+subject: "design"
+---
+
+When building a mobile video editor, text is one of the most complex elements to handle. It's not just about content; it's about typography, style, timing, and animation.
+
+The **YouTube Create** app has set a new standard for how these properties should be surfaced on mobile. Instead of burying options in deep menus, it uses a **context-aware bottom sheet** that puts the most important creative tools right in the "thumb zone".
+
+## The YouTube Create Text Workflow
+
+When you select a text element in YouTube Create, the UI transforms. The generic bottom bar is replaced by a specialized "Text Toolbar" designed for rapid iteration.
+
+### Key Features
+1.  **Bottom Sheet Architecture**: The properties panel slides up, covering the bottom ~40% of the screen. This allows the user to see the canvas clearly while adjusting styles.
+2.  **Specialized Categories**:
+    *   **Edit**: Quick distinct mode just for typing.
+    *   **Style**: A dedicated tab for "Look & Feel" (Color, Background, Outline, Shadow).
+    *   **Font**: A fullscreen picker with hundreds of Google Fonts.
+    *   **Animation**: One-tap presets for entrance/exit motions.
+3.  **Live Preview**: Every change (font size, color, animation) is reflected instantly on the canvas.
+4.  **Touch Optimizations**: Sliders are thick and easy to grab. Buttons are large and card-like.
+
+## Adapting for Kinetix
+
+Our goal with Kinetix is to bring this level of polish to the web. We've already started the transition with our new **Mobile Bottom Sheet** architecture.
+
+### What We've Implemented
+*   **Context Awareness**: Our `PropertiesPanel` now detects if `obj instanceof TextObject` and shows a specialized **"Typography"** tab.
+*   **Horizontal Category Strip**: Just like YouTube Create, we use a horizontal scrollable strip to switch between `Adjust`, `Style`, `Text`, and `Motion`.
+*   **Touch Controls**: We've replaced standard HTML inputs with custom `Slider` and `ColorPicker` components designed for touch.
+
+### The Roadmap: Deepening User Control
+
+To fully match the utility of YouTube Create, we are planning the following enhancements for our Text Inspector:
+
+#### 1. Advanced Styling Cards
+Currently, we have basic Color and Opacity. We plan to add:
+*   **Outline/Stroke**: A toggleable visual card to add borders to text.
+*   **Shadow**: A dedicated control group for drop shadows (blur, offset, color).
+*   **Background**: Option to add "highlight" backgrounds behind text, popular in social video.
+
+#### 2. The Font Picker
+Dropdowns don't work well on mobile. We will build a **Font Picker Drawer**:
+*   A searchable list of fonts.
+*   Visual previews of each font family.
+*   "Recently Used" section for consistency.
+
+#### 3. Text Effects
+YouTube Create offers pre-made effects (gradients, metallic looks). We can implement this using **CSS Filters** and **SVG Masks** directly in our engine, exposing them as simple "Effect Cards" in the UI.
+
+## Conclusion
+
+Mobile interfaces demand focus. By analyzing patterns from industry leaders like YouTube Create, we can strip away the complexity of desktop software and build tools that feel native, intuitive, and powerful.
+
+*Stay tuned for the next update where we roll out the Advanced Text Styling options!*

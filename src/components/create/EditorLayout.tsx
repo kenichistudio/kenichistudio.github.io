@@ -13,8 +13,14 @@ import { BrowserDetector } from "../../utils/BrowserDetector";
 import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { AlertTriangle } from "lucide-react";
 import { BottomSheet } from "./BottomSheet";
-import { BottomDock, type BottomDockTab } from "./BottomDock";
+import { BottomDock, type BottomDockTab, type ObjectType } from "./BottomDock";
 import { CanvasControls } from "./CanvasControls";
+import { TextObject } from "../../engine/objects/TextObject";
+import { ChartObject } from "../../engine/objects/ChartObject";
+import { CharacterObject } from "../../engine/objects/CharacterObject";
+import { CodeBlockObject } from "../../engine/objects/CodeBlockObject";
+import { ParticleTextObject } from "../../engine/objects/ParticleTextObject";
+import { BarChartRaceObject } from "../../engine/objects/BarChartRaceObject";
 
 // Use a simple local context or prop drilling for this "one-page app"
 // to keep it self-contained for now.
@@ -37,20 +43,28 @@ export const EditorLayout = () => {
 
     // Mobile Bottom Sheet State
     const [activeBottomTab, setActiveBottomTab] = useState<BottomDockTab>(null);
+    const [selectedObjectType, setSelectedObjectType] = useState<ObjectType>(null);
     const [showExportAdvanced, setShowExportAdvanced] = useState(false);
 
-    // When selection changes on mobile, verify if we should open edit sheet?
-    // YouTube Create behavior: selecting an object opens the tools.
-    // We can auto-open 'edit' tab if on mobile.
+    // Update selected object type when selection changes
     useEffect(() => {
-        if (selectedId && window.innerWidth < 1024) {
-            // Optional: Auto-open edit sheet or just show dock is active?
-            // YouTube Create: The bottom bar changes to tool options.
-            // For us: We highlight the Edit button or open the sheet.
-            // Let's just notify availability for now, or auto-open if desired.
-            // setActiveBottomTab('edit'); // Uncomment to auto-open
+        if (selectedId && engine) {
+            const obj = engine.scene.get(selectedId);
+            if (obj instanceof TextObject) setSelectedObjectType("text");
+            else if (obj instanceof ChartObject) setSelectedObjectType("chart");
+            else if (obj instanceof CharacterObject) setSelectedObjectType("character");
+            else if (obj instanceof CodeBlockObject) setSelectedObjectType("code");
+            else if (obj instanceof ParticleTextObject) setSelectedObjectType("particle");
+            else if (obj instanceof BarChartRaceObject) setSelectedObjectType("chart"); // Treat as chart for now
+            else setSelectedObjectType("shape"); // Default fallthrough for now
+        } else {
+            setSelectedObjectType(null);
+            // Close any object-specific sheets when deselected
+            if (['edit', 'font', 'style', 'motion', 'adjust'].includes(activeBottomTab || '')) {
+                setActiveBottomTab(null);
+            }
         }
-    }, [selectedId]);
+    }, [selectedId, engine]);
 
     // FIX: Remove injected 'height: auto !important' style to restore layout.
     useLayoutEffect(() => {
@@ -101,6 +115,7 @@ export const EditorLayout = () => {
             setCurrentTime(t => t); // fast way to trigger update? or maybe add a state?
         };
 
+        newEngine.resize(1920, 1080);
         setEngine(newEngine);
 
         return () => {
@@ -261,9 +276,9 @@ export const EditorLayout = () => {
                     {/* Sticky Canvas Container (Mobile) / Flex Item (Desktop) */}
                     <div
                         ref={mainCanvasContainerRef}
-                        className="relative z-40 lg:relative flex flex-col w-full min-w-0 min-h-0 bg-slate-100 dark:bg-[#020617] border-b border-slate-200 dark:border-slate-800 lg:border-none"
+                        className="relative z-40 lg:relative flex flex-col w-full min-w-0 min-h-0 bg-slate-100 dark:bg-[#020617] border-b border-slate-200 dark:border-slate-800 lg:border-none lg:flex-1"
                     >
-                        <div className="w-full h-auto max-h-[55vh] lg:max-h-none flex items-center justify-center bg-slate-900/5 dark:bg-black/20">
+                        <div className="w-full h-auto max-h-[55vh] lg:max-h-none lg:flex-1 lg:min-h-0 flex items-center justify-center bg-slate-900/5 dark:bg-black/20 p-8">
                             <CanvasWorkspace
                                 ref={canvasRef}
                                 aspectRatio={canvasAspectRatio}
@@ -311,86 +326,96 @@ export const EditorLayout = () => {
                                 />
                             </div>
                         </div>
-                    </div >
 
-                    {/* Mobile Properties Panel - MOVED TO BOTTOM SHEET */}
-                    {/* <div className="flex-1 lg:hidden p-4 bg-slate-50 dark:bg-slate-950"> ... </div> */}
 
-                </div >
+                        {/* Mobile Properties Panel - MOVED TO BOTTOM SHEET */}
+                        {/* <div className="flex-1 lg:hidden p-4 bg-slate-50 dark:bg-slate-950"> ... </div> */}
 
-                {/* Mobile Bottom Dock */}
-                < BottomDock
-                    activeTab={activeBottomTab}
-                    onTabChange={(tab) => {
-                        if (tab === 'export') {
-                            setShowExportDialog(true);
-                        } else {
-                            setActiveBottomTab(tab);
-                        }
-                    }}
-                    hasSelection={!!selectedId}
-                />
 
-                {/* Mobile Bottom Sheets */}
 
-                {/* 1. ASSETS SHEET */}
-                <BottomSheet
-                    isOpen={['assets', 'text', 'shapes', 'code', 'charts'].includes(activeBottomTab || '')}
-                    onClose={() => setActiveBottomTab(null)}
-                    title={
-                        activeBottomTab === 'text' ? 'Typography' :
-                            activeBottomTab === 'shapes' ? 'Shapes' :
-                                activeBottomTab === 'code' ? 'Code Blocks' :
-                                    activeBottomTab === 'charts' ? 'Charts & Data' : 'Assets'
-                    }
-                    initialSnap={0.5}
-                    snaps={[0.5, 0.9]}
-                >
-                    <div className="h-full">
-                        <Sidebar
-                            engine={engine}
-                            isMobileSheet
-                            mobileActiveTab={
-                                activeBottomTab === 'text' ? 'text' :
-                                    activeBottomTab === 'shapes' ? 'shapes' :
-                                        activeBottomTab === 'code' ? 'shapes' : // Code is in shapes tab
-                                            activeBottomTab === 'charts' ? 'media' : // Charts are in media tab
-                                                undefined
-                            }
+                        {/* Mobile Bottom Dock */}
+                        <BottomDock
+                            activeTab={activeBottomTab}
+                            onTabChange={(tab) => {
+                                if (tab === 'export') {
+                                    setShowExportDialog(true);
+                                } else {
+                                    setActiveBottomTab(tab);
+                                }
+                            }}
+                            hasSelection={!!selectedId}
+                            selectedObjectType={selectedObjectType}
+                            isFullscreen={isFullscreen}
                         />
+
+                        {/* Mobile Bottom Sheets */}
+
+                        {/* 1. ASSETS SHEET */}
+                        <BottomSheet
+                            isOpen={['assets', 'text', 'shapes', 'code', 'charts'].includes(activeBottomTab || '')}
+                            onClose={() => setActiveBottomTab(null)}
+                            title={
+                                activeBottomTab === 'text' ? 'Typography' :
+                                    activeBottomTab === 'shapes' ? 'Shapes' :
+                                        activeBottomTab === 'code' ? 'Code Blocks' :
+                                            activeBottomTab === 'charts' ? 'Charts & Data' : 'Assets'
+                            }
+                            initialSnap={0.5}
+                            snaps={[0.5, 0.9]}
+                        >
+                            <div className="h-full">
+                                <Sidebar
+                                    engine={engine}
+                                    isMobileSheet
+                                    mobileActiveTab={
+                                        activeBottomTab === 'text' ? 'text' :
+                                            activeBottomTab === 'shapes' ? 'shapes' :
+                                                activeBottomTab === 'code' ? 'shapes' : // Code is in shapes tab
+                                                    activeBottomTab === 'charts' ? 'media' : // Charts are in media tab
+                                                        undefined
+                                    }
+                                />
+                            </div>
+                        </BottomSheet>
+
+                        {/* 2. EDIT SHEET (Context Aware) */}
+                        <BottomSheet
+                            isOpen={['edit', 'font', 'style', 'motion', 'adjust', 'theme', 'settings'].includes(activeBottomTab || '')}
+                            onClose={() => setActiveBottomTab(null)}
+                            title="Edit Properties"
+                            initialSnap={0.5}
+                            snaps={[0.5, 0.9]}
+
+                        >
+                            <PropertiesPanel
+                                engine={engine}
+                                selectedId={selectedId}
+                                isMobileSheet
+                                // Pass the active tab as the category to show
+                                externalMobileCategory={['font', 'style', 'motion', 'adjust', 'theme', 'settings'].includes(activeBottomTab || '') ? activeBottomTab as string : undefined}
+                            />
+                        </BottomSheet>
+
+                        {/* 3. LAYERS SHEET */}
+                        <BottomSheet
+                            isOpen={activeBottomTab === 'layers'}
+                            onClose={() => setActiveBottomTab(null)}
+                            title="Layers"
+                            initialSnap={0.5}
+                            snaps={[0.5, 0.9]}
+                        >
+                            <PropertiesPanel
+                                engine={engine}
+                                selectedId={selectedId}
+                                isMobileSheet
+                                initialTab="layers"
+                            />
+                        </BottomSheet>
+
                     </div>
-                </BottomSheet>
+                </div>
 
-                {/* 2. EDIT SHEET */}
-                <BottomSheet
-                    isOpen={activeBottomTab === 'edit'}
-                    onClose={() => setActiveBottomTab(null)}
-                    title="Edit Properties"
-                    initialSnap={0.5}
-                    snaps={[0.5, 0.9]}
-                >
-                    <PropertiesPanel
-                        engine={engine}
-                        selectedId={selectedId}
-                        isMobileSheet // Pass this to disable the persistent toolbar we made earlier
-                    />
-                </BottomSheet>
-
-                {/* 3. LAYERS SHEET */}
-                <BottomSheet
-                    isOpen={activeBottomTab === 'layers'}
-                    onClose={() => setActiveBottomTab(null)}
-                    title="Layers"
-                    initialSnap={0.5}
-                    snaps={[0.5, 0.9]}
-                >
-                    <PropertiesPanel
-                        engine={engine}
-                        selectedId={selectedId}
-                        isMobileSheet
-                        initialTab="layers"
-                    />
-                </BottomSheet>
+                {/* Mobile Properties Panel - MOVED TO BOTTOM SHEET */}
 
 
                 {/* Mobile Floating Inspector Toggle - REMOVED per redesign */}
@@ -408,6 +433,7 @@ export const EditorLayout = () => {
                     <PropertiesPanel
                         engine={engine}
                         selectedId={selectedId}
+                        onResize={(w, h) => setCanvasAspectRatio(w / h)}
                     />
                 </div>
 

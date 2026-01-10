@@ -290,3 +290,57 @@ export const ColorPicker: React.FC<ColorPickerProps> = ({ value, onChange, label
         </div>
     );
 };
+
+// --- Mobile Specific Components ---
+
+export const MobilePropertyContainer: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+    return (
+        <div className="flex flex-col h-full bg-white dark:bg-slate-900 pb-safe">
+            {children}
+        </div>
+    );
+};
+
+export const MobileCategoryStrip: React.FC<{
+    categories: { id: string; label: string; icon?: React.ReactNode }[];
+    activeCategory: string;
+    onSelect: (id: string) => void;
+    children?: React.ReactNode;
+}> = ({ categories, activeCategory, onSelect, children }) => {
+    return (
+        <div className="flex items-center gap-4 overflow-x-auto px-4 py-3 border-b border-white/10 no-scrollbar touch-pan-x">
+            {children}
+            {categories.map((cat) => (
+                <button
+                    key={cat.id}
+                    onClick={() => onSelect(cat.id)}
+                    className={`flex flex-col items-center gap-1 min-w-[60px] transition-all ${activeCategory === cat.id
+                        ? "text-blue-400 opacity-100 scale-105"
+                        : "text-slate-400 opacity-70 hover:opacity-100"
+                        }`}
+                >
+                    <div className={`p-2 rounded-full ${activeCategory === cat.id ? "bg-blue-500/20" : "bg-transparent"
+                        }`}>
+                        {cat.icon}
+                    </div>
+                    <span className="text-[10px] font-medium uppercase tracking-wider">{cat.label}</span>
+                </button>
+            ))}
+        </div>
+    );
+};
+
+export const MobileControlGroup: React.FC<{ title?: string; children: React.ReactNode; className?: string }> = ({ title, children, className }) => {
+    return (
+        <div className={`mb-4 ${className}`}>
+            {title && (
+                <div className="px-4 mb-2 text-xs font-bold text-slate-500 uppercase tracking-widest">
+                    {title}
+                </div>
+            )}
+            <div className="bg-slate-800/50 rounded-xl overflow-hidden mx-2 border border-white/5 divide-y divide-white/5">
+                {children}
+            </div>
+        </div>
+    );
+};

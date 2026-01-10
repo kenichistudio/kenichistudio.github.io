@@ -141,8 +141,6 @@ export const Sidebar = ({ engine, isMobileSheet = false, mobileActiveTab }: Side
         race.y = engine.scene.height / 2 - 200;
         engine.scene.add(race);
         engine.render();
-        engine.scene.add(race);
-        engine.render();
     };
 
     const handleAddCharacter = () => {

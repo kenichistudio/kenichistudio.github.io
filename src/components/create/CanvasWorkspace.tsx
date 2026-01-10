@@ -62,51 +62,72 @@ export const CanvasWorkspace = forwardRef<HTMLCanvasElement, CanvasWorkspaceProp
                 return null;
         }
     };
+    const containerRef = React.useRef<HTMLDivElement>(null);
+    const [containerSize, setContainerSize] = React.useState({ w: 0, h: 0 });
+
+    React.useLayoutEffect(() => {
+        if (!containerRef.current?.parentElement) return;
+
+        const observer = new ResizeObserver((entries) => {
+            for (const entry of entries) {
+                setContainerSize({ w: entry.contentRect.width, h: entry.contentRect.height });
+            }
+        });
+
+        observer.observe(containerRef.current.parentElement);
+        return () => observer.disconnect();
+    }, []);
+
+    const targetRatio = props.aspectRatio || 16 / 9;
+    const containerRatio = containerSize.w / containerSize.h;
+
+    // If container is wider than target: constrained by height (h-full)
+    // If container is taller than target: constrained by width (w-full)
+    // Default to w-full if measurement not ready
+    const isConstrainedByHeight = containerSize.w > 0 && containerRatio > targetRatio;
+
     return (
-        <div className="flex-1 flex items-center justify-center overflow-hidden min-w-0 min-h-0 bg-slate-50 dark:bg-neutral-950 p-2 md:p-8">
-            <div
-                style={{ aspectRatio: props.aspectRatio || 16 / 9 }}
-                className="shadow-2xl shadow-slate-300 dark:shadow-neutral-950 border border-slate-200 dark:border-neutral-800 ring-4 ring-slate-100 dark:ring-neutral-900 rounded-sm overflow-hidden w-auto h-auto max-w-full max-h-full block relative group"
-            >
-                <canvas
-                    ref={ref}
-                    width={1920}
-                    height={1080}
-                    className="w-full h-full bg-white dark:bg-slate-900 block cursor-crosshair"
-                />
+        <div
+            ref={containerRef}
+            style={{ aspectRatio: targetRatio }}
+            className={`shadow-2xl shadow-slate-300 dark:shadow-neutral-950 border border-slate-200 dark:border-neutral-800 ring-4 ring-slate-100 dark:ring-neutral-900 rounded-sm overflow-hidden block relative group ${isConstrainedByHeight ? 'h-full w-auto' : 'w-full h-auto'}`}
+        >
+            <canvas
+                ref={ref}
+                className="w-full h-full bg-white dark:bg-slate-900 block cursor-crosshair"
+            />
 
-                {/* Guide Overlay */}
-                {renderGuideOverlay()}
+            {/* Guide Overlay */}
+            {renderGuideOverlay()}
 
-                {/* Control Overlay */}
-                {!props.hideOverlayControls && (
-                    <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-2 px-3 py-2 bg-slate-900/80 backdrop-blur text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-200 transform translate-y-2 group-hover:translate-y-0 z-50">
-                        <button
-                            onClick={(e) => {
-                                e.stopPropagation();
-                                props.onPlayPause?.();
-                            }}
-                            className="p-1.5 hover:bg-white/20 rounded-full transition-colors"
-                            title={props.isPlaying ? "Pause" : "Play"}
-                        >
-                            {props.isPlaying ? <Pause size={16} fill="currentColor" /> : <Play size={16} fill="currentColor" />}
-                        </button>
+            {/* Control Overlay */}
+            {!props.hideOverlayControls && (
+                <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-2 px-3 py-2 bg-slate-900/80 backdrop-blur text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-200 transform translate-y-2 group-hover:translate-y-0 z-50">
+                    <button
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            props.onPlayPause?.();
+                        }}
+                        className="p-1.5 hover:bg-white/20 rounded-full transition-colors"
+                        title={props.isPlaying ? "Pause" : "Play"}
+                    >
+                        {props.isPlaying ? <Pause size={16} fill="currentColor" /> : <Play size={16} fill="currentColor" />}
+                    </button>
 
-                        <div className="w-px h-4 bg-white/20 mx-1" />
+                    <div className="w-px h-4 bg-white/20 mx-1" />
 
-                        <button
-                            onClick={(e) => {
-                                e.stopPropagation();
-                                props.onToggleFullscreen?.();
-                            }}
-                            className="p-1.5 hover:bg-white/20 rounded-full transition-colors"
-                            title={props.isFullscreen ? "Exit Fullscreen" : "Fullscreen"}
-                        >
-                            {props.isFullscreen ? <Minimize size={16} /> : <Maximize size={16} />}
-                        </button>
-                    </div>
-                )}
-            </div>
+                    <button
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            props.onToggleFullscreen?.();
+                        }}
+                        className="p-1.5 hover:bg-white/20 rounded-full transition-colors"
+                        title={props.isFullscreen ? "Exit Fullscreen" : "Fullscreen"}
+                    >
+                        {props.isFullscreen ? <Minimize size={16} /> : <Maximize size={16} />}
+                    </button>
+                </div>
+            )}
         </div>
     );
 });
