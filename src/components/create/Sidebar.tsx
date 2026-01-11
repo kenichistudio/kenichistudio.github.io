@@ -9,14 +9,11 @@ import {
     X
 } from "lucide-react";
 import { Engine } from "../../engine/Core";
-import { TextObject } from "../../engine/objects/TextObject";
-import { CodeBlockObject } from "../../engine/objects/CodeBlockObject";
-import { ChartObject } from "../../engine/objects/ChartObject";
-import { BarChartRaceObject } from "../../engine/objects/BarChartRaceObject";
-import { CharacterObject } from "../../engine/objects/CharacterObject";
-import { LogoCharacterObject } from "../../engine/objects/LogoCharacterObject";
-import { ParticleTextObject } from "../../engine/objects/ParticleTextObject";
-import { User, Sparkles, Wand2 } from "lucide-react";
+import { TEXT_OPTIONS, createText } from "../../data/textOptions";
+import { SHAPE_OPTIONS, createShape } from "../../data/shapeOptions";
+import { CODE_OPTIONS, createCode } from "../../data/codeOptions";
+import { CHART_TYPES, createChart } from "../../data/chartOptions";
+
 interface SidebarProps {
     engine: Engine | null;
     isMobileSheet?: boolean;
@@ -72,113 +69,11 @@ export const Sidebar = ({ engine, isMobileSheet = false, mobileActiveTab }: Side
         return `${base} ${count}`;
     };
 
-    const handleAddText = (style: string) => {
-        if (!engine) return;
-        if (window.innerWidth < 1100) setLocalActiveTab(null);
-        const name = getNextName(style === "heading" ? "Heading" : "Subheading");
-        const txt = new TextObject(`text-${Date.now()}`, {
-            text: name, // Use the name as default text too? Or just "Big Heading"
-            fontSize: style === "heading" ? 80 : 40,
-            color: "#ffffff"
-        });
-        txt.name = name; // Set the name
-        txt.text = name; // Set the display text to match name for clarity
-        txt.x = engine.scene.width / 2 - 150;
-        txt.y = engine.scene.height / 2 - 50;
-        engine.scene.add(txt);
-        engine.render();
-    };
 
-    const handleAddCode = () => {
-        if (!engine) return;
-        if (window.innerWidth < 1100) setLocalActiveTab(null);
-        const name = getNextName("Code");
-        const code = new CodeBlockObject(`code-${Date.now()}`);
-        code.name = name;
-        code.x = engine.scene.width / 2 - 200;
-        code.y = engine.scene.height / 2 - 100;
-        engine.scene.add(code);
-        engine.render();
-    };
 
-    const handleAddChart = (type: "bar" | "line" | "area" | "scatter" | "pie" | "donut") => {
-        if (!engine) return;
-        if (window.innerWidth < 1100) setLocalActiveTab(null);
 
-        let nameBase = "Chart";
-        if (type === "bar") nameBase = "Bar Chart";
-        if (type === "line") nameBase = "Line Chart";
-        if (type === "area") nameBase = "Area Chart";
-        if (type === "scatter") nameBase = "Scatter Plot";
-        if (type === "pie") nameBase = "Pie Chart";
-        if (type === "donut") nameBase = "Donut Chart";
 
-        const name = getNextName(nameBase);
-        const chart = new ChartObject(`chart-${Date.now()}`, type);
-        chart.name = name;
-        chart.x = engine.scene.width / 2 - 200;
-        chart.y = engine.scene.height / 2 - 150;
 
-        if (type === "pie" || type === "donut") {
-            chart.width = 300;
-            chart.height = 300;
-            chart.labels = ["A", "B", "C", "D"];
-            chart.data = [30, 20, 15, 35];
-            chart.animation.type = "grow"; // Radial grow
-        }
-
-        engine.scene.add(chart);
-        engine.render();
-    };
-
-    const handleAddRace = () => {
-        if (!engine) return;
-        if (window.innerWidth < 1100) setLocalActiveTab(null);
-        const name = getNextName("Bar Race");
-        const race = new BarChartRaceObject(`race-${Date.now()}`);
-        race.name = name;
-        race.x = engine.scene.width / 2 - 300;
-        race.y = engine.scene.height / 2 - 200;
-        engine.scene.add(race);
-        engine.render();
-    };
-
-    const handleAddCharacter = () => {
-        if (!engine) return;
-        if (window.innerWidth < 1100) setLocalActiveTab(null);
-        const name = getNextName("Character");
-        const char = new CharacterObject(`char-${Date.now()}`);
-        char.name = name;
-        char.x = engine.scene.width / 2 - 60;
-        char.y = engine.scene.height / 2 - 100;
-        engine.scene.add(char);
-        engine.render();
-    };
-
-    const handleAddLogo = () => {
-        if (!engine) return;
-        if (window.innerWidth < 1100) setLocalActiveTab(null);
-        const name = getNextName("Header Logo");
-        const logo = new LogoCharacterObject(`logo-${Date.now()}`);
-        logo.name = name;
-        logo.x = engine.scene.width / 2 - 150;
-        logo.y = engine.scene.height / 2 - 150;
-        engine.scene.add(logo);
-        engine.render();
-    };
-
-    const handleAddParticleText = () => {
-        if (!engine) return;
-        if (window.innerWidth < 1100) setLocalActiveTab(null);
-        const name = getNextName("Particles");
-        const obj = new ParticleTextObject(`ptext-${Date.now()}`);
-        obj.name = name;
-        obj.text = "PARTICLES";
-        obj.x = engine.scene.width / 2 - 300;
-        obj.y = engine.scene.height / 2 - 75;
-        engine.scene.add(obj);
-        engine.render();
-    };
 
     return (
         <div className="flex h-full z-10 shadow-xl shadow-slate-200 dark:shadow-neutral-900/50 relative">
@@ -286,140 +181,110 @@ export const Sidebar = ({ engine, isMobileSheet = false, mobileActiveTab }: Side
                             {activeTab === "text" && (
                                 <div className="space-y-4">
                                     <div className="text-xs font-bold text-slate-400 text-center mb-4">Click to add to canvas</div>
-                                    <button
-                                        onClick={() => handleAddText("heading")}
-                                        className="w-full text-left p-6 bg-white dark:bg-neutral-800 rounded-xl shadow-sm border border-slate-200 dark:border-neutral-700 hover:scale-105 hover:shadow-md transition-all group"
-                                    >
-                                        <span className="text-4xl font-black text-slate-900 dark:text-white block mb-2">Heading</span>
-                                        <span className="text-xs text-slate-400">Inter Display, Bold</span>
-                                    </button>
-                                    <button
-                                        onClick={() => handleAddText("subheading")}
-                                        className="w-full text-left p-6 bg-white dark:bg-neutral-800 rounded-xl shadow-sm border border-slate-200 dark:border-neutral-700 hover:scale-105 hover:shadow-md transition-all group"
-                                    >
-                                        <span className="text-xl font-medium text-slate-700 dark:text-neutral-300 block mb-2">Subheading</span>
-                                        <span className="text-xs text-slate-400">Inter Display, Medium</span>
-                                    </button>
-
-                                    <button
-                                        onClick={handleAddParticleText}
-                                        className="w-full text-left p-6 bg-gradient-to-r from-violet-500/10 to-fuchsia-500/10 dark:from-violet-900/20 dark:to-fuchsia-900/20 rounded-xl shadow-sm border border-violet-200 dark:border-violet-900/30 hover:scale-105 hover:shadow-md transition-all group relative overflow-hidden"
-                                    >
-                                        <div className="absolute right-4 top-4 text-violet-500 opacity-20 group-hover:opacity-100 transition-opacity">
-                                            <Wand2 size={24} />
-                                        </div>
-                                        <span className="text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-violet-600 to-fuchsia-600 dark:from-violet-400 dark:to-fuchsia-400 block mb-2">
-                                            Particle Text
-                                        </span>
-                                        <span className="text-xs text-violet-600/70 dark:text-violet-400/70 block">
-                                            Explode, Assemble, Vortex FX
-                                        </span>
-                                    </button>
+                                    {TEXT_OPTIONS.map((opt) => {
+                                        const Icon = opt.icon;
+                                        return (
+                                            <button
+                                                key={opt.type}
+                                                onClick={() => {
+                                                    if (engine) createText(engine, opt.type);
+                                                    if (window.innerWidth < 1100) setLocalActiveTab(null);
+                                                }}
+                                                className={`w-full text-left p-6 rounded-xl shadow-sm border transition-all group relative overflow-hidden
+                                                    ${opt.bgClass} 
+                                                    ${opt.type === 'particle'
+                                                        ? 'hover:scale-105 hover:shadow-md border-violet-200 dark:border-violet-900/30'
+                                                        : 'bg-white dark:bg-neutral-800 border-slate-200 dark:border-neutral-700 hover:scale-105 hover:shadow-md'
+                                                    }
+                                                `}
+                                            >
+                                                {opt.type === 'particle' && (
+                                                    <div className="absolute right-4 top-4 text-violet-500 opacity-20 group-hover:opacity-100 transition-opacity">
+                                                        <Icon size={24} />
+                                                    </div>
+                                                )}
+                                                <span className={`block mb-2 font-black ${opt.type === 'heading' ? 'text-4xl' : opt.type === 'subheading' ? 'text-xl font-medium' : 'text-2xl'} ${opt.colorClass}`}>
+                                                    {opt.label}
+                                                </span>
+                                                <span className={`text-xs block ${opt.type === 'particle' ? 'text-violet-600/70 dark:text-violet-400/70' : 'text-slate-400'}`}>
+                                                    {opt.description}
+                                                </span>
+                                            </button>
+                                        );
+                                    })}
                                 </div>
                             )}
 
                             {activeTab === "media" && (
                                 <div className="space-y-4">
                                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                                        <button onClick={() => handleAddChart("bar")} className="aspect-square bg-white dark:bg-neutral-800 rounded-xl border border-slate-200 dark:border-neutral-700 flex flex-col items-center justify-center hover:bg-blue-50 dark:hover:bg-neutral-700 hover:border-blue-200 transition-all gap-3 group">
-                                            <div className="flex items-end gap-1 h-8 w-8 justify-center">
-                                                <div className="w-1.5 bg-blue-500/80 h-4 rounded-t-sm group-hover:h-5 transition-all"></div>
-                                                <div className="w-1.5 bg-blue-500 h-6 rounded-t-sm group-hover:h-8 transition-all"></div>
-                                                <div className="w-1.5 bg-blue-500/80 h-5 rounded-t-sm group-hover:h-4 transition-all"></div>
-                                            </div>
-                                            <span className="text-[10px] font-bold text-slate-600 dark:text-neutral-400">Bar</span>
-                                        </button>
-                                        <button onClick={() => handleAddChart("line")} className="aspect-square bg-white dark:bg-neutral-800 rounded-xl border border-slate-200 dark:border-neutral-700 flex flex-col items-center justify-center hover:bg-blue-50 dark:hover:bg-neutral-700 hover:border-blue-200 transition-all gap-3 group">
-                                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-purple-500 group-hover:scale-110 transition-transform">
-                                                <path d="M3 18 L9 12 L14 16 L21 8" />
-                                            </svg>
-                                            <span className="text-[10px] font-bold text-slate-600 dark:text-neutral-400">Line</span>
-                                        </button>
-                                        <button onClick={() => handleAddChart("area")} className="aspect-square bg-white dark:bg-neutral-800 rounded-xl border border-slate-200 dark:border-neutral-700 flex flex-col items-center justify-center hover:bg-blue-50 dark:hover:bg-neutral-700 hover:border-blue-200 transition-all gap-3 group">
-                                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-emerald-500 group-hover:scale-110 transition-transform">
-                                                <path d="M3 18 L9 12 L14 16 L21 8 V 18 H 3" fill="currentColor" fillOpacity="0.2" />
-                                                <path d="M3 18 L9 12 L14 16 L21 8" />
-                                            </svg>
-                                            <span className="text-[10px] font-bold text-slate-600 dark:text-neutral-400">Area</span>
-                                        </button>
-                                        <button onClick={() => handleAddChart("scatter")} className="aspect-square bg-white dark:bg-neutral-800 rounded-xl border border-slate-200 dark:border-neutral-700 flex flex-col items-center justify-center hover:bg-blue-50 dark:hover:bg-neutral-700 hover:border-blue-200 transition-all gap-3 group">
-                                            <div className="h-8 w-8 relative">
-                                                <div className="absolute top-1 left-1 w-1.5 h-1.5 bg-orange-500 rounded-full"></div>
-                                                <div className="absolute top-4 left-4 w-1.5 h-1.5 bg-orange-500 rounded-full"></div>
-                                                <div className="absolute bottom-2 right-2 w-1.5 h-1.5 bg-orange-500 rounded-full"></div>
-                                            </div>
-                                            <span className="text-[10px] font-bold text-slate-600 dark:text-neutral-400">Scatter</span>
-                                        </button>
-                                        <button onClick={() => handleAddChart("pie")} className="aspect-square bg-white dark:bg-neutral-800 rounded-xl border border-slate-200 dark:border-neutral-700 flex flex-col items-center justify-center hover:bg-blue-50 dark:hover:bg-neutral-700 hover:border-blue-200 transition-all gap-3 group">
-                                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-pink-500 group-hover:scale-110 transition-transform">
-                                                <path d="M21.21 15.89 A 10 10 0 1 1 8 2.83" />
-                                                <path d="M22 12 A 10 10 0 0 0 12 2 v 10 z" />
-                                            </svg>
-                                            <span className="text-[10px] font-bold text-slate-600 dark:text-neutral-400">Pie</span>
-                                        </button>
-                                        <button onClick={() => handleAddChart("donut")} className="aspect-square bg-white dark:bg-neutral-800 rounded-xl border border-slate-200 dark:border-neutral-700 flex flex-col items-center justify-center hover:bg-blue-50 dark:hover:bg-neutral-700 hover:border-blue-200 transition-all gap-3 group">
-                                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-cyan-500 group-hover:scale-110 transition-transform">
-                                                <circle cx="12" cy="12" r="10" />
-                                                <circle cx="12" cy="12" r="4" />
-                                            </svg>
-                                            <span className="text-[10px] font-bold text-slate-600 dark:text-neutral-400">Donut</span>
-                                        </button>
-                                        <button onClick={handleAddRace} className="aspect-square bg-white dark:bg-neutral-800 rounded-xl border border-slate-200 dark:border-neutral-700 flex flex-col items-center justify-center hover:bg-blue-50 dark:hover:bg-neutral-700 hover:border-blue-200 transition-all gap-3 group">
-                                            <div className="flex flex-col gap-0.5 items-start justify-center h-8 w-8">
-                                                <div className="w-6 h-1.5 bg-indigo-500 rounded-sm group-hover:w-8 transition-all duration-300"></div>
-                                                <div className="w-4 h-1.5 bg-purple-500 rounded-sm group-hover:w-6 transition-all duration-300 delay-75"></div>
-                                                <div className="w-5 h-1.5 bg-pink-500 rounded-sm group-hover:w-3 transition-all duration-300 delay-150"></div>
-                                            </div>
-                                            <span className="text-[10px] font-bold text-slate-600 dark:text-neutral-400">Race</span>
-                                        </button>
+                                        {CHART_TYPES.map((chart) => {
+                                            const Icon = chart.icon;
+                                            return (
+                                                <button
+                                                    key={chart.type}
+                                                    onClick={() => {
+                                                        if (engine) createChart(engine, chart.type);
+                                                        if (window.innerWidth < 1100) setLocalActiveTab(null);
+                                                    }}
+                                                    className="aspect-square bg-white dark:bg-neutral-800 rounded-xl border border-slate-200 dark:border-neutral-700 flex flex-col items-center justify-center hover:bg-blue-50 dark:hover:bg-neutral-700 hover:border-blue-200 transition-all gap-3 group"
+                                                >
+                                                    <Icon size={24} className={`${chart.colorClass} group-hover:scale-110 transition-transform`} />
+                                                    <span className="text-[10px] font-bold text-slate-600 dark:text-neutral-400">{chart.label}</span>
+                                                </button>
+                                            );
+                                        })}
                                     </div>
                                 </div>
                             )}
 
                             {activeTab === "shapes" && (
                                 <div className="space-y-4">
-                                    <button
-                                        onClick={handleAddCode}
-                                        className="w-full text-left p-1 bg-slate-900 rounded-xl shadow-lg hover:ring-2 ring-blue-500 transition-all group overflow-hidden"
-                                    >
-                                        <div className="bg-slate-800/50 p-2 flex gap-1.5 border-b border-white/5">
-                                            <div className="w-2 h-2 rounded-full bg-red-500"></div>
-                                            <div className="w-2 h-2 rounded-full bg-yellow-500"></div>
-                                            <div className="w-2 h-2 rounded-full bg-green-500"></div>
-                                        </div>
-                                        <div className="p-4 font-mono text-xs">
-                                            <span className="text-blue-400">console</span>
-                                            <span className="text-white">.log(</span>
-                                            <span className="text-green-400">'Code Block'</span>
-                                            <span className="text-white">)</span>
-                                        </div>
-                                    </button>
+                                    {CODE_OPTIONS.map((opt) => (
+                                        <button
+                                            key={opt.type}
+                                            onClick={() => {
+                                                if (engine) createCode(engine, opt.type);
+                                                if (window.innerWidth < 1100) setLocalActiveTab(null);
+                                            }}
+                                            className="w-full text-left p-1 bg-slate-900 rounded-xl shadow-lg hover:ring-2 ring-blue-500 transition-all group overflow-hidden"
+                                        >
+                                            <div className="bg-slate-800/50 p-2 flex gap-1.5 border-b border-white/5">
+                                                <div className="w-2 h-2 rounded-full bg-red-500"></div>
+                                                <div className="w-2 h-2 rounded-full bg-yellow-500"></div>
+                                                <div className="w-2 h-2 rounded-full bg-green-500"></div>
+                                            </div>
+                                            <div className="p-4 font-mono text-xs">
+                                                <span className="text-blue-400">console</span>
+                                                <span className="text-white">.log(</span>
+                                                <span className="text-green-400">'Code Block'</span>
+                                                <span className="text-white">)</span>
+                                            </div>
+                                        </button>
+                                    ))}
 
-                                    <button
-                                        onClick={handleAddCharacter}
-                                        className="w-full text-left p-4 bg-white dark:bg-neutral-800 rounded-xl shadow-sm border border-slate-200 dark:border-neutral-700 hover:scale-105 hover:shadow-md transition-all group flex items-center gap-4"
-                                    >
-                                        <div className="w-12 h-12 bg-blue-100 dark:bg-blue-900/40 rounded-full flex items-center justify-center text-blue-600 dark:text-blue-400">
-                                            <User size={24} />
-                                        </div>
-                                        <div>
-                                            <div className="font-bold text-slate-900 dark:text-white">Character</div>
-                                            <div className="text-xs text-slate-500 dark:text-neutral-400">Animated Persona</div>
-                                        </div>
-                                    </button>
+                                    {SHAPE_OPTIONS.map((opt) => {
+                                        const Icon = opt.icon;
+                                        return (
+                                            <button
+                                                key={opt.type}
+                                                onClick={() => {
+                                                    if (engine) createShape(engine, opt.type);
+                                                    if (window.innerWidth < 1100) setLocalActiveTab(null);
+                                                }}
+                                                className="w-full text-left p-4 bg-white dark:bg-neutral-800 rounded-xl shadow-sm border border-slate-200 dark:border-neutral-700 hover:scale-105 hover:shadow-md transition-all group flex items-center gap-4"
+                                            >
+                                                <div className={`w-12 h-12 rounded-full flex items-center justify-center ${opt.iconBgClass} ${opt.iconColorClass}`}>
+                                                    <Icon size={24} />
+                                                </div>
+                                                <div>
+                                                    <div className="font-bold text-slate-900 dark:text-white">{opt.label}</div>
+                                                    <div className="text-xs text-slate-500 dark:text-neutral-400">{opt.description}</div>
+                                                </div>
+                                            </button>
+                                        );
+                                    })}
 
-                                    <button
-                                        onClick={handleAddLogo}
-                                        className="w-full text-left p-4 bg-white dark:bg-neutral-800 rounded-xl shadow-sm border border-slate-200 dark:border-neutral-700 hover:scale-105 hover:shadow-md transition-all group flex items-center gap-4"
-                                    >
-                                        <div className="w-12 h-12 bg-orange-100 dark:bg-orange-900/40 rounded-full flex items-center justify-center text-orange-600 dark:text-orange-400">
-                                            <Sparkles size={24} />
-                                        </div>
-                                        <div>
-                                            <div className="font-bold text-slate-900 dark:text-white">Profile Logo</div>
-                                            <div className="text-xs text-slate-500 dark:text-neutral-400">Particle Text Effect</div>
-                                        </div>
-                                    </button>
                                     <div className="text-center text-xs text-slate-400 mt-2">More shapes coming soon...</div>
                                 </div>
                             )}
@@ -431,7 +296,8 @@ export const Sidebar = ({ engine, isMobileSheet = false, mobileActiveTab }: Side
                         </div>
                     </aside>
                 </>
-            )}
+            )
+            }
         </div >
     );
 };

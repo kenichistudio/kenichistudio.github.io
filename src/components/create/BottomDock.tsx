@@ -46,7 +46,7 @@ export const BottomDock: React.FC<BottomDockProps> = ({ activeTab, onTabChange, 
                 }
                 `}
             </style>
-            <div className={`${!isFullscreen ? 'lg:hidden fixed' : 'absolute'} bottom-0 left-0 right-0 w-full h-16 bg-white/95 dark:bg-slate-900/95 border-t border-slate-200 dark:border-slate-800 flex items-center px-2 z-[100] overflow-x-auto no-scrollbar gap-1 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)] dark:shadow-none pb-safe`}>
+            <div className={`${!isFullscreen ? 'lg:hidden fixed' : 'absolute'} bottom-0 left-0 right-0 w-full h-16 bg-white/95 dark:bg-slate-900/95 border-t border-slate-200 dark:border-slate-800 flex items-center px-2 z-[100] overflow-x-auto no-scrollbar gap-1 dark:shadow-none pb-safe`}>
 
                 {/* Back Arrow for Context Mode */}
                 {hasSelection && (

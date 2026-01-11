@@ -27,6 +27,10 @@ import { AdjustDrawer } from "./AdjustDrawer";
 import { SettingsDrawer } from "./SettingsDrawer";
 import { FontDrawer } from "./FontDrawer";
 import { StyleDrawer } from "./StyleDrawer";
+import { ChartsDrawer } from "./ChartsDrawer";
+import { TextDrawer } from "./TextDrawer";
+import { ShapesDrawer } from "./ShapesDrawer";
+import { CodeDrawer } from "./CodeDrawer";
 
 // Use a simple local context or prop drilling for this "one-page app"
 // to keep it self-contained for now.
@@ -66,7 +70,7 @@ export const EditorLayout = () => {
         } else {
             setSelectedObjectType(null);
             // Close any object-specific sheets when deselected
-            if (['edit', 'font', 'style', 'motion', 'adjust', 'settings'].includes(activeBottomTab || '')) {
+            if (['edit', 'font', 'style', 'motion', 'adjust', 'settings', 'charts', 'text', 'shapes', 'code'].includes(activeBottomTab || '')) {
                 setActiveBottomTab(null);
             }
         }
@@ -357,16 +361,10 @@ export const EditorLayout = () => {
 
                         {/* Mobile Bottom Sheets */}
 
-                        {/* 1. ASSETS SHEET */}
                         <BottomSheet
-                            isOpen={['assets', 'text', 'shapes', 'code', 'charts'].includes(activeBottomTab || '')}
+                            isOpen={['assets'].includes(activeBottomTab || '')}
                             onClose={() => setActiveBottomTab(null)}
-                            title={
-                                activeBottomTab === 'text' ? 'Typography' :
-                                    activeBottomTab === 'shapes' ? 'Shapes' :
-                                        activeBottomTab === 'code' ? 'Code Blocks' :
-                                            activeBottomTab === 'charts' ? 'Charts & Data' : 'Assets'
-                            }
+                            title="Templates"
                             initialSnap={0.5}
                             snaps={[0.5, 0.9]}
                         >
@@ -374,13 +372,7 @@ export const EditorLayout = () => {
                                 <Sidebar
                                     engine={engine}
                                     isMobileSheet
-                                    mobileActiveTab={
-                                        activeBottomTab === 'text' ? 'text' :
-                                            activeBottomTab === 'shapes' ? 'shapes' :
-                                                activeBottomTab === 'code' ? 'shapes' : // Code is in shapes tab
-                                                    activeBottomTab === 'charts' ? 'media' : // Charts are in media tab
-                                                        undefined
-                                    }
+                                    mobileActiveTab="templates"
                                 />
                             </div>
                         </BottomSheet>
@@ -463,6 +455,34 @@ export const EditorLayout = () => {
                             engine={engine}
                             selectedId={selectedId}
                             isOpen={activeBottomTab === 'style'}
+                            onClose={() => setActiveBottomTab(null)}
+                        />
+
+                        {/* 10. CHARTS DRAWER */}
+                        <ChartsDrawer
+                            engine={engine}
+                            isOpen={activeBottomTab === 'charts'}
+                            onClose={() => setActiveBottomTab(null)}
+                        />
+
+                        {/* 11. TEXT DRAWER */}
+                        <TextDrawer
+                            engine={engine}
+                            isOpen={activeBottomTab === 'text'}
+                            onClose={() => setActiveBottomTab(null)}
+                        />
+
+                        {/* 12. SHAPES DRAWER */}
+                        <ShapesDrawer
+                            engine={engine}
+                            isOpen={activeBottomTab === 'shapes'}
+                            onClose={() => setActiveBottomTab(null)}
+                        />
+
+                        {/* 13. CODE DRAWER */}
+                        <CodeDrawer
+                            engine={engine}
+                            isOpen={activeBottomTab === 'code'}
                             onClose={() => setActiveBottomTab(null)}
                         />
 
