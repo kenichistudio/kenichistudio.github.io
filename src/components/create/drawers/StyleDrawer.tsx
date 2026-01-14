@@ -11,12 +11,12 @@ interface StyleDrawerProps {
     onClose: () => void;
 }
 
-export const StyleDrawer: React.FC<StyleDrawerProps> = ({ engine, selectedId, isOpen, onClose }) => {
+export const StyleDrawerContent: React.FC<{ engine: Engine | null; selectedId: string | null; onClose: () => void }> = ({ engine, selectedId, onClose }) => {
     const [forceUpdate, setForceUpdate] = useState(0);
 
     const obj = selectedId && engine ? engine.scene.get(selectedId) : null;
 
-    if (!isOpen || !obj) return null;
+    if (!obj) return null;
 
     const handleChange = (key: string, value: any) => {
         (obj as any)[key] = value;
@@ -39,8 +39,8 @@ export const StyleDrawer: React.FC<StyleDrawerProps> = ({ engine, selectedId, is
                             key={opt.value}
                             onClick={() => handleChange('align', opt.value)}
                             className={`flex-1 py-2 rounded-md flex justify-center transition-all ${textObj.align === opt.value
-                                    ? "bg-white dark:bg-slate-700 shadow-sm text-indigo-600 dark:text-indigo-400"
-                                    : "text-slate-400 hover:text-slate-600 dark:hover:text-slate-300"
+                                ? "bg-white dark:bg-slate-700 shadow-sm text-indigo-600 dark:text-indigo-400"
+                                : "text-slate-400 hover:text-slate-600 dark:hover:text-slate-300"
                                 }`}
                         >
                             <opt.icon size={20} />
@@ -59,8 +59,6 @@ export const StyleDrawer: React.FC<StyleDrawerProps> = ({ engine, selectedId, is
                         size="md"
                     />
                 </div>
-
-                {/* Optional: Background Color & Radius could go here if full features were needed, keeping simple for now per plan */}
             </div>
 
             {/* Opacity */}
@@ -110,10 +108,21 @@ export const StyleDrawer: React.FC<StyleDrawerProps> = ({ engine, selectedId, is
     );
 
     return (
+        <div className="p-6">
+            {obj instanceof TextObject ? renderTextStyles(obj) : renderGenericStyles()}
+        </div>
+    );
+};
+
+export const StyleDrawer: React.FC<StyleDrawerProps> = ({ engine, selectedId, isOpen, onClose }) => {
+
+    // Preserve old behavior
+    const obj = selectedId && engine ? engine.scene.get(selectedId) : null;
+    if (!isOpen || !obj) return null;
+
+    return (
         <div className="fixed bottom-16 left-0 right-0 z-[90] bg-white/95 dark:bg-slate-900/95 backdrop-blur-xl border-t border-slate-200 dark:border-slate-800 animate-in slide-in-from-bottom-full duration-300 shadow-xl pb-safe">
-            <div className="p-6">
-                {obj instanceof TextObject ? renderTextStyles(obj) : renderGenericStyles()}
-            </div>
+            <StyleDrawerContent engine={engine} selectedId={selectedId} onClose={onClose} />
         </div>
     );
 };

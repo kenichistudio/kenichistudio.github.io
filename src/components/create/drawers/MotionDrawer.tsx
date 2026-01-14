@@ -11,17 +11,12 @@ interface MotionDrawerProps {
     onClose: () => void;
 }
 
-export const MotionDrawer: React.FC<MotionDrawerProps> = ({ engine, selectedId, isOpen, onClose }) => {
+export const MotionDrawerContent: React.FC<{ engine: Engine | null; selectedId: string | null; onClose: () => void }> = ({ engine, selectedId, onClose }) => {
     const [forceUpdate, setForceUpdate] = useState(0);
 
     const obj = selectedId && engine ? engine.scene.get(selectedId) : null;
 
-    useEffect(() => {
-        if (!isOpen) return;
-        // Subscribe to updates if needed, mostly handled by parent re-renders or local forceUpdate
-    }, [isOpen, selectedId]);
-
-    if (!isOpen || !obj) return null;
+    if (!obj) return null;
 
     // Helper to update animation
     const updateAnim = (updates: Partial<any>) => {
@@ -49,12 +44,11 @@ export const MotionDrawer: React.FC<MotionDrawerProps> = ({ engine, selectedId, 
         : animations.filter(a => a.id !== 'typewriter');
 
     return (
-        <div className="fixed bottom-16 left-0 right-0 z-[90] bg-white/95 dark:bg-slate-900/95 backdrop-blur-xl border-t border-slate-200 dark:border-slate-800 animate-in slide-in-from-bottom-full duration-300 shadow-xl pb-safe">
-
+        <div className="flex flex-col gap-4 p-4 min-h-[140px]">
             {/* Timing Controls (Only if animation active) */}
             {obj.animation?.type && obj.animation.type !== 'none' && (
-                <div className="px-6 pt-4 pb-2 border-b border-slate-100 dark:border-slate-800/50">
-                    <div className="flex gap-8">
+                <div className="px-2 pt-2 pb-2 border-b border-slate-100 dark:border-slate-800/50">
+                    <div className="flex gap-4">
                         <div className="flex-1 space-y-2">
                             <div className="flex justify-between text-[10px] text-slate-500 font-bold uppercase">
                                 <span>Duration</span>
@@ -84,7 +78,7 @@ export const MotionDrawer: React.FC<MotionDrawerProps> = ({ engine, selectedId, 
             )}
 
             {/* Horizontal Presets */}
-            <div className="flex overflow-x-auto gap-4 p-4 no-scrollbar items-center">
+            <div className="flex overflow-x-auto gap-4 p-1 no-scrollbar items-center">
                 {availableAnimations.map((anim) => {
                     const isActive = obj.animation?.type === anim.id || (!obj.animation?.type && anim.id === 'none');
                     return (
@@ -101,10 +95,19 @@ export const MotionDrawer: React.FC<MotionDrawerProps> = ({ engine, selectedId, 
                         </button>
                     );
                 })}
-
-                {/* Spacer for right padding */}
-                <div className="w-2 shrink-0" />
             </div>
+        </div>
+    );
+};
+
+export const MotionDrawer: React.FC<MotionDrawerProps> = ({ engine, selectedId, isOpen, onClose }) => {
+    // Preserve old behavior for direct usage (if any)
+    const obj = selectedId && engine ? engine.scene.get(selectedId) : null;
+    if (!isOpen || !obj) return null;
+
+    return (
+        <div className="fixed bottom-16 left-0 right-0 z-[90] bg-white/95 dark:bg-slate-900/95 backdrop-blur-xl border-t border-slate-200 dark:border-slate-800 animate-in slide-in-from-bottom-full duration-300 shadow-xl pb-safe">
+            <MotionDrawerContent engine={engine} selectedId={selectedId} onClose={onClose} />
         </div>
     );
 };

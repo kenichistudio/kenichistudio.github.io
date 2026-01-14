@@ -10,12 +10,12 @@ interface SettingsDrawerProps {
     onClose: () => void;
 }
 
-export const SettingsDrawer: React.FC<SettingsDrawerProps> = ({ engine, selectedId, isOpen, onClose }) => {
+export const SettingsDrawerContent: React.FC<{ engine: Engine | null; selectedId: string | null; onClose: () => void }> = ({ engine, selectedId, onClose }) => {
     const [forceUpdate, setForceUpdate] = useState(0);
 
     const obj = selectedId && engine ? engine.scene.get(selectedId) : null;
 
-    if (!isOpen || !obj) return null;
+    if (!obj) return null;
 
     const handleChange = (key: string, value: any) => {
         (obj as any)[key] = value;
@@ -70,10 +70,20 @@ export const SettingsDrawer: React.FC<SettingsDrawerProps> = ({ engine, selected
     };
 
     return (
+        <div className="p-6">
+            {renderContent()}
+        </div>
+    );
+};
+
+export const SettingsDrawer: React.FC<SettingsDrawerProps> = ({ engine, selectedId, isOpen, onClose }) => {
+    // Preserve old behavior
+    const obj = selectedId && engine ? engine.scene.get(selectedId) : null;
+    if (!isOpen || !obj) return null;
+
+    return (
         <div className="fixed bottom-16 left-0 right-0 z-[90] bg-white/95 dark:bg-slate-900/95 backdrop-blur-xl border-t border-slate-200 dark:border-slate-800 animate-in slide-in-from-bottom-full duration-300 shadow-xl pb-safe">
-            <div className="p-6">
-                {renderContent()}
-            </div>
+            <SettingsDrawerContent engine={engine} selectedId={selectedId} onClose={onClose} />
         </div>
     );
 };

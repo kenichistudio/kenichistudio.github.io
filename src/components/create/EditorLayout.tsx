@@ -21,12 +21,8 @@ import { CharacterObject } from "../../engine/objects/CharacterObject";
 import { CodeBlockObject } from "../../engine/objects/CodeBlockObject";
 import { ParticleTextObject } from "../../engine/objects/ParticleTextObject";
 import { BarChartRaceObject } from "../../engine/objects/BarChartRaceObject";
-import { MotionDrawer } from "./drawers/MotionDrawer";
+import { ToolsDrawer } from "./drawers/ToolsDrawer";
 import { ThemeDrawer } from "./drawers/ThemeDrawer";
-import { AdjustDrawer } from "./drawers/AdjustDrawer";
-import { SettingsDrawer } from "./drawers/SettingsDrawer";
-import { FontDrawer } from "./drawers/FontDrawer";
-import { StyleDrawer } from "./drawers/StyleDrawer";
 import { AssetsDrawer } from "./drawers/AssetsDrawer";
 import { DataDrawer } from "./drawers/DataDrawer";
 import { LayersDrawer } from "./drawers/LayersDrawer";
@@ -401,55 +397,23 @@ export const EditorLayout = () => {
                             onClose={() => setActiveBottomTab(null)}
                         />
 
-                        {/* 4. MOTION DRAWER */}
-                        <MotionDrawer
+                        {/* 4. UNIFIED TOOLS DRAWER */}
+                        <ToolsDrawer
                             engine={engine}
                             selectedId={selectedId}
-                            isOpen={activeBottomTab === 'motion'}
+                            activeTab={activeBottomTab}
                             onClose={() => setActiveBottomTab(null)}
                         />
 
-                        {/* 5. THEME DRAWER */}
+
+
+                        {/* 5. THEME DRAWER (Kept separate) */}
                         <ThemeDrawer
                             engine={engine}
                             selectedId={selectedId}
                             isOpen={activeBottomTab === 'theme'}
                             onClose={() => setActiveBottomTab(null)}
                         />
-
-                        {/* 6. ADJUST DRAWER */}
-                        <AdjustDrawer
-                            engine={engine}
-                            selectedId={selectedId}
-                            isOpen={activeBottomTab === 'adjust'}
-                            onClose={() => setActiveBottomTab(null)}
-                        />
-
-                        {/* 7. SETTINGS DRAWER */}
-                        <SettingsDrawer
-                            engine={engine}
-                            selectedId={selectedId}
-                            isOpen={activeBottomTab === 'settings'}
-                            onClose={() => setActiveBottomTab(null)}
-                        />
-
-                        {/* 8. FONT DRAWER */}
-                        <FontDrawer
-                            engine={engine}
-                            selectedId={selectedId}
-                            isOpen={activeBottomTab === 'font'}
-                            onClose={() => setActiveBottomTab(null)}
-                        />
-
-                        {/* 9. STYLE DRAWER */}
-                        <StyleDrawer
-                            engine={engine}
-                            selectedId={selectedId}
-                            isOpen={activeBottomTab === 'style'}
-                            onClose={() => setActiveBottomTab(null)}
-                        />
-
-                        {/* 10. UNIFIED ASSETS DRAWER */}
                         <AssetsDrawer
                             engine={engine}
                             activeTab={activeBottomTab}
