@@ -87,7 +87,7 @@ export const EditDrawer: React.FC<EditDrawerProps> = ({ engine, selectedId, isOp
     // 1. Text Object: YT Create Style Full Screen Editor (Mobile Optimized)
     if (obj instanceof TextObject) {
         return (
-            <div className="flex flex-col h-[40dvh] min-h-[250px] bg-black/60 backdrop-blur-xl fixed top-24 left-4 right-4 z-50 rounded-3xl shadow-2xl border border-white/10 ring-1 ring-black/5">
+            <div className="flex flex-col h-[40dvh] min-h-[250px] bg-black/60 fixed top-24 left-4 right-4 z-50 rounded-3xl shadow-2xl border border-white/10 ring-1 ring-black/5">
                 {/* Header */}
                 <div className="flex items-center justify-between px-4 py-3 bg-transparent shrink-0">
                     <button
@@ -129,9 +129,10 @@ export const EditDrawer: React.FC<EditDrawerProps> = ({ engine, selectedId, isOp
     // 2. Code Block: Code Editor
     if (obj instanceof CodeBlockObject) {
         return (
-            <div className="flex flex-col h-full bg-slate-100 dark:bg-app-bg">
-                <div className="flex items-center justify-between px-4 py-3 border-b border-slate-100 dark:border-app-border bg-white dark:bg-app-surface shadow-sm z-10">
-                    <span className="text-sm font-bold text-slate-900 dark:text-white">Edit Code</span>
+            <div className="flex flex-col h-[40dvh] min-h-[250px] bg-white dark:bg-slate-900 fixed top-24 left-4 right-4 z-50 rounded-3xl shadow-2xl border border-slate-200 dark:border-white/10 ring-1 ring-black/5">
+                {/* Header */}
+                <div className="flex items-center justify-between px-4 py-3 bg-transparent shrink-0">
+                    <span className="text-sm font-bold text-slate-900 dark:text-white pl-2">Edit Code</span>
                     <button
                         onClick={onClose}
                         className="bg-indigo-600 text-white text-xs font-bold px-4 py-2 rounded-full active:scale-95 transition-transform"
@@ -139,9 +140,9 @@ export const EditDrawer: React.FC<EditDrawerProps> = ({ engine, selectedId, isOp
                         Done
                     </button>
                 </div>
-                <div className="flex-1 p-4 bg-slate-50 dark:bg-app-bg relative">
+                <div className="flex-1 p-4 bg-transparent relative overflow-hidden">
                     <textarea
-                        className="w-full h-full bg-white dark:bg-app-surface border border-slate-200 dark:border-app-border rounded-xl p-4 text-slate-900 dark:text-white text-xs font-mono focus:border-indigo-500 outline-none resize-none"
+                        className="w-full h-full bg-slate-50 dark:bg-black/20 border border-slate-200 dark:border-white/10 rounded-xl p-4 text-slate-900 dark:text-white text-xs font-mono focus:border-indigo-500 outline-none resize-none"
                         value={obj.code}
                         onChange={(e) => handleChange("code", e.target.value)}
                         spellCheck={false}
