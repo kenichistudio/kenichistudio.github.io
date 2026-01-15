@@ -54,7 +54,7 @@ export const EditDrawer: React.FC<EditDrawerProps> = ({ engine, selectedId, isOp
     if (!selectedId) {
         return (
             <div className="flex flex-col h-full bg-slate-100 dark:bg-app-bg">
-                <div className="flex items-center justify-between px-4 py-3 border-b border-slate-100 dark:border-app-border bg-white dark:bg-app-surface shadow-sm z-10">
+                <div className="flex items-center justify-between px-4 py-3 border-b border-slate-100 dark:border-app-border bg-white dark:bg-app-surface shadow-sm z-10 shrink-0">
                     <span className="text-sm font-bold text-slate-900 dark:text-white">Canvas Settings</span>
                     <button
                         onClick={onClose}
@@ -84,41 +84,38 @@ export const EditDrawer: React.FC<EditDrawerProps> = ({ engine, selectedId, isOp
         setForceUpdate(n => n + 1);
     };
 
-    // 1. Text Object: YT Create Style Full Screen Editor
+    // 1. Text Object: YT Create Style Full Screen Editor (Mobile Optimized)
     if (obj instanceof TextObject) {
         return (
-            <div className="flex flex-col h-full bg-slate-100 dark:bg-app-bg">
+            <div className="flex flex-col h-[40dvh] min-h-[250px] bg-black/60 backdrop-blur-xl fixed top-24 left-4 right-4 z-50 rounded-3xl shadow-2xl border border-white/10 ring-1 ring-black/5">
                 {/* Header */}
-                <div className="flex items-center justify-between px-4 py-2 bg-white dark:bg-app-surface border-b border-slate-200 dark:border-app-border shrink-0">
+                <div className="flex items-center justify-between px-4 py-3 bg-transparent shrink-0">
                     <button
                         onClick={() => {
                             // Cancel: Revert text and close
                             handleChange("text", initialEditText);
                             onClose();
                         }}
-                        className="px-3 py-2 text-sm font-bold text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors"
+                        className="px-3 py-2 text-sm font-bold text-white/70 hover:text-white transition-colors"
                     >
                         Cancel
                     </button>
 
-                    <span className="text-sm font-bold text-slate-900 dark:text-white">Edit Text</span>
+                    <span className="text-sm font-bold text-white">Edit Text</span>
 
                     <button
                         onClick={onClose}
-                        className="px-6 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-bold rounded-full transition-colors shadow-sm"
+                        className="px-6 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-bold rounded-full transition-colors shadow-sm active:scale-95"
                     >
                         Done
                     </button>
                 </div>
 
-                {/* Editor Area */}
-                <div className="flex-1 p-6 flex flex-col items-center justify-center relative">
-                    {/* Background Overlay Hint (Optional) */}
-                    <div className="absolute inset-0 pointer-events-none opacity-5 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-indigo-500 via-transparent to-transparent" />
-
+                {/* Editor Area - Top Aligned for Virtual Keyboard safety */}
+                <div className="flex-1 w-full flex flex-col justify-start pt-12 relative overflow-hidden">
                     <textarea
                         ref={textInputRef}
-                        className="w-full h-full max-w-2xl bg-transparent border-none text-center text-3xl font-bold text-slate-900 dark:text-white placeholder:text-slate-300 dark:placeholder:text-slate-700 outline-none resize-none mx-auto leading-relaxed selection:bg-indigo-500/30"
+                        className="w-full flex-1 max-w-2xl bg-transparent border-none text-center text-3xl md:text-4xl font-bold text-white placeholder:text-slate-600 outline-none resize-none mx-auto leading-relaxed selection:bg-indigo-500/30 px-6 py-4"
                         value={obj.text}
                         onChange={(e) => handleChange("text", e.target.value)}
                         placeholder="Type something..."
