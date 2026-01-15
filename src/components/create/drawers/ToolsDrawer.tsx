@@ -60,12 +60,17 @@ export const ToolsDrawer: React.FC<ToolsDrawerProps> = ({ engine, selectedId, ac
     // Allow 'canvas' tab to open even if no object is selected
     if (!selectedId && activeTab !== 'canvas') return null;
 
+    const isEditMode = activeTab === 'edit';
+
     return (
         <BottomSheet
             isOpen={isOpen}
             onClose={onClose}
-            title={title}
-            variant="dock"
+            title={isEditMode ? undefined : title}
+            variant={isEditMode ? 'sheet' : 'dock'}
+            initialSnap={isEditMode ? 1 : 0.5}
+            snaps={isEditMode ? [1] : [0.5, 0.9]}
+            zIndex={isEditMode ? 101 : 50}
         >
             {content}
         </BottomSheet>

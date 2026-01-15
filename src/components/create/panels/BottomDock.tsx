@@ -50,7 +50,7 @@ export const BottomDock: React.FC<BottomDockProps> = ({ activeTab, onTabChange, 
 
                 {/* Back Arrow for Context Mode */}
                 {hasSelection && (
-                    <>
+                    <div className="sticky left-0 z-20 flex items-center h-full bg-white dark:bg-app-surface shadow-[4px_0_12px_-4px_rgba(0,0,0,0.1)] dark:shadow-[4px_0_12px_-4px_rgba(0,0,0,0.5)]">
                         <button
                             onClick={onCloseContext}
                             className={`flex flex-col items-center justify-center w-12 h-12 rounded-full shrink-0 ${activeTab === null ? 'text-slate-500 dark:text-slate-400' : 'text-slate-400 dark:text-slate-500'}`}
@@ -58,7 +58,7 @@ export const BottomDock: React.FC<BottomDockProps> = ({ activeTab, onTabChange, 
                             <ChevronLeft size={24} />
                         </button>
                         <div className="w-px h-8 bg-slate-200 dark:bg-slate-800 shrink-0 mx-1" />
-                    </>
+                    </div>
                 )}
 
                 {/* CONTEXT: TEXT SELECTED */}

@@ -11,6 +11,7 @@ interface BottomSheetProps {
     snaps?: number[]; // [0.5, 0.9]
     variant?: 'sheet' | 'dock';
     onSnapChange?: (snapIndex: number) => void;
+    zIndex?: number;
 }
 
 export const BottomSheet: React.FC<BottomSheetProps> = ({
@@ -21,7 +22,8 @@ export const BottomSheet: React.FC<BottomSheetProps> = ({
     initialSnap = 0.5,
     snaps = [0.5, 0.9],
     variant = 'sheet',
-    onSnapChange
+    onSnapChange,
+    zIndex = 50
 }) => {
     const [activeSnap, setActiveSnap] = useState(initialSnap);
 
@@ -110,10 +112,10 @@ export const BottomSheet: React.FC<BottomSheetProps> = ({
                         dragElastic={0.05}
                         dragMomentum={false}
                         onDragEnd={isDock ? undefined : handleDragEnd}
-                        className={`fixed left-0 right-0 z-50 bg-white dark:bg-app-surface shadow-2xl flex flex-col lg:hidden
+                        className={`fixed left-0 right-0 bg-white dark:bg-app-surface shadow-2xl flex flex-col lg:hidden
                             ${isDock ? "border-t border-slate-200 dark:border-app-border pb-safe bottom-16" : "rounded-t-3xl max-h-[95vh] bottom-0"}
                         `}
-                        style={{ height: isDock ? "auto" : "95vh" }}
+                        style={{ height: isDock ? "auto" : "95vh", zIndex }}
                     >
                         {/* Handle / Header */}
                         {!isDock && (
