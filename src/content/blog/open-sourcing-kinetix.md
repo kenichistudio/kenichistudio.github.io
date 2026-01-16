@@ -2,7 +2,6 @@
 title: "The Plan: Open Sourcing the Kinetix Engine"
 description: "A roadmap for extracting the Kinetix video engine into a standalone, framework-agnostic open source library to rival Remotion."
 pubDate: 2026-01-16
-author: "Antigravity"
 tags: ["open-source", "roadmap", "monetization", "javascript"]
 ---
 

@@ -1,0 +1,423 @@
+---
+import Layout from "../layouts/Layout.astro";
+---
+
+<Layout title="Kinetix Engine Demo" showFooter={false} showAds={false}>
+    <main class="min-h-screen bg-[#1a1a1a] text-white p-8 font-sans">
+        <div class="max-w-6xl mx-auto">
+            <header class="mb-8 flex justify-between items-center">
+                <div>
+                    <h1
+                        class="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-emerald-400"
+                    >
+                        Kinetix Core
+                    </h1>
+                    <p class="text-gray-400 mt-2">
+                        Open Source Engine Verification & Demo
+                    </p>
+                </div>
+                <div class="flex gap-4">
+                    <a
+                        href="/create"
+                        class="px-4 py-2 rounded bg-gray-800 hover:bg-gray-700 transition text-sm"
+                    >
+                        Back to Editor
+                    </a>
+                    <a
+                        href="https://github.com/simplearyan/kinetix"
+                        target="_blank"
+                        class="px-4 py-2 rounded bg-blue-600 hover:bg-blue-500 transition text-sm font-semibold"
+                    >
+                        GitHub
+                    </a>
+                </div>
+            </header>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <!-- Controls Sidebar -->
+                <div class="space-y-6">
+                    <!-- Playback controls -->
+                    <div
+                        class="bg-[#2a2a2a] p-6 rounded-xl border border-white/5"
+                    >
+                        <h2
+                            class="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-4"
+                        >
+                            Playback
+                        </h2>
+                        <div class="flex gap-2">
+                            <button
+                                id="btn-play"
+                                class="flex-1 bg-emerald-600 hover:bg-emerald-500 text-white px-4 py-2 rounded transition"
+                            >
+                                Play
+                            </button>
+                            <button
+                                id="btn-pause"
+                                class="flex-1 bg-gray-700 hover:bg-gray-600 text-white px-4 py-2 rounded transition"
+                            >
+                                Pause
+                            </button>
+                        </div>
+                        <div
+                            class="mt-4 flex items-center gap-2 text-sm text-gray-400"
+                        >
+                            <span id="time-display">0.00s</span>
+                            <input
+                                type="range"
+                                id="timeline"
+                                min="0"
+                                max="5000"
+                                value="0"
+                                class="flex-1 accent-emerald-500"
+                            />
+                            <span id="duration-display">5.00s</span>
+                        </div>
+                    </div>
+
+                    <!-- Object controls -->
+                    <div
+                        class="bg-[#2a2a2a] p-6 rounded-xl border border-white/5"
+                    >
+                        <h2
+                            class="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-4"
+                        >
+                            Scene
+                        </h2>
+                        <div class="grid grid-cols-2 gap-3">
+                            <button
+                                id="btn-add-rect"
+                                class="bg-gray-700 hover:bg-blue-600 text-white px-3 py-2 rounded text-sm transition text-left flex items-center gap-2"
+                            >
+                                <span class="w-2 h-2 rounded-full bg-blue-400"
+                                ></span> Add Rect
+                            </button>
+                            <button
+                                id="btn-add-text"
+                                class="bg-gray-700 hover:bg-purple-600 text-white px-3 py-2 rounded text-sm transition text-left flex items-center gap-2"
+                            >
+                                <span class="w-2 h-2 rounded-full bg-purple-400"
+                                ></span> Add Text
+                            </button>
+                        </div>
+                        <div
+                            id="object-list"
+                            class="mt-4 space-y-2 max-h-40 overflow-y-auto custom-scrollbar"
+                        >
+                            <!-- Items added here -->
+                        </div>
+                    </div>
+
+                    <!-- Export controls -->
+                    <div
+                        class="bg-[#2a2a2a] p-6 rounded-xl border border-white/5"
+                    >
+                        <h2
+                            class="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-4"
+                        >
+                            Export
+                        </h2>
+                        <p class="text-xs text-gray-500 mb-4">
+                            Renders frame-by-frame using Web Workers.
+                        </p>
+                        <button
+                            id="btn-export"
+                            class="w-full bg-indigo-600 hover:bg-indigo-500 text-white px-4 py-3 rounded-lg font-semibold transition flex justify-center items-center gap-2"
+                        >
+                            <span>Export WebM</span>
+                        </button>
+                        <div
+                            id="export-progress"
+                            class="hidden mt-3 h-2 bg-gray-800 rounded-full overflow-hidden"
+                        >
+                            <div
+                                class="h-full bg-indigo-500 w-0 transition-all duration-300"
+                            >
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Canvas Area -->
+                <div class="lg:col-span-2">
+                    <div
+                        class="relative aspect-video bg-black rounded-xl overflow-hidden shadow-2xl border border-white/10 ring-4 ring-black/20"
+                    >
+                        <canvas id="engine-canvas" class="w-full h-full block"
+                        ></canvas>
+
+                        <!-- Loading Overlay -->
+                        <div
+                            id="loader"
+                            class="absolute inset-0 flex items-center justify-center bg-black/50 backdrop-blur-sm z-10 hidden"
+                        >
+                            <div
+                                class="w-8 h-8 border-4 border-emerald-500 border-t-transparent rounded-full animate-spin"
+                            >
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Code Preview -->
+                    <div
+                        class="mt-8 bg-[#151515] rounded-xl p-6 border border-white/5 font-mono text-sm"
+                    >
+                        <div class="flex justify-between items-center mb-2">
+                            <span class="text-gray-500">Live Code Check</span>
+                            <span
+                                class="text-xs text-emerald-400 bg-emerald-400/10 px-2 py-1 rounded"
+                                >@kinetix/core</span
+                            >
+                        </div>
+                        <pre
+                            class="text-gray-300 overflow-x-auto"><code id="code-preview">// Engine initializing...</code></pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</Layout>
+
+<script>
+    // Debug Helper
+    window.onerror = function (msg, url, line, col, error) {
+        const div = document.createElement("div");
+        div.style.position = "fixed";
+        div.style.top = "0";
+        div.style.left = "0";
+        div.style.width = "100%";
+        div.style.backgroundColor = "red";
+        div.style.color = "white";
+        div.style.padding = "10px";
+        div.style.zIndex = "9999";
+        div.innerHTML = `<strong>Error:</strong> ${msg} <br> <small>${url}:${line}</small>`;
+        document.body.appendChild(div);
+        console.error("Global Error Caught:", error);
+        return false;
+    };
+
+    import { Engine } from "../open-source-engine/src/index.ts";
+    import { KinetixObject } from "../open-source-engine/src/objects/Object.ts";
+
+    console.log("Imports loaded successfully");
+
+    // --- Custom Implementation for Demo ---
+    class RectObject extends KinetixObject {
+        color: string;
+        constructor(id: string, color: string) {
+            console.log("Creating RectObject", id);
+            super(id, "Rect");
+            this.color = color;
+            this.width = 200;
+            this.height = 200;
+        }
+        draw(ctx: CanvasRenderingContext2D, time: number) {
+            ctx.fillStyle = this.color;
+            const cx = this.x + this.width / 2;
+            const cy = this.y + this.height / 2;
+
+            ctx.translate(cx, cy);
+            ctx.rotate((this.rotation * Math.PI) / 180);
+            ctx.translate(-cx, -cy);
+
+            ctx.fillRect(this.x, this.y, this.width, this.height);
+        }
+        clone() {
+            return new RectObject("clone_" + this.id, this.color);
+        }
+    }
+
+    class DemoTextObject extends KinetixObject {
+        text: string;
+        constructor(id: string, text: string) {
+            super(id, "Text");
+            this.text = text;
+            this.width = 300;
+            this.height = 60;
+        }
+        draw(ctx: CanvasRenderingContext2D, time: number) {
+            ctx.font = "bold 40px 'Inter', sans-serif";
+            ctx.fillStyle = "white";
+            ctx.fillText(this.text, this.x, this.y + 40);
+        }
+        clone() {
+            return new DemoTextObject("clone_" + this.id, this.text);
+        }
+    }
+
+    // --- Initialization ---
+    try {
+        console.log("Initializing Engine...");
+        const canvas = document.getElementById(
+            "engine-canvas",
+        ) as HTMLCanvasElement;
+        if (!canvas)
+            throw new Error("Canvas element #engine-canvas not found!");
+
+        // Initialize Engine
+        // Wait! Engine constructor (in Core.ts) takes canvas.
+        // It initializes Muxer? No, Muxer is in exportVideo.
+        // It creates scene? Yes, new Scene().
+        const engine = new Engine(canvas);
+        console.log("Engine instance created:", engine);
+
+        // Resize
+        const resize = () => {
+            const parent = canvas.parentElement;
+            if (parent) {
+                engine.resize(parent.clientWidth, parent.clientHeight);
+            }
+        };
+        window.addEventListener("resize", resize);
+        setTimeout(resize, 0);
+
+        // Setup UI Sync
+        const timeDisplay = document.getElementById("time-display");
+        const timelineInput = document.getElementById(
+            "timeline",
+        ) as HTMLInputElement;
+        const codePreview = document.getElementById("code-preview");
+
+        engine.onTimeUpdate = (time) => {
+            if (timeDisplay)
+                timeDisplay.innerText = (time / 1000).toFixed(2) + "s";
+            if (timelineInput) timelineInput.value = time.toString();
+        };
+
+        if (timelineInput) {
+            timelineInput.addEventListener("input", (e) => {
+                const val = parseFloat((e.target as HTMLInputElement).value);
+                engine.seek(val);
+            });
+        }
+
+        // Buttons
+        document.getElementById("btn-play")?.addEventListener("click", () => {
+            console.log("Play clicked");
+            engine.play();
+        });
+        document.getElementById("btn-pause")?.addEventListener("click", () => {
+            console.log("Pause clicked");
+            engine.pause();
+        });
+
+        document
+            .getElementById("btn-add-rect")
+            ?.addEventListener("click", () => {
+                console.log("Add Rect Clicked");
+                const id = "rect_" + Date.now();
+                const rect = new RectObject(id, "#3b82f6");
+                rect.x = Math.random() * (engine.scene.width - 200);
+                rect.y = Math.random() * (engine.scene.height - 200);
+                rect.rotation = Math.random() * 360;
+
+                engine.scene.add(rect);
+                updateCodePreview();
+                addToList(id, "Rectangle");
+            });
+
+        document
+            .getElementById("btn-add-text")
+            ?.addEventListener("click", () => {
+                console.log("Add Text Clicked");
+                const id = "text_" + Date.now();
+                const text = new DemoTextObject(id, "Hello World");
+                text.x = Math.random() * (engine.scene.width - 300);
+                text.y = Math.random() * (engine.scene.height - 100);
+                engine.scene.add(text);
+                updateCodePreview();
+                addToList(id, "Text");
+            });
+
+        document
+            .getElementById("btn-export")
+            ?.addEventListener("click", async () => {
+                console.log("Export Clicked");
+                const btn = document.getElementById("btn-export");
+                const progress = document.getElementById("export-progress");
+                const bar = progress?.querySelector("div");
+
+                if (btn) btn.innerHTML = "<span>Rendering...</span>";
+                if (progress) progress.classList.remove("hidden");
+
+                try {
+                    const blob = await engine.exportVideo(
+                        3000,
+                        30,
+                        "offline",
+                        (img) => {
+                            if (bar) bar.style.width = img + "%";
+                        },
+                    );
+
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement("a");
+                    a.href = url;
+                    a.download = "kinetix-demo.webm";
+                    a.click();
+                } catch (e) {
+                    alert("Export failed: " + e);
+                    console.error(e);
+                } finally {
+                    if (btn) btn.innerHTML = "<span>Export WebM</span>";
+                    setTimeout(() => {
+                        if (progress) progress.classList.add("hidden");
+                        if (bar) bar.style.width = "0%";
+                    }, 1000);
+                }
+            });
+
+        function updateCodePreview() {
+            if (!codePreview) return;
+            const lines = [
+                `const engine = new Engine(canvas);`,
+                `engine.resize(${engine.canvas.width}, ${engine.canvas.height});`,
+            ];
+            engine.scene.objects.forEach((obj) => {
+                lines.push(
+                    `engine.scene.add(new ${obj.name}("${obj.id}")); // x:${obj.x.toFixed(0)}, y:${obj.y.toFixed(0)}`,
+                );
+            });
+            codePreview.innerText = lines.join("\n");
+        }
+
+        function addToList(id: string, label: string) {
+            const list = document.getElementById("object-list");
+            if (!list) return;
+            const el = document.createElement("div");
+            el.className =
+                "flex justify-between items-center bg-black/20 p-2 rounded text-xs text-gray-300";
+            el.innerHTML = `<span>${label}</span> <span class="text-gray-600 font-mono">${id.slice(-4)}</span>`;
+            list.appendChild(el);
+        }
+
+        // Start
+        updateCodePreview();
+    } catch (err) {
+        console.error("Initialization Error:", err);
+        const div = document.createElement("div");
+        div.style.position = "fixed";
+        div.style.top = "50%";
+        div.style.left = "50%";
+        div.style.transform = "translate(-50%, -50%)";
+        div.style.backgroundColor = "darkred";
+        div.style.color = "white";
+        div.style.padding = "20px";
+        div.style.zIndex = "9999";
+        div.innerText = "Fatal Engine Error: " + err;
+        document.body.appendChild(div);
+    }
+</script>
+
+<style>
+    .custom-scrollbar::-webkit-scrollbar {
+        width: 4px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-track {
+        background: #1a1a1a;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+        background: #333;
+        border-radius: 4px;
+    }
+</style>
