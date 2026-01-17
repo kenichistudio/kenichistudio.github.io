@@ -28,11 +28,9 @@ export class Engine {
         const scaleX = width / this.scene.width;
         const scaleY = height / this.scene.height;
 
-        // Use the smaller scale to ensure obj fits in the new view without cropping/overflowing relatively?
-        // Or actually, we want layout to "stretch" positions, but "scale" sizes uniformly.
-        const sizeScale = Math.min(scaleX, scaleY);
-        // Special case: If mostly just resolution upgrade (both > 1), maybe use max? 
-        // Or just min is safest to avoid cropping.
+        // Use Geometric Mean to preserve visual "area" weight roughly constant relative to canvas area
+        // old: const sizeScale = Math.min(scaleX, scaleY);
+        const sizeScale = Math.sqrt(scaleX * scaleY);
 
         this.canvas.width = width;
         this.canvas.height = height;

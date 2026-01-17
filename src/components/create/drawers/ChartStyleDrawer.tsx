@@ -168,6 +168,7 @@ export const ChartStyleDrawer: React.FC<ChartStyleDrawerProps> = ({ engine, sele
                                 }`}
                         >
                             <Type size={22} strokeWidth={activeSubTab === 'font' ? 2.5 : 2} />
+                            <span className="text-[10px] font-bold uppercase tracking-wider">Typeface</span>
                             {activeSubTab === 'font' && <div className="w-1 h-1 rounded-full bg-yellow-500 dark:bg-yellow-400 absolute -bottom-2" />}
                         </button>
                         <button
@@ -178,6 +179,7 @@ export const ChartStyleDrawer: React.FC<ChartStyleDrawerProps> = ({ engine, sele
                                 }`}
                         >
                             <Droplets size={22} strokeWidth={activeSubTab === 'visuals' ? 2.5 : 2} />
+                            <span className="text-[10px] font-bold uppercase tracking-wider">Color</span>
                             {activeSubTab === 'visuals' && <div className="w-1 h-1 rounded-full bg-yellow-500 dark:bg-yellow-400 absolute -bottom-2" />}
                         </button>
                     </div>
