@@ -52,21 +52,23 @@ export const AdjustDrawerContent: React.FC<{ engine: Engine | null; selectedId: 
         <div className="flex flex-col gap-6 p-6 min-h-[140px]">
             {/* Alignment */}
             {/* Alignment Row - Compact */}
-            <div className="flex bg-slate-100 dark:bg-app-surface rounded-xl p-1">
+            {/* Alignment Row - Slicker */}
+            <div className="grid grid-cols-2 gap-3">
                 <button
                     onClick={() => handleAlign('horizontal')}
-                    className="flex-1 flex items-center justify-center h-10 rounded-lg hover:bg-white dark:hover:bg-neutral-700 hover:shadow-sm active:scale-95 transition-all text-slate-500 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400"
+                    className="flex flex-col items-center justify-center gap-2 py-3 bg-slate-100 dark:bg-app-surface rounded-xl hover:bg-slate-200 dark:hover:bg-app-surface-hover active:scale-95 transition-all text-slate-600 dark:text-slate-300 group"
                     title="Center Horizontally"
                 >
-                    <AlignHorizontalSpaceAround size={20} />
+                    <AlignHorizontalSpaceAround size={20} className="group-hover:text-accent transition-colors" />
+                    <span className="text-[10px] font-bold uppercase tracking-wider opacity-70 group-hover:opacity-100">Center X</span>
                 </button>
-                <div className="w-px my-2 bg-slate-200 dark:bg-app-border" />
                 <button
                     onClick={() => handleAlign('vertical')}
-                    className="flex-1 flex items-center justify-center h-10 rounded-lg hover:bg-white dark:hover:bg-neutral-700 hover:shadow-sm active:scale-95 transition-all text-slate-500 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400"
+                    className="flex flex-col items-center justify-center gap-2 py-3 bg-slate-100 dark:bg-app-surface rounded-xl hover:bg-slate-200 dark:hover:bg-app-surface-hover active:scale-95 transition-all text-slate-600 dark:text-slate-300 group"
                     title="Center Vertically"
                 >
-                    <AlignVerticalSpaceAround size={20} />
+                    <AlignVerticalSpaceAround size={20} className="group-hover:text-accent transition-colors" />
+                    <span className="text-[10px] font-bold uppercase tracking-wider opacity-70 group-hover:opacity-100">Center Y</span>
                 </button>
             </div>
 

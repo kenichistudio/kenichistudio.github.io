@@ -35,81 +35,76 @@ export const PositionDrawerContent: React.FC<PositionDrawerProps> = ({ engine, s
                 <span className="text-xs font-bold uppercase tracking-wider">Position</span>
             </div>
 
-            {/* X / Y Controls */}
-            <div className="grid grid-cols-2 gap-4">
-                {/* X Axis */}
-                <div className="space-y-2">
-                    <div className="flex justify-between items-center text-xs font-bold text-slate-500">
-                        <span>X Axis</span>
-                        <input
-                            type="number"
-                            value={Math.round(obj.x)}
-                            onChange={(e) => handleChange('x', Number(e.target.value))}
-                            className="w-16 bg-slate-100 dark:bg-app-surface rounded px-2 py-1 text-right text-slate-900 dark:text-white outline-none focus:ring-1 ring-indigo-500"
-                        />
-                    </div>
+            {/* X / Y Coordinates - Slicker */}
+            <div className="grid grid-cols-2 gap-3">
+                <div className="bg-slate-100 dark:bg-app-surface p-3 rounded-xl flex items-center justify-between group hover:ring-1 hover:ring-indigo-500/50 transition-all">
+                    <span className="text-xs font-bold text-slate-500 dark:text-slate-400 group-hover:text-indigo-500 transition-colors">X</span>
+                    <input
+                        type="number"
+                        value={Math.round(obj.x)}
+                        onChange={(e) => handleChange('x', Number(e.target.value))}
+                        className="w-20 bg-transparent text-right font-mono font-bold text-slate-900 dark:text-white outline-none"
+                    />
                 </div>
-
-                {/* Y Axis */}
-                <div className="space-y-2">
-                    <div className="flex justify-between items-center text-xs font-bold text-slate-500">
-                        <span>Y Axis</span>
-                        <input
-                            type="number"
-                            value={Math.round(obj.y)}
-                            onChange={(e) => handleChange('y', Number(e.target.value))}
-                            className="w-16 bg-slate-100 dark:bg-app-surface rounded px-2 py-1 text-right text-slate-900 dark:text-white outline-none focus:ring-1 ring-indigo-500"
-                        />
-                    </div>
+                <div className="bg-slate-100 dark:bg-app-surface p-3 rounded-xl flex items-center justify-between group hover:ring-1 hover:ring-indigo-500/50 transition-all">
+                    <span className="text-xs font-bold text-slate-500 dark:text-slate-400 group-hover:text-indigo-500 transition-colors">Y</span>
+                    <input
+                        type="number"
+                        value={Math.round(obj.y)}
+                        onChange={(e) => handleChange('y', Number(e.target.value))}
+                        className="w-20 bg-transparent text-right font-mono font-bold text-slate-900 dark:text-white outline-none"
+                    />
                 </div>
             </div>
 
-            {/* Nudge Controls */}
-            <div className="flex flex-col items-center gap-2 mt-2">
-                <span className="text-[10px] uppercase font-bold text-slate-400">Nudge</span>
+            {/* Nudge Controls - D-Pad Style */}
+            <div className="flex flex-col items-center gap-3">
+                <span className="text-[10px] uppercase font-bold text-slate-400 tracking-widest">Nudge</span>
 
-                <div className="grid grid-cols-3 gap-2">
-                    {/* Top Row */}
-                    <div className="col-start-2">
-                        <button
-                            onClick={() => handleNudge('y', -10)}
-                            className="p-3 bg-slate-100 dark:bg-app-surface rounded-xl hover:bg-slate-200 dark:hover:bg-app-surface-hover active:scale-95 transition-all text-slate-700 dark:text-slate-200"
-                        >
-                            <ArrowUp size={20} />
-                        </button>
-                    </div>
+                <div className="bg-slate-50 dark:bg-app-surface/50 p-2 rounded-full border border-slate-100 dark:border-app-border">
+                    <div className="grid grid-cols-3 gap-1">
+                        {/* Top Row */}
+                        <div className="col-start-2">
+                            <button
+                                onClick={() => handleNudge('y', -10)}
+                                className="w-12 h-12 flex items-center justify-center bg-white dark:bg-app-surface rounded-xl shadow-sm hover:shadow-md hover:scale-105 hover:bg-indigo-50 dark:hover:bg-neutral-700 hover:text-indigo-600 transition-all text-slate-600 dark:text-slate-300"
+                            >
+                                <ArrowUp size={20} />
+                            </button>
+                        </div>
 
-                    {/* Middle Row */}
-                    <div className="col-start-1 row-start-2">
-                        <button
-                            onClick={() => handleNudge('x', -10)}
-                            className="p-3 bg-slate-100 dark:bg-app-surface rounded-xl hover:bg-slate-200 dark:hover:bg-app-surface-hover active:scale-95 transition-all text-slate-700 dark:text-slate-200"
-                        >
-                            <ArrowLeft size={20} />
-                        </button>
-                    </div>
+                        {/* Middle Row */}
+                        <div className="col-start-1 row-start-2">
+                            <button
+                                onClick={() => handleNudge('x', -10)}
+                                className="w-12 h-12 flex items-center justify-center bg-white dark:bg-app-surface rounded-xl shadow-sm hover:shadow-md hover:scale-105 hover:bg-indigo-50 dark:hover:bg-neutral-700 hover:text-indigo-600 transition-all text-slate-600 dark:text-slate-300"
+                            >
+                                <ArrowLeft size={20} />
+                            </button>
+                        </div>
 
-                    <div className="col-start-2 row-start-2 flex items-center justify-center">
-                        <div className="w-2 h-2 rounded-full bg-slate-300 dark:bg-slate-600" />
-                    </div>
+                        <div className="col-start-2 row-start-2 flex items-center justify-center">
+                            <div className="w-2 h-2 rounded-full bg-indigo-500/20" />
+                        </div>
 
-                    <div className="col-start-3 row-start-2">
-                        <button
-                            onClick={() => handleNudge('x', 10)}
-                            className="p-3 bg-slate-100 dark:bg-app-surface rounded-xl hover:bg-slate-200 dark:hover:bg-app-surface-hover active:scale-95 transition-all text-slate-700 dark:text-slate-200"
-                        >
-                            <ArrowRight size={20} />
-                        </button>
-                    </div>
+                        <div className="col-start-3 row-start-2">
+                            <button
+                                onClick={() => handleNudge('x', 10)}
+                                className="w-12 h-12 flex items-center justify-center bg-white dark:bg-app-surface rounded-xl shadow-sm hover:shadow-md hover:scale-105 hover:bg-indigo-50 dark:hover:bg-neutral-700 hover:text-indigo-600 transition-all text-slate-600 dark:text-slate-300"
+                            >
+                                <ArrowRight size={20} />
+                            </button>
+                        </div>
 
-                    {/* Bottom Row */}
-                    <div className="col-start-2 row-start-3">
-                        <button
-                            onClick={() => handleNudge('y', 10)}
-                            className="p-3 bg-slate-100 dark:bg-app-surface rounded-xl hover:bg-slate-200 dark:hover:bg-app-surface-hover active:scale-95 transition-all text-slate-700 dark:text-slate-200"
-                        >
-                            <ArrowDown size={20} />
-                        </button>
+                        {/* Bottom Row */}
+                        <div className="col-start-2 row-start-3">
+                            <button
+                                onClick={() => handleNudge('y', 10)}
+                                className="w-12 h-12 flex items-center justify-center bg-white dark:bg-app-surface rounded-xl shadow-sm hover:shadow-md hover:scale-105 hover:bg-indigo-50 dark:hover:bg-neutral-700 hover:text-indigo-600 transition-all text-slate-600 dark:text-slate-300"
+                            >
+                                <ArrowDown size={20} />
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
