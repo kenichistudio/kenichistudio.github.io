@@ -49,6 +49,18 @@ export const useLayers = (engine: Engine | null, selectedId: string | null) => {
         }
     };
 
+    const toggleLock = (id: string, e?: React.MouseEvent) => {
+        e?.stopPropagation();
+        if (!engine) return;
+        const obj = engine.scene.get(id);
+        if (obj) {
+            obj.locked = !obj.locked;
+            // Deselect if locked? Maybe optionally.
+            // if (obj.locked && selectedId === id) engine.deselect();
+            setForceUpdate(n => n + 1);
+        }
+    };
+
     const select = (id: string) => {
         engine?.selectObject(id);
     };
@@ -89,6 +101,7 @@ export const useLayers = (engine: Engine | null, selectedId: string | null) => {
     return {
         layers,
         toggleVisibility,
+        toggleLock,
         select,
         duplicate,
         remove,

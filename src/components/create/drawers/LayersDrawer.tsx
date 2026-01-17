@@ -2,7 +2,7 @@ import React from "react";
 import { Engine } from "../../../engine/Core";
 import { BottomSheet } from "../panels/BottomSheet";
 import { useLayers } from "../../../hooks/useLayers";
-import { Copy, Trash2, Eye, EyeOff, Type, PieChart, Square, ArrowUp, ArrowDown, ChevronUp, ChevronDown } from "lucide-react";
+import { Copy, Trash2, Eye, EyeOff, Type, PieChart, Square, ArrowUp, ArrowDown, ChevronUp, ChevronDown, Lock, Unlock } from "lucide-react";
 import { TextObject } from "../../../engine/objects/TextObject";
 import { ChartObject } from "../../../engine/objects/ChartObject";
 
@@ -14,7 +14,7 @@ interface LayersDrawerProps {
 }
 
 export const LayersDrawer: React.FC<LayersDrawerProps> = ({ engine, selectedId, isOpen, onClose }) => {
-    const { layers, select, toggleVisibility, duplicate, remove, moveUp, moveDown } = useLayers(engine, selectedId);
+    const { layers, select, toggleVisibility, toggleLock, duplicate, remove, moveUp, moveDown } = useLayers(engine, selectedId);
     const [snap, setSnap] = React.useState<number>(0.5);
 
     if (!engine) return null;
@@ -59,6 +59,7 @@ export const LayersDrawer: React.FC<LayersDrawerProps> = ({ engine, selectedId, 
                     <div className="flex px-2 text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-2 mt-2">
                         <div className="w-8 shrink-0 text-center">Icon</div>
                         <div className="flex-1 px-2">Name</div>
+                        <div className="w-8 text-center">Lock</div>
                         <div className="w-8 text-center">Vis</div>
                     </div>
 
@@ -82,6 +83,7 @@ export const LayersDrawer: React.FC<LayersDrawerProps> = ({ engine, selectedId, 
                                             ? "bg-indigo-50 dark:bg-indigo-500/10 border-indigo-500/50"
                                             : "bg-slate-50 dark:bg-app-bg border-slate-100 dark:border-app-border hover:border-slate-300 dark:hover:border-slate-600"
                                         }
+                                    ${layer.locked ? "opacity-75" : ""}
                                 `}
                                 >
                                     {/* Selection Indicator */}
@@ -104,8 +106,18 @@ export const LayersDrawer: React.FC<LayersDrawerProps> = ({ engine, selectedId, 
                                         </h4>
                                         <div className="flex items-center gap-2">
                                             <span className="text-[9px] font-bold text-slate-400 uppercase tracking-wider">{(layer as any).type}</span>
+                                            {layer.locked && <span className="text-[9px] font-bold text-amber-500 uppercase tracking-wider ml-2">LOCKED</span>}
                                         </div>
                                     </div>
+
+                                    {/* Lock Column */}
+                                    <button
+                                        onClick={(e) => toggleLock(layer.id, e)}
+                                        className={`w-8 h-8 flex items-center justify-center rounded-lg transition-colors ${!layer.locked ? "text-slate-300 hover:text-slate-400" : "text-amber-500 bg-amber-50 dark:bg-amber-900/20"}`}
+                                        title={layer.locked ? "Unlock" : "Lock"}
+                                    >
+                                        {layer.locked ? <Lock size={14} /> : <Unlock size={14} />}
+                                    </button>
 
                                     {/* Visibility Column */}
                                     <button
