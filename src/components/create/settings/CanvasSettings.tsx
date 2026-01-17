@@ -49,7 +49,7 @@ const MobileCanvasSettings: React.FC<CanvasSettingsProps & { forceUpdate: any, s
             <div className="flex-1 p-4 pb-2 overflow-y-auto">
                 {/* Aspect Ratio Content */}
                 {activeTab === 'ratio' && (
-                    <div className="space-y-4 animate-in fade-in slide-in-from-bottom-2 duration-200">
+                    <div className="space-y-4 animate-in fade-in duration-200">
                         <div className="flex items-center justify-between text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
                             <span>Aspect Ratio</span>
                         </div>
@@ -96,7 +96,7 @@ const MobileCanvasSettings: React.FC<CanvasSettingsProps & { forceUpdate: any, s
 
                 {/* Resolution Content */}
                 {activeTab === 'res' && (
-                    <div className="space-y-4 animate-in fade-in slide-in-from-bottom-2 duration-200">
+                    <div className="space-y-4 animate-in fade-in duration-200">
                         <div className="flex justify-between items-center text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
                             <span>Resolution</span>
                             <span className="font-mono text-[10px] opacity-70 bg-slate-100 dark:bg-app-surface px-2 py-0.5 rounded">{engine.scene.width} x {engine.scene.height}</span>
@@ -139,7 +139,7 @@ const MobileCanvasSettings: React.FC<CanvasSettingsProps & { forceUpdate: any, s
 
                 {/* Background Content */}
                 {activeTab === 'bg' && (
-                    <div className="space-y-4 animate-in fade-in slide-in-from-bottom-2 duration-200">
+                    <div className="space-y-4 animate-in fade-in duration-200">
                         <div className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
                             Background Color
                         </div>
@@ -185,7 +185,7 @@ const MobileCanvasSettings: React.FC<CanvasSettingsProps & { forceUpdate: any, s
 
                 {/* Duration Content */}
                 {activeTab === 'duration' && (
-                    <div className="space-y-6 animate-in fade-in slide-in-from-bottom-2 duration-200">
+                    <div className="space-y-6 animate-in fade-in duration-200">
                         <div className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
                             Duration
                         </div>
@@ -236,39 +236,39 @@ const MobileCanvasSettings: React.FC<CanvasSettingsProps & { forceUpdate: any, s
             <div className="flex p-1 bg-white dark:bg-neutral-900 border-t border-slate-100 dark:border-neutral-800">
                 <button
                     onClick={() => setActiveTab('ratio')}
-                    className={`flex-1 py-3 flex flex-col gap-0.5 items-center justify-center rounded-xl transition-all ${activeTab === 'ratio'
+                    className={`flex-1 py-1 flex flex-col items-center justify-center rounded-xl transition-all ${activeTab === 'ratio'
                         ? "text-accent dark:text-accent-light"
                         : "text-slate-400 hover:text-slate-600 dark:hover:text-slate-300"}`}
                 >
                     <Smartphone size={20} strokeWidth={activeTab === 'ratio' ? 2.5 : 2} />
-                    {activeTab === 'ratio' && <div className="w-1 h-1 bg-current rounded-full mt-1" />}
+                    <span className="text-[10px] font-medium mt-1">Aspect</span>
                 </button>
                 <button
                     onClick={() => setActiveTab('res')}
-                    className={`flex-1 py-3 flex flex-col gap-0.5 items-center justify-center rounded-xl transition-all ${activeTab === 'res'
+                    className={`flex-1 py-1 flex flex-col items-center justify-center rounded-xl transition-all ${activeTab === 'res'
                         ? "text-accent dark:text-accent-light"
                         : "text-slate-400 hover:text-slate-600 dark:hover:text-slate-300"}`}
                 >
                     <Monitor size={20} strokeWidth={activeTab === 'res' ? 2.5 : 2} />
-                    {activeTab === 'res' && <div className="w-1 h-1 bg-current rounded-full mt-1" />}
+                    <span className="text-[10px] font-medium mt-1">Size</span>
                 </button>
                 <button
                     onClick={() => setActiveTab('bg')}
-                    className={`flex-1 py-3 flex flex-col gap-0.5 items-center justify-center rounded-xl transition-all ${activeTab === 'bg'
+                    className={`flex-1 py-1 flex flex-col items-center justify-center rounded-xl transition-all ${activeTab === 'bg'
                         ? "text-accent dark:text-accent-light"
                         : "text-slate-400 hover:text-slate-600 dark:hover:text-slate-300"}`}
                 >
                     <Palette size={20} strokeWidth={activeTab === 'bg' ? 2.5 : 2} />
-                    {activeTab === 'bg' && <div className="w-1 h-1 bg-current rounded-full mt-1" />}
+                    <span className="text-[10px] font-medium mt-1">Color</span>
                 </button>
                 <button
                     onClick={() => setActiveTab('duration')}
-                    className={`flex-1 py-3 flex flex-col gap-0.5 items-center justify-center rounded-xl transition-all ${activeTab === 'duration'
+                    className={`flex-1 py-1 flex flex-col items-center justify-center rounded-xl transition-all ${activeTab === 'duration'
                         ? "text-accent dark:text-accent-light"
                         : "text-slate-400 hover:text-slate-600 dark:hover:text-slate-300"}`}
                 >
                     <Clock size={20} strokeWidth={activeTab === 'duration' ? 2.5 : 2} />
-                    {activeTab === 'duration' && <div className="w-1 h-1 bg-current rounded-full mt-1" />}
+                    <span className="text-[10px] font-medium mt-1">Time</span>
                 </button>
             </div>
         </div>

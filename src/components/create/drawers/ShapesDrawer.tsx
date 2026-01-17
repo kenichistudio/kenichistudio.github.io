@@ -17,7 +17,7 @@ export const ShapesDrawerContent: React.FC<{ engine: Engine | null; onClose: () 
     };
 
     return (
-        <div className="space-y-4 px-2">
+        <div className="grid grid-cols-2 gap-3 px-2 pb-4">
             {/* Shapes Loop */}
             {SHAPE_OPTIONS.map((opt) => {
                 const Icon = opt.icon;
@@ -25,20 +25,17 @@ export const ShapesDrawerContent: React.FC<{ engine: Engine | null; onClose: () 
                     <button
                         key={opt.type}
                         onClick={() => handleAdd(opt.type)}
-                        className="w-full text-left p-4 bg-white dark:bg-neutral-800 rounded-xl shadow-sm border border-slate-200 dark:border-neutral-700 hover:scale-105 hover:shadow-md transition-all group flex items-center gap-4"
+                        className="group relative flex flex-col items-center justify-center gap-2 p-4 h-32 w-full bg-slate-50 dark:bg-neutral-800/50 rounded-2xl border border-slate-200 dark:border-white/5 hover:border-accent dark:hover:border-accent hover:bg-slate-100 dark:hover:bg-neutral-800 transition-all active:scale-95"
                     >
-                        <div className={`w-12 h-12 rounded-full flex items-center justify-center ${opt.iconBgClass} ${opt.iconColorClass}`}>
-                            <Icon size={24} />
+                        <div className={`w-10 h-10 rounded-full flex items-center justify-center transition-transform group-hover:scale-110 ${opt.iconBgClass} ${opt.iconColorClass}`}>
+                            <Icon size={20} />
                         </div>
-                        <div>
-                            <div className="font-bold text-slate-900 dark:text-white">{opt.label}</div>
-                            <div className="text-xs text-slate-500 dark:text-neutral-400">{opt.description}</div>
+                        <div className="text-center">
+                            <div className="font-bold text-xs text-slate-700 dark:text-slate-200 group-hover:text-slate-900 dark:group-hover:text-white">{opt.label}</div>
                         </div>
                     </button>
                 );
             })}
-
-            <div className="text-center text-xs text-slate-400 mt-2">More shapes coming soon...</div>
         </div>
     );
 };

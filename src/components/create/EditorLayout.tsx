@@ -31,7 +31,8 @@ import { ChartStyleDrawer } from "./drawers/ChartStyleDrawer";
 import { LayersDrawer } from "./drawers/LayersDrawer";
 import { ChartsDrawer } from "./drawers/ChartsDrawer";
 import { TextDrawer } from "./drawers/TextDrawer";
-import { ElementsDrawer } from "./drawers/ElementsDrawer"; // Assuming ElementsDrawer is also needed based on the instruction's JSX
+import { ElementsDrawer } from "./drawers/ElementsDrawer";
+import { TransformDrawer } from "./drawers/TransformDrawer";
 
 // Use a simple local context or prop drilling for this "one-page app"
 // to keep it self-contained for now.
@@ -72,7 +73,7 @@ export const EditorLayout = () => {
             setSelectedObjectType(null);
             // Close any object-specific sheets when deselected
             // NOTE: 'edit' is EXCLUDED because it is also used for Canvas Settings (no selection)
-            if (['font', 'style', 'motion', 'adjust', 'dimensions', 'position', 'settings', 'charts', 'text', 'elements', 'config'].includes(activeBottomTab || '')) {
+            if (['font', 'style', 'motion', 'transform', 'settings', 'charts', 'text', 'elements', 'config'].includes(activeBottomTab || '')) {
                 setActiveBottomTab(null);
             }
         }
@@ -411,6 +412,14 @@ export const EditorLayout = () => {
                             engine={engine}
                             selectedId={selectedId}
                             activeTab={(selectedObjectType === 'chart' && activeBottomTab === 'style') ? null : activeBottomTab}
+                            onClose={() => setActiveBottomTab(null)}
+                        />
+
+                        {/* TRANSFORM DRAWER */}
+                        <TransformDrawer
+                            engine={engine}
+                            selectedId={selectedId}
+                            isOpen={activeBottomTab === 'transform'}
                             onClose={() => setActiveBottomTab(null)}
                         />
 

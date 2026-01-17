@@ -19,6 +19,7 @@ export interface TextOptions {
     backgroundColor?: string;
     backgroundPadding?: number;
     backgroundRadius?: number;
+    letterSpacing?: number;
 }
 
 export class TextObject extends KinetixObject {
@@ -35,6 +36,7 @@ export class TextObject extends KinetixObject {
     backgroundColor?: string;
     backgroundPadding: number = 0;
     backgroundRadius: number = 0;
+    letterSpacing: number = 0;
 
     constructor(id: string, options: Partial<TextOptions> = {}) {
         super(id, "Text");
@@ -50,6 +52,7 @@ export class TextObject extends KinetixObject {
         this.backgroundColor = options.backgroundColor;
         this.backgroundPadding = options.backgroundPadding || 10;
         this.backgroundRadius = options.backgroundRadius || 4;
+        this.letterSpacing = options.letterSpacing || 0;
 
         this.width = 300;
         this.height = 100;
@@ -90,6 +93,10 @@ export class TextObject extends KinetixObject {
 
         ctx.globalAlpha = opacity;
         ctx.font = `bold ${this.fontSize}px "${this.fontFamily}", sans-serif`;
+        // canvas letterSpacing is supported in recent browsers (Chrome 113+, FF 115+, Safari 16.4+)
+        if ('letterSpacing' in ctx) {
+            (ctx as any).letterSpacing = `${this.letterSpacing}px`;
+        }
         ctx.textAlign = this.align;
         ctx.textBaseline = "top";
 
@@ -178,7 +185,8 @@ export class TextObject extends KinetixObject {
             shadow: this.shadow ? { ...this.shadow } : undefined,
             backgroundColor: this.backgroundColor,
             backgroundPadding: this.backgroundPadding,
-            backgroundRadius: this.backgroundRadius
+            backgroundRadius: this.backgroundRadius,
+            letterSpacing: this.letterSpacing
         });
         clone.x = this.x + 20;
         clone.y = this.y + 20;

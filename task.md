@@ -1,0 +1,26 @@
+- [x] Configure [package.json](file:///d:/Code/Antigravity/design_concepts/kinetix/package.json) for standalone library <!-- id: 2 -->
+- [x] Create [src/open-source-engine/src/index.ts](file:///d:/Code/Antigravity/design_concepts/kinetix/src/open-source-engine/src/index.ts) entry point <!-- id: 3 -->
+- [x] Configure [vite.config.ts](file:///d:/Code/Antigravity/design_concepts/Kenichi%20Desktop/vite.config.ts) for library build (ESM/UMD) <!-- id: 4 -->
+- [x] Create [tsconfig.json](file:///d:/Code/Antigravity/design_concepts/kinetix/tsconfig.json) for the library <!-- id: 5 -->
+- [x] Update License to MPL 2.0 <!-- id: 6 -->
+- [x] Create [.github/FUNDING.yml](file:///d:/Code/Antigravity/design_concepts/kinetix/src/open-source-engine/.github/FUNDING.yml) <!-- id: 7 -->
+- [x] Create `/engine` demo page <!-- id: 8 -->
+- [x] Create Pitch Strategy & Feature Roadmap <!-- id: 9 -->
+- [x] Debug and Fix `/engine` functionality <!-- id: 10 -->
+- [x] Execute Robustness Plan (Refactor Core & Types) <!-- id: 11 -->
+- [x] Implement Multi-Resolution Export (Core & UI) <!-- id: 12 -->
+- [x] Implement Canvas Resolution Settings <!-- id: 13 -->
+- [x] Implement Preview Player Controls <!-- id: 14 -->
+- [x] Create `@kinetix/ui` (PlayerOverlay Component) <!-- id: 15 -->
+- [x] Implement [VideoObject](file:///d:/Code/Antigravity/design_concepts/kinetix/src/open-source-engine/src/objects/VideoObject.ts#3-110) & Drag-n-Drop Support <!-- id: 16 -->
+- [x] Create [CanvasControl](file:///d:/Code/Antigravity/design_concepts/kinetix/src/open-source-engine/src/ui/CanvasControl.ts#3-210) Component (replaces ResolutionPicker) <!-- id: 17 -->
+- [x] Create [ExportControl](file:///d:/Code/Antigravity/design_concepts/kinetix/src/open-source-engine/src/ui/ExportControl.ts#3-202) Component <!-- id: 18 -->
+- [x] Enhance [ExportControl](file:///d:/Code/Antigravity/design_concepts/kinetix/src/open-source-engine/src/ui/ExportControl.ts#3-202) (Formats, FPS, Modes) <!-- id: 20 -->
+- [x] Refactor [engine.astro](file:///d:/Code/Antigravity/design_concepts/kinetix/src/pages/engine.astro) to use new UI components <!-- id: 19 -->
+- [x] Write "Getting Started" Blog Post (Installation, Frameworks, UI) <!-- id: 21 -->
+- [x] Write Blog Post: Kenichi Desktop Setup in VS 2022 <!-- id: 22 -->
+- [x] Refactor Elements Drawer (Move Toggle to Bottom) <!-- id: 23 -->
+- [x] Add Text Labels to Canvas Tab Sub-nav <!-- id: 24 -->
+- [x] Remove slide-up animation from Canvas Settings <!-- id: 25 -->
+- [x] Refine Elements Drawer Toggle Colors <!-- id: 26 -->
+- [/] Plan & Implement Shapes/Code UI Improvements <!-- id: 27 -->

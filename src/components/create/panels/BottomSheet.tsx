@@ -12,6 +12,7 @@ interface BottomSheetProps {
     variant?: 'sheet' | 'dock';
     onSnapChange?: (snapIndex: number) => void;
     zIndex?: number;
+    manualSnap?: number | null; // Allow forcing a snap update
 }
 
 export const BottomSheet: React.FC<BottomSheetProps> = ({
@@ -23,7 +24,8 @@ export const BottomSheet: React.FC<BottomSheetProps> = ({
     snaps = [0.5, 0.9],
     variant = 'sheet',
     onSnapChange,
-    zIndex = 50
+    zIndex = 50,
+    manualSnap
 }) => {
     const [activeSnap, setActiveSnap] = useState(initialSnap);
 
@@ -31,13 +33,15 @@ export const BottomSheet: React.FC<BottomSheetProps> = ({
     useEffect(() => {
         if (isOpen) {
             setActiveSnap(initialSnap);
-            // Notify initial snap index if provided, usually 0 (first snap) or matched index
-            const initialIndex = snaps.indexOf(initialSnap);
-            if (initialIndex !== -1) {
-                // We defer this slightly to ensure parent is ready or just rely on parent setting default
-            }
         }
-    }, [isOpen, initialSnap, snaps]);
+    }, [isOpen, initialSnap]);
+
+    // React to manual snap changes
+    useEffect(() => {
+        if (manualSnap !== undefined && manualSnap !== null) {
+            setActiveSnap(manualSnap);
+        }
+    }, [manualSnap]);
 
     // Close on escape key
     useEffect(() => {

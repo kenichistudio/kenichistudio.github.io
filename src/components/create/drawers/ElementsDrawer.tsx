@@ -31,32 +31,6 @@ export const ElementsDrawerContent: React.FC<ElementsDrawerContentProps> = ({ en
 
     return (
         <div className="h-full flex flex-col">
-            {/* Segmented Control */}
-            <div className="px-4 pb-4">
-                <div className="flex p-1 bg-slate-100 dark:bg-black/40 rounded-xl border border-slate-200 dark:border-white/5">
-                    <button
-                        onClick={() => setActiveSubTab('shapes')}
-                        className={`flex-1 flex items-center justify-center gap-2 py-2 rounded-lg text-sm font-bold transition-all ${activeSubTab === 'shapes'
-                            ? 'bg-white dark:bg-app-surface text-slate-900 dark:text-white shadow-sm'
-                            : 'text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200'
-                            }`}
-                    >
-                        <Square size={16} />
-                        <span>Shapes</span>
-                    </button>
-                    <button
-                        onClick={() => setActiveSubTab('code')}
-                        className={`flex-1 flex items-center justify-center gap-2 py-2 rounded-lg text-sm font-bold transition-all ${activeSubTab === 'code'
-                            ? 'bg-white dark:bg-app-surface text-slate-900 dark:text-white shadow-sm'
-                            : 'text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200'
-                            }`}
-                    >
-                        <Terminal size={16} />
-                        <span>Code</span>
-                    </button>
-                </div>
-            </div>
-
             {/* Content Area */}
             <div className="flex-1 overflow-y-auto">
                 {activeSubTab === 'shapes' ? (
@@ -64,6 +38,30 @@ export const ElementsDrawerContent: React.FC<ElementsDrawerContentProps> = ({ en
                 ) : (
                     <CodeDrawerContent engine={engine} onClose={onClose} />
                 )}
+            </div>
+
+            {/* Segmented Control - Simple Text Toggle */}
+            <div className="px-4 pt-2 pb-4 flex justify-center gap-8 border-t border-slate-200 dark:border-white/5 bg-white dark:bg-[#1a1a1a]">
+                <button
+                    onClick={() => setActiveSubTab('shapes')}
+                    className={`flex items-center gap-2 py-3 text-sm font-bold transition-colors ${activeSubTab === 'shapes'
+                        ? 'text-accent dark:text-accent-light'
+                        : 'text-slate-500 hover:text-slate-800 dark:text-gray-500 dark:hover:text-gray-300'
+                        }`}
+                >
+                    <Square size={16} className={activeSubTab === 'shapes' ? "fill-current" : ""} />
+                    <span>Shapes</span>
+                </button>
+                <button
+                    onClick={() => setActiveSubTab('code')}
+                    className={`flex items-center gap-2 py-3 text-sm font-bold transition-colors ${activeSubTab === 'code'
+                        ? 'text-accent dark:text-accent-light'
+                        : 'text-slate-500 hover:text-slate-800 dark:text-gray-500 dark:hover:text-gray-300'
+                        }`}
+                >
+                    <Terminal size={16} className={activeSubTab === 'code' ? "fill-current" : ""} />
+                    <span>Code</span>
+                </button>
             </div>
         </div>
     );

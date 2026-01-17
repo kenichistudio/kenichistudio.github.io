@@ -60,6 +60,20 @@ export const StyleDrawerContent: React.FC<{ engine: Engine | null; selectedId: s
                 </div>
             </div>
 
+            {/* Letter Spacing */}
+            <div className="space-y-2">
+                <div className="flex justify-between text-[10px] text-slate-500 font-bold uppercase">
+                    <span>Spacing</span>
+                    <span>{Math.round(textObj.letterSpacing || 0)}px</span>
+                </div>
+                <Slider
+                    value={textObj.letterSpacing || 0}
+                    min={-5} max={50} step={1}
+                    onChange={(v) => handleChange("letterSpacing", v)}
+                    compact={false}
+                />
+            </div>
+
             {/* Opacity */}
             <div className="space-y-2">
                 <div className="flex justify-between text-[10px] text-slate-500 font-bold uppercase">
