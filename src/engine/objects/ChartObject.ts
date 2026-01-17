@@ -27,13 +27,13 @@ export class ChartObject extends KinetixObject {
         this.chartType = type;
         this.width = 400;
         this.height = 300;
-        this.animation.type = "grow"; // Default animation
+        this.enterAnimation.type = "grow"; // Default animation
     }
 
-    draw(ctx: CanvasRenderingContext2D, time: number) {
+    draw(ctx: CanvasRenderingContext2D, time: number, totalDuration: number = 5000) {
         // Animation Paramteres
-        const duration = this.animation.duration;
-        const animType = this.animation.type;
+        const duration = this.enterAnimation.duration;
+        const animType = this.enterAnimation.type;
 
         let globalProgress = 0;
         if (time < duration && animType !== "none") {
@@ -378,7 +378,7 @@ export class ChartObject extends KinetixObject {
         clone.customColors = [...this.customColors];
 
         // Clone animation settings
-        clone.animation = { ...this.animation };
+        clone.enterAnimation = { ...this.enterAnimation };
 
         return clone;
     }

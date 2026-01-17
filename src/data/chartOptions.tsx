@@ -82,7 +82,7 @@ export const createChart = (engine: Engine, type: ChartType) => {
         chart.height = 300;
         chart.labels = ["A", "B", "C", "D"];
         chart.data = [30, 20, 15, 35];
-        chart.animation.type = "grow"; // Radial grow
+        chart.enterAnimation.type = "grow"; // Radial grow
     }
 
     engine.scene.add(chart);

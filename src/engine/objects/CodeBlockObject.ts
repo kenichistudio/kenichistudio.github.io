@@ -58,19 +58,19 @@ export class CodeBlockObject extends KinetixObject {
 
         // Generic Animation Logic
         let animProgress = 0;
-        if (this.animation.type !== "none") {
-            const start = this.animation.delay || 0;
-            const duration = this.animation.duration || 1000;
+        if (this.enterAnimation.type !== "none") {
+            const start = this.enterAnimation.delay || 0;
+            const duration = this.enterAnimation.duration || 1000;
             animProgress = Math.max(0, Math.min(1, (time - start) / duration));
         }
 
-        if (this.animation.type === "fadeIn") {
+        if (this.enterAnimation.type === "fadeIn") {
             ctx.globalAlpha = this.opacity * animProgress;
-        } else if (this.animation.type === "slideUp") {
+        } else if (this.enterAnimation.type === "slideUp") {
             const offset = 50 * (1 - this.easeOutCubic(animProgress));
             ctx.translate(0, offset);
             ctx.globalAlpha = this.opacity * animProgress; // usually slide up includes fade
-        } else if (this.animation.type === "scaleIn") {
+        } else if (this.enterAnimation.type === "scaleIn") {
             const s = this.easeOutBack(animProgress);
             // Scale from center
             ctx.translate(this.x + this.width / 2, this.y + this.height / 2);
@@ -106,10 +106,10 @@ export class CodeBlockObject extends KinetixObject {
 
         // Determine visible code based on animation
         let visibleCode = this.code;
-        if (this.animation.type === "typewriter") {
+        if (this.enterAnimation.type === "typewriter") {
             // Calculate progress
-            const start = this.animation.delay || 0;
-            const duration = this.animation.duration || 1000;
+            const start = this.enterAnimation.delay || 0;
+            const duration = this.enterAnimation.duration || 1000;
 
             if (time < start) {
                 visibleCode = "";
