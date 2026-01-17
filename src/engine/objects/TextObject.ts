@@ -58,34 +58,63 @@ export class TextObject extends KinetixObject {
         this.height = 100;
     }
 
-    draw(ctx: CanvasRenderingContext2D, time: number) {
+    draw(ctx: CanvasRenderingContext2D, time: number, totalDuration: number = 5000) {
         // --- Animation Logic ---
         let opacity = this.opacity;
         let y = this.y;
         let scale = 1;
         let textToDraw = this.text;
 
-        if (this.animation.type !== "none") {
-            const t = time - this.animation.delay;
-            const progress = Math.max(0, Math.min(1, t / this.animation.duration));
+        // 1. Enter Animation
+        if (this.enterAnimation.type !== "none") {
+            const t = time - this.enterAnimation.delay;
+            const progress = Math.max(0, Math.min(1, t / this.enterAnimation.duration));
             const ease = 1 - Math.pow(1 - progress, 3); // easeOutCubic
 
             if (t < 0) {
                 opacity = 0;
             } else {
-                switch (this.animation.type) {
-                    case "fadeIn": opacity = progress; break;
+                switch (this.enterAnimation.type) {
+                    case "fadeIn": opacity *= progress; break;
                     case "slideUp":
-                        opacity = progress;
+                        opacity *= progress;
                         y = this.y + (50 * (1 - ease));
                         break;
                     case "scaleIn":
-                        scale = ease;
-                        opacity = progress;
+                        scale *= ease;
+                        opacity *= progress;
                         break;
                     case "typewriter":
                         const charCount = Math.floor(this.text.length * progress);
                         textToDraw = this.text.slice(0, charCount);
+                        break;
+                }
+            }
+        }
+
+        // 2. Exit Animation
+        if (this.exitAnimation.type !== "none") {
+            // Exit starts at (Total - Duration)
+            // Or maybe we use delay as "End Delay"?
+            // Let's assume exit plays for its duration ENDING at totalDuration
+            const exitStart = totalDuration - this.exitAnimation.duration;
+            const t = time - exitStart;
+
+            if (t > 0) {
+                const progress = Math.min(1, t / this.exitAnimation.duration);
+                const ease = progress * progress; // easeInQuad for exit
+
+                switch (this.exitAnimation.type) {
+                    case "fadeOut":
+                        opacity *= (1 - progress);
+                        break;
+                    case "slideDown":
+                        opacity *= (1 - progress);
+                        y = y + (50 * ease);
+                        break;
+                    case "scaleOut":
+                        scale *= (1 - ease);
+                        opacity *= (1 - progress);
                         break;
                 }
             }

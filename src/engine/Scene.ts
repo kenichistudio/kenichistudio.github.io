@@ -50,7 +50,7 @@ export class Scene {
         }
     }
 
-    render(ctx: CanvasRenderingContext2D, time: number) {
+    render(ctx: CanvasRenderingContext2D, time: number, totalDuration?: number) {
         // Clear
         ctx.fillStyle = this.backgroundColor;
         ctx.fillRect(0, 0, this.width, this.height);
@@ -65,7 +65,7 @@ export class Scene {
             // But we could apply scene camera transforms here later
 
             ctx.globalAlpha = obj.opacity;
-            obj.draw(ctx, time);
+            obj.draw(ctx, time, totalDuration);
 
             ctx.restore();
         }

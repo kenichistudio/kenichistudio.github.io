@@ -280,7 +280,7 @@ export class Engine {
     }
 
     render() {
-        this.scene.render(this.ctx, this.currentTime);
+        this.scene.render(this.ctx, this.currentTime, this.totalDuration);
 
         // Draw Selection Overlay
         if (this.selectedObjectId && !this.isPlaying) {

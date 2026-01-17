@@ -18,10 +18,16 @@ export abstract class KinetixObject {
     locked: boolean = false;
 
     // Animation
-    animation: {
-        type: "none" | "fadeIn" | "slideUp" | "scaleIn" | "typewriter" | "grow";
+    enterAnimation: {
+        type: string;
         duration: number; // ms
         delay: number; // ms
+    } = { type: "none", duration: 1000, delay: 0 };
+
+    exitAnimation: {
+        type: string;
+        duration: number; // ms
+        delay: number; // unused for now, or could vary exit start
     } = { type: "none", duration: 1000, delay: 0 };
 
     constructor(id: string, name: string) {
@@ -29,7 +35,7 @@ export abstract class KinetixObject {
         this.name = name;
     }
 
-    abstract draw(ctx: CanvasRenderingContext2D, time: number): void;
+    abstract draw(ctx: CanvasRenderingContext2D, time: number, totalDuration?: number): void;
 
     // Optional lifecycle hooks
     onAdd(scene: any) { }
