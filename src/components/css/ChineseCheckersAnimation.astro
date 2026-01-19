@@ -210,10 +210,10 @@
                 box-shadow var(--trans-dur);
 
             @for $h from 1 through $balls * 2 {
-                $angle: 45 * (math.$pi / 180) * math.floor(($h / 2));
+                $angle: 45 * math.div(math.$pi, 180) * math.floor(math.div($h, 2));
                 $distance: $hole-distance-offset +
                     $hole-distance *
-                    ((($h % 2) + 1) / 2);
+                    math.div(($h % 2) + 1, 2);
 
                 &:nth-child(#{$h}) {
                     bottom: math.cos($angle) * $distance;
@@ -286,7 +286,7 @@
                 $rotateTimes: 8;
             }
 
-            $angle: 45 * (math.$pi / 180) * $rotateTimes;
+            $angle: 45 * math.div(math.$pi, 180) * $rotateTimes;
 
             &__sector:nth-child(#{$b}) {
                 bottom: math.cos($angle) * $sector-distance;
