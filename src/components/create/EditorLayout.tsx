@@ -4,7 +4,7 @@ import { Header } from "./panels/Header";
 import { VerticalAd } from "../ads/VerticalAd";
 import { SquareAd } from "../ads/SquareAd";
 import { CanvasWorkspace } from "./canvas/CanvasWorkspace";
-import { PropertiesPanel } from "./panels/PropertiesPanel";
+import { DesktopPropertiesPanel } from "./panels/DesktopPropertiesPanel";
 import { TimelineDesktop } from "./panels/TimelineDesktop";
 import { TimelineMobile } from "./panels/TimelineMobile";
 import { Engine } from "../../engine/Core";
@@ -464,7 +464,7 @@ export const EditorLayout = () => {
                     transition-transform duration-300 ease-in-out
                     ${rightSidebarOpen ? 'translate-x-0' : 'translate-x-full !w-0 border-none'}
                 `}>
-                    <PropertiesPanel
+                    <DesktopPropertiesPanel
                         engine={engine}
                         selectedId={selectedId}
                         onResize={(w, h) => setCanvasAspectRatio(w / h)}
