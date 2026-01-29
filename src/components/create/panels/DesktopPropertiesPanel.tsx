@@ -33,7 +33,13 @@ import {
     ArrowLeft,
     ArrowRight,
     X,
-    Keyboard
+    Keyboard,
+    PanelLeftOpen,
+    PanelRightOpen,
+    ChevronLeft,
+    ChevronRight,
+    ChevronsLeft,
+    ChevronsRight
 } from "lucide-react";
 
 // Object Types
@@ -49,11 +55,13 @@ interface DesktopPropertiesPanelProps {
     engine: Engine | null;
     selectedId: string | null;
     onResize?: (w: number, h: number) => void;
+    isExpanded?: boolean;
+    onToggleExpand?: () => void;
 }
 
 type Tab = "properties" | "layers" | "animations";
 
-export const DesktopPropertiesPanel: React.FC<DesktopPropertiesPanelProps> = ({ engine, selectedId, onResize }) => {
+export const DesktopPropertiesPanel: React.FC<DesktopPropertiesPanelProps> = ({ engine, selectedId, onResize, isExpanded, onToggleExpand }) => {
     const [activeTab, setActiveTab] = useState<Tab>("properties");
 
     // Use our new unified hook
@@ -331,26 +339,39 @@ export const DesktopPropertiesPanel: React.FC<DesktopPropertiesPanelProps> = ({ 
 
     return (
         <div className="flex flex-col h-full bg-white dark:bg-app-bg text-slate-900 dark:text-slate-200">
-            {/* 1. Tabs */}
-            <div className="flex items-center p-1 mx-4 mt-4 bg-app-light-surface dark:bg-app-surface rounded-xl mb-4 shrink-0 shadow-inner">
-                {(["properties", "layers", "animations"] as Tab[]).map((tab) => (
+            {/* 1. Tabs & Toggles */}
+            <div className="flex items-center gap-2 mx-4 mt-4 mb-4 shrink-0">
+                <div className="flex-1 flex items-center p-1 bg-app-light-surface dark:bg-app-surface rounded-xl shadow-inner">
+                    {(["properties", "layers", "animations"] as Tab[]).map((tab) => (
+                        <button
+                            key={tab}
+                            onClick={() => setActiveTab(tab)}
+                            className={`
+                                flex-1 py-1.5 text-xs font-bold rounded-lg capitalize transition-all flex items-center justify-center gap-1.5
+                                ${activeTab === tab
+                                    ? "bg-white dark:bg-app-bg text-indigo-600 dark:text-indigo-400 shadow-sm transform scale-100"
+                                    : "text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200"
+                                }
+                            `}
+                        >
+                            {tab === 'properties' && <Move size={12} />}
+                            {tab === 'layers' && <Layers size={12} />}
+                            {tab === 'animations' && <Sparkles size={12} />}
+                            {tab}
+                        </button>
+                    ))}
+                </div>
+
+                {/* Expansion Toggle */}
+                {onToggleExpand && (
                     <button
-                        key={tab}
-                        onClick={() => setActiveTab(tab)}
-                        className={`
-                            flex-1 py-1.5 text-xs font-bold rounded-lg capitalize transition-all flex items-center justify-center gap-1.5
-                            ${activeTab === tab
-                                ? "bg-white dark:bg-app-bg text-indigo-600 dark:text-indigo-400 shadow-sm transform scale-100"
-                                : "text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200"
-                            }
-                        `}
+                        onClick={onToggleExpand}
+                        className="p-2 bg-app-light-surface dark:bg-app-surface hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-500 hover:text-indigo-500 rounded-xl transition-colors shadow-sm"
+                        title={isExpanded ? "Collapse Sidebar" : "Expand Sidebar"}
                     >
-                        {tab === 'properties' && <Move size={12} />}
-                        {tab === 'layers' && <Layers size={12} />}
-                        {tab === 'animations' && <Sparkles size={12} />}
-                        {tab}
+                        {isExpanded ? <ChevronsRight size={16} /> : <ChevronsLeft size={16} />}
                     </button>
-                ))}
+                )}
             </div>
 
             {/* 2. Content Area */}

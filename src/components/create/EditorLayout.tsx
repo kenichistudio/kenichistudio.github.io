@@ -46,6 +46,7 @@ export const EditorLayout = () => {
     const [currentTime, setCurrentTime] = useState(0);
     const [isPlaying, setIsPlaying] = useState(false);
     const [rightSidebarOpen, setRightSidebarOpen] = useState(true);
+    const [isRightSidebarExpanded, setIsRightSidebarExpanded] = useState(false);
     const [isExporting, setIsExporting] = useState(false);
     const [canvasAspectRatio, setCanvasAspectRatio] = useState(16 / 9);
     const [exportMode, setExportMode] = useState<'realtime' | 'offline'>('offline');
@@ -459,15 +460,17 @@ export const EditorLayout = () => {
                 {/* Right Sidebar - Desktop Only */}
                 <div className={`
                     hidden lg:flex
-                    w-80 border-l border-slate-200 dark:border-app-border bg-white dark:bg-app-bg shrink-0 flex-col overflow-hidden min-h-0
+                    ${isRightSidebarExpanded ? 'w-[450px]' : 'w-80'} border-l border-slate-200 dark:border-app-border bg-white dark:bg-app-bg shrink-0 flex-col overflow-hidden min-h-0
                     relative z-auto h-auto
-                    transition-transform duration-300 ease-in-out
+                    transition-[width,transform] duration-300 ease-in-out
                     ${rightSidebarOpen ? 'translate-x-0' : 'translate-x-full !w-0 border-none'}
                 `}>
                     <DesktopPropertiesPanel
                         engine={engine}
                         selectedId={selectedId}
                         onResize={(w, h) => setCanvasAspectRatio(w / h)}
+                        isExpanded={isRightSidebarExpanded}
+                        onToggleExpand={() => setIsRightSidebarExpanded(!isRightSidebarExpanded)}
                     />
                 </div>
 
