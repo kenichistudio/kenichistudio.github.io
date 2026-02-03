@@ -13,6 +13,6 @@ const isGhPages = process.env.GITHUB_ACTIONS === 'true';
 export default defineConfig({
   site: 'https://kenichistudio.github.io', 
   // Vercel uses root '/', GitHub Pages uses '/kenichi/'
-  base: isGhPages ? '/home/' : '/',
+  base: isGhPages ? '/' : '/',
   integrations: [react(), tailwind(), mdx()]
 });
