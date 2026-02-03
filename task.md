@@ -1,3 +1,11 @@
+- [/] **Rebrand Project to Kenichi** <!-- id: 28 -->
+    - [ ] Rename directory `kinetix` to `kenichi` <!-- id: 29 -->
+    - [ ] Update `package.json` (name, author) <!-- id: 30 -->
+    - [ ] Update `README.md` (Title, Descriptions) <!-- id: 31 -->
+    - [ ] Update `astro.config.mjs` & `vite.config.ts` <!-- id: 32 -->
+    - [ ] Global search & replace "Kinetix" -> "Kenichi" in UI text <!-- id: 33 -->
+    - [ ] Update `rebranding_proposal.md` with final decisions <!-- id: 34 -->
+
 - [x] Configure [package.json](file:///d:/Code/Antigravity/design_concepts/kinetix/package.json) for standalone library <!-- id: 2 -->
 - [x] Create [src/open-source-engine/src/index.ts](file:///d:/Code/Antigravity/design_concepts/kinetix/src/open-source-engine/src/index.ts) entry point <!-- id: 3 -->
 - [x] Configure [vite.config.ts](file:///d:/Code/Antigravity/design_concepts/Kenichi%20Desktop/vite.config.ts) for library build (ESM/UMD) <!-- id: 4 -->

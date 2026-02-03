@@ -1,7 +1,8 @@
 {
-  "name": "kinetix",
+  "name": "kenichi",
   "type": "module",
   "version": "0.0.1",
+  "author": "SimpleAryan",
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",

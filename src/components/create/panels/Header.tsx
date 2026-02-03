@@ -42,7 +42,7 @@ export const Header = ({
                         K
                     </div>
                     <span className="font-bold text-lg hidden lg:block text-slate-900 dark:text-white tracking-tight">
-                        Kinetix Create
+                        Kenichi Studio
                     </span>
                 </a>
             </div>

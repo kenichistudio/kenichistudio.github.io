@@ -1,10 +1,12 @@
-# Kinetix
+# Kenichi Studio
 
-Kinetix is an advanced educational platform and content creation studio aimed at making learning engaging through interactive components and a dedicated creative environment. It leverages the power of Astro, React, and modern web technologies to deliver a seamless, performant, and visually rich user experience.
+**Simple Tools. Powerful Stories.**
+
+Kenichi Studio is an advanced educational platform and content creation studio aimed at making learning engaging through interactive components and a dedicated creative environment. It leverages the power of Astro, React, and modern web technologies to deliver a seamless, performant, and visually rich user experience.
 
 ## 🌟 Features
 
-- **🎨 Kinetix Studio**: A powerful in-browser content creation tool.
+- **🎨 Kenichi Studio**: A powerful in-browser content creation tool.
     - **Layer-based Editing**: Manage scenes with a familiar professional workflow.
     - **Animated Components**: Drag-and-drop elements including Progress Bars, Typewriter Code, and Counters.
     - **Client-Side Video Export**: Export creations as WebM/MP4 directly from the browser using Remotion technology.
