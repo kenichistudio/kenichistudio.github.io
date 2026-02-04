@@ -19,6 +19,11 @@ export class StudioEngine {
         this.draw(this.currentTime);
     }
 
+    // Alias for PropertiesPanel compatibility
+    render() {
+        this.draw(this.currentTime);
+    }
+
     private animationId: number = 0;
     private lastFrameTime = 0;
 

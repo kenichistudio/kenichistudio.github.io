@@ -11,11 +11,14 @@ interface ChartSettingsProps {
 }
 
 export const ChartSettings: React.FC<ChartSettingsProps> = ({ object: obj, engine, onUpdate }) => {
+    const [_, setForceUpdate] = useState(0);
+
     if (!engine) return null;
 
     const handleChange = (key: string, value: any) => {
         (obj as any)[key] = value;
         engine.render();
+        setForceUpdate(n => n + 1);
         onUpdate();
     };
 

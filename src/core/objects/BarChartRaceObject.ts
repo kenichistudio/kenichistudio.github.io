@@ -47,6 +47,20 @@ export class BarChartRaceObject extends KinetixObject {
     fontSize: number = 14; // Base font size
     duration: number = 10000; // Total duration in ms
 
+    // Dynamic Colors
+    colors: Record<string, string> = {
+        "Facebook": "#1877F2",
+        "MySpace": "#003399",
+        "Friendster": "#CCCCCC",
+        "Orkut": "#D6006D",
+        "LinkedIn": "#0077B5",
+        "Twitter": "#1DA1F2",
+        "Instagram": "#E1306C",
+        "Pinterest": "#BD081C",
+        "Snapchat": "#FFFC00",
+        "TikTok": "#000000"
+    };
+
     // State for smooth animation
     private yPositions: Record<string, number> = {};
     private lastDrawTime: number = 0;
@@ -68,6 +82,7 @@ export class BarChartRaceObject extends KinetixObject {
 
         // Check for seek/jump to reset animation state
         const isSeek = Math.abs(time - this.lastDrawTime) > 500;
+        const isStaticUpdate = time === this.lastDrawTime;
         this.lastDrawTime = time;
 
         // 2. Interpolate Values (same)
@@ -96,7 +111,7 @@ export class BarChartRaceObject extends KinetixObject {
                 currentValues.push({
                     label: key,
                     value: val,
-                    color: COLORS[key] || "#999"
+                    color: this.colors[key] || "#999"
                 });
             }
         });
@@ -132,8 +147,8 @@ export class BarChartRaceObject extends KinetixObject {
             // Smooth lerp for Y position
             let currentY = this.yPositions[item.label];
 
-            // Initialize or Snap if seeking (large time jump)
-            if (currentY === undefined || isSeek) {
+            // Initialize or Snap if seeking (large time jump) or static update (editing properties)
+            if (currentY === undefined || isSeek || isStaticUpdate) {
                 currentY = targetY;
             } else {
                 // Lerp towards target (10% per frame approx)
