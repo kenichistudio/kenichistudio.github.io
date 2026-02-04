@@ -1,6 +1,6 @@
-import { Engine } from "../../../engine/Core";
-import { TextObject } from "../../../engine/objects/TextObject";
-import { ParticleTextObject } from "../../../engine/objects/ParticleTextObject";
+import { Engine } from "@core/Core";
+import { TextObject } from "@core/objects/TextObject";
+import { ParticleTextObject } from "@core/objects/ParticleTextObject";
 import { Type, Sparkles, Wand2 } from "lucide-react";
 
 export type TextType = "heading" | "subheading" | "particle";

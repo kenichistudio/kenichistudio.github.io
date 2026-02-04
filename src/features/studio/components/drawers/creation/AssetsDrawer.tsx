@@ -1,5 +1,5 @@
 import React, { useMemo } from "react";
-import { Engine } from "../../../../../engine/Core";
+import { Engine } from "@core/Core";
 import { BottomSheet } from "../../dock/BottomSheet";
 
 import { ElementsDrawerContent } from "./ElementsDrawer";

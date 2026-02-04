@@ -1,5 +1,5 @@
-import { Engine } from "../../../engine/Core";
-import { CodeBlockObject } from "../../../engine/objects/CodeBlockObject";
+import { Engine } from "@core/Core";
+import { CodeBlockObject } from "@core/objects/CodeBlockObject";
 import { Terminal } from "lucide-react";
 
 export type CodeType = "code";

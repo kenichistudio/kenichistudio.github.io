@@ -1,5 +1,5 @@
 import React from "react";
-import { Engine } from "../../../../../engine/Core";
+import { Engine } from "@core/Core";
 import { SHAPE_OPTIONS, createShape } from "../../../config/shapeOptions";
 import { BottomSheet } from "../../dock/BottomSheet";
 

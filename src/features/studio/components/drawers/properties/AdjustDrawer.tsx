@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Engine } from "../../../../../engine/Core";
+import { Engine } from "@core/Core";
 import { Slider } from "../../ui/InspectorUI";
 import { BottomSheet } from "../../dock/BottomSheet";
 import { RotateCw, RotateCcw, Layout, AlignHorizontalSpaceAround, AlignVerticalSpaceAround } from "lucide-react";

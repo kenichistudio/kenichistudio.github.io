@@ -7,8 +7,8 @@ interface Props {
 }
 
 const { title, showFooter = true, showAds = true, isApp = false } = Astro.props;
-import Footer from "../components/Footer.astro";
-import VerticalAd from "../components/ads/VerticalAd.astro";
+import Footer from "@/layouts/components/Footer.astro";
+import VerticalAd from "@shared/ads/VerticalAd.astro";
 import "../styles/typography.css";
 import "../styles/inspector.css";
 ---

@@ -1,6 +1,6 @@
-import { Engine } from "../../../engine/Core";
-import { ChartObject } from "../../../engine/objects/ChartObject";
-import { BarChartRaceObject } from "../../../engine/objects/BarChartRaceObject";
+import { Engine } from "@core/Core";
+import { ChartObject } from "@core/objects/ChartObject";
+import { BarChartRaceObject } from "@core/objects/BarChartRaceObject";
 import { RectangleHorizontal, Smartphone, Square, BarChart3, TrendingUp, AreaChart, ScatterChart, PieChart as PieIcon, Circle, GripHorizontal, Activity } from "lucide-react";
 
 export type ChartType = "bar" | "line" | "area" | "scatter" | "pie" | "donut" | "race";

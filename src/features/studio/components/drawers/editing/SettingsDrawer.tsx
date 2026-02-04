@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { Engine } from "../../../../../engine/Core";
-import { CodeBlockObject } from "../../../../../engine/objects/CodeBlockObject";
+import { Engine } from "@core/Core";
+import { CodeBlockObject } from "@core/objects/CodeBlockObject";
 import { Toggle, Slider, ControlRow } from "../../ui/InspectorUI";
 
 interface SettingsDrawerProps {

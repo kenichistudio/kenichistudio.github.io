@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
-import { Engine } from "../../../engine/Core";
-import { KinetixObject } from "../../../engine/Object";
+import { Engine } from "@core/Core";
+import { KinetixObject } from "@core/Object";
 
 export const useLayers = (engine: Engine | null, selectedId: string | null) => {
     const [layers, setLayers] = useState<KinetixObject[]>([]);

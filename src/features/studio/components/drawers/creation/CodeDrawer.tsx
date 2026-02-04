@@ -1,5 +1,5 @@
 import React from "react";
-import { Engine } from "../../../../../engine/Core";
+import { Engine } from "@core/Core";
 import { CODE_OPTIONS, createCode } from "../../../config/codeOptions";
 import { BottomSheet } from "../../dock/BottomSheet";
 

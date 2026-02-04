@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Engine } from "../../../engine/Core";
+import { Engine } from "@core/Core";
 import { ControlRow, ColorPicker } from "../components/ui/InspectorUI";
 
 interface CanvasSettingsProps {

@@ -1,7 +1,7 @@
 import { useState, useCallback } from 'react';
-import { Engine } from '../../../engine/Core';
+import { Engine } from '@core/Core';
 import { Ban, Zap, ArrowUp, ArrowDown, Maximize, Minimize, Keyboard, ArrowLeft, ArrowRight } from 'lucide-react';
-import { TextObject } from '../../../engine/objects/TextObject';
+import { TextObject } from '@core/objects/TextObject';
 
 export type AnimationType = 'enter' | 'exit';
 

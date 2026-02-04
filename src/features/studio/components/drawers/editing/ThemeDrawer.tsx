@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { Engine } from "../../../../../engine/Core";
-import { CodeBlockObject } from "../../../../../engine/objects/CodeBlockObject";
+import { Engine } from "@core/Core";
+import { CodeBlockObject } from "@core/objects/CodeBlockObject";
 import { Check, Palette } from "lucide-react";
 import { Slider } from "../../ui/InspectorUI";
 

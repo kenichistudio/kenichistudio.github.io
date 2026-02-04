@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Engine } from "../../../engine/Core";
+import { Engine } from "@core/Core";
 import { useObjectProperties } from "../hooks/useObjectProperties";
 import { CanvasSettings } from "../settings/CanvasSettings";
 import { CodeBlockSettings } from "../settings/CodeBlockSettings";
@@ -26,10 +26,10 @@ import {
 } from "lucide-react";
 
 // Objects
-import { TextObject } from "../../../engine/objects/TextObject";
-import { CodeBlockObject } from "../../../engine/objects/CodeBlockObject";
-import { CharacterObject } from "../../../engine/objects/CharacterObject";
-import { ParticleTextObject } from "../../../engine/objects/ParticleTextObject";
+import { TextObject } from "@core/objects/TextObject";
+import { CodeBlockObject } from "@core/objects/CodeBlockObject";
+import { CharacterObject } from "@core/objects/CharacterObject";
+import { ParticleTextObject } from "@core/objects/ParticleTextObject";
 
 interface MobilePropertiesPanelProps {
     engine: Engine | null;

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Engine } from "../../../../../engine/Core";
+import { Engine } from "@core/Core";
 import { TEXT_OPTIONS, TEXT_EFFECTS, createText } from "../../../config/textOptions";
 import { ChevronUp, ChevronDown, Type, Wand2 } from "lucide-react";
 

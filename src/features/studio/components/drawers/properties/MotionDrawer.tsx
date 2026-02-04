@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { Engine } from "../../../../../engine/Core";
+import { Engine } from "@core/Core";
 import {
     Ban, Zap, ArrowUp, ArrowDown, Maximize, Minimize, Keyboard, LogIn, LogOut,
     ArrowLeft, ArrowRight // Added new requirements from shared hook if any
 } from "lucide-react";
-import { TextObject } from "../../../../../engine/objects/TextObject";
+import { TextObject } from "@core/objects/TextObject";
 import { Slider } from "../../ui/InspectorUI";
 import { useObjectAnimations } from "../../../hooks/useObjectAnimations";
 
