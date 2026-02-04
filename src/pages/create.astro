@@ -1,8 +1,6 @@
 ---
-import SquareAd from "../components/ads/SquareAd.astro";
-
 import Layout from "../layouts/Layout.astro";
-import { EditorLayout } from "../components/create/EditorLayout";
+import { StudioEditor } from "../features/studio/StudioEditor";
 ---
 
 <Layout title="Kenichi Studio" showFooter={false} showAds={false} isApp>
@@ -10,6 +8,6 @@ import { EditorLayout } from "../components/create/EditorLayout";
     <div
         class="h-full w-full overflow-hidden bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 relative"
     >
-        <EditorLayout client:only="react" />
+        <StudioEditor client:only="react" />
     </div>
 </Layout>
