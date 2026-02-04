@@ -1,157 +1,83 @@
-# Contributing to Kinetix
+# Contributing to Kenichi Studio 🎨
 
-Thank you for your interest in contributing to Kinetix! We're building an advanced educational platform and creative studio, and we'd love your help.
+Welcome! We are excited that you want to contribute to **Kenichi Studio**. This document provides guidelines and best practices to help you get started and stay productive.
 
-## 📋 Table of Contents
+---
 
-- [Getting Started](#getting-started)
-- [Development Workflow](#development-workflow)
-- [Project Architecture](#project-architecture)
-- [Component Development](#component-development)
-- [Code Style](#code-style)
-- [Pull Request Process](#pull-request-process)
+## 🏗️ Project Architecture
+
+Kenichi Studio follows a **Feature-Based Architecture**. This keeps the codebase modular and scalable.
+
+- **`src/core/`**: The engine room. Contains Canvas logic, Workers, and base `Object` classes.
+- **`src/features/`**: Domain-specific logic. Each feature (e.g., `studio`, `animator`) should be self-contained.
+- **`src/shared/`**: Reusable components, hooks, and utilities used across multiple features.
+- **`src/content-widgets/`**: Visual components used in MDX and blog content.
+
+> [!IMPORTANT]
+> Always use **Path Aliases** instead of relative imports where possible:
+> - `@core/*` -> `src/core/*`
+> - `@features/*` -> `src/features/*`
+> - `@shared/*` -> `src/shared/*`
+> - `@widgets/*` -> `src/content-widgets/*`
 
 ---
 
 ## 🚀 Getting Started
 
 ### Prerequisites
+- **Node.js**: v18 or higher
+- **npm**: v9 or higher
 
-- Node.js 18+ and npm
-- Git
-- A code editor (VS Code recommended)
-
-### Initial Setup
-
-```bash
-# Fork the repository on GitHub, then clone your fork
-git clone https://github.com/yourusername/kinetix.git
-cd kinetix
-
-# Install dependencies
-npm install
-
-# Start development server
-npm run dev
-```
-
----
-
-## 🔄 Development Workflow
-
-### 1. Create a New Branch
-
-Always create a new branch for your work:
-
-```bash
-# Update your main branch
-git checkout main
-git pull origin main
-
-# Create and switch to a new branch
-git checkout -b feature/your-feature-name
-# or
-git checkout -b fix/bug-description
-```
-
-### 2. Make Your Changes
-
-- Write code following our [Code Style](#code-style).
-- Test your changes locally in both light and dark modes.
-- Commit frequently with clear messages.
-
-### 3. Push and Create PR
-
-```bash
-# Push your branch to your fork
-git push origin feature/your-feature-name
-```
+### Setup
+1. **Clone the repository:**
+   ```bash
+   git clone https://github.com/simplearyan/kenichi-studio.git
+   cd kenichi-studio
+   ```
+2. **Install dependencies:**
+   ```bash
+   npm install
+   ```
+3. **Start the development server:**
+   ```bash
+   npm run dev
+   ```
 
 ---
 
-## 🏗️ Project Architecture
+## �️ Contribution Workflow
 
-Kinetix is a hybrid application combining static content (Astro) with dynamic, interactive applications (React).
+### 1. Branching Policy
+Create a descriptive branch name from `main`:
+- `feat/added-new-chart`
+- `fix/bar-chart-race-colors`
+- `chore/cleanup-imports`
 
-- **Static Pages (Blog/Education)**: These use Astro components for maximum performance.
-- **Kinetix Studio**: This is a fully client-side React application ("island") embedded within Astro.
+### 2. Implementation Standards
+- **Styling**: Use **Vanilla CSS** or **Standard CSS Modules**. Avoid ad-hoc utility classes.
+- **Components**: Group related logic into hooks within the feature directory.
+- **Performance**: Ensure properties panels use local `useState` for instant UI feedback (force-update pattern).
 
-### Directory Structure
+### 3. Commit Messages
+We follow a concise `type: description` format:
+- `feat:` for new features
+- `fix:` for bug fixes
+- `refactor:` for code changes that neither fix a bug nor add a feature
+- `docs:` for documentation changes
 
-- `src/components/studio/`: Contains the core logic for the video editor (Timeline, Canvas, Properties).
-- `src/components/animator/`: Helpers for animations used in the studio.
-- `src/content/`: MDX-based content for the blog and education hub.
-- `src/layouts/`: Base layouts for the application.
-
----
-
-## 🎨 Component Development
-
-### Creating a New Studio Component
-
-If you are adding a new drag-and-drop object to the Kinetix Studio:
-
-1.  **Define the Object**: Create the object class in `src/engine/objects/`.
-2.  **Create the Renderer**: Add the React component that renders this object in `src/components/create/objects/`.
-3.  **Add Settings**: Create a settings panel in `src/components/create/settings/`.
-4.  **Register**: Register the object type in the Engine core.
-
-### Creating a UI Component
-
-For general UI components (buttons, cards):
-
-- Use **Tailwind CSS** for styling.
-- Support **Dark Mode** (`dark:` prefix).
-- Use **Lucide React** for icons.
+### 4. Pull Request Process
+- Ensure `npm run build` passes locally.
+- Write a clear PR description explaining the **Why** and **How**.
+- Link to any related issues.
 
 ---
 
-## 💅 Code Style
+## � For the Owner: Productivity Tips
 
-### General Guidelines
-
-- Use 4 spaces for indentation (TSX/TS) and 2 spaces for JSON/MD.
-- Use explicit types in TypeScript.
-- Prefer functional components and Hooks for React.
-
-### Tailwind Best Practices
-
-- Use the simplified color palette (`bg-app-bg`, `text-primary`, `bg-accent`).
-- Avoid arbitrary values (`w-[123px]`) unless absolutely necessary.
-- Use `clsx` or `tailwind-merge` for conditional class names.
-
-### Commit Messages
-
-Follow conventional commits:
-
-```text
-type(scope): subject
-```
-
-- `feat`: New feature
-- `fix`: Bug fix
-- `docs`: Documentation
-- `style`: Formatting, missing semicolons
-- `refactor`: Code restructuring
+- **Reviewing**: Look for "Feature Isolation". Logic belonging to `studio` should not leak into `core` unnecessarily.
+- **Build Checks**: Use the project's Path Aliases to quickly identify where dependencies are coming from.
+- **Syncing**: Keep the main branch clean and use `git pull --rebase` to integrate remote changes smoothly.
 
 ---
 
-## 🔍 Pull Request Process
-
-1.  **Test your changes**: Ensure the app builds (`npm run build`) and runs without errors.
-2.  **Describe your changes**: Provide a clear description of what you did and why in the PR.
-3.  **Screenshots**: If you changed the UI, please attach before/after screenshots.
-
----
-
-## 🐛 Reporting Bugs
-
-Please include:
-- A clear description of the bug.
-- Steps to reproduce.
-- Browser and OS version.
-- Screenshots if applicable.
-
----
-
-**Happy Coding! 🚀**
+Thank you for making Kenichi Studio better! 🚀
