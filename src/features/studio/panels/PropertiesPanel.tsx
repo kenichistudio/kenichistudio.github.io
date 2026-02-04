@@ -1,13 +1,13 @@
 import React, { useEffect, useState, useRef } from "react";
 import { CanvasSettings } from "../settings/CanvasSettings";
-import { Engine } from "../../../engine/Core";
-import { TextObject } from "../../../engine/objects/TextObject";
-import { CodeBlockObject } from "../../../engine/objects/CodeBlockObject";
-import { ChartObject } from "../../../engine/objects/ChartObject";
-import { BarChartRaceObject } from "../../../engine/objects/BarChartRaceObject";
-import { CharacterObject } from "../../../engine/objects/CharacterObject";
-import { LogoCharacterObject } from "../../../engine/objects/LogoCharacterObject";
-import { ParticleTextObject } from "../../../engine/objects/ParticleTextObject";
+import { Engine } from "@core/Core";
+import { TextObject } from "@core/objects/TextObject";
+import { CodeBlockObject } from "@core/objects/CodeBlockObject";
+import { ChartObject } from "@core/objects/ChartObject";
+import { BarChartRaceObject } from "@core/objects/BarChartRaceObject";
+import { CharacterObject } from "@core/objects/CharacterObject";
+import { LogoCharacterObject } from "@core/objects/LogoCharacterObject";
+import { ParticleTextObject } from "@core/objects/ParticleTextObject";
 import { LayersPanel } from "./LayersPanel";
 
 import {

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Engine } from "../../../../engine/Core";
+import { Engine } from "@core/Core";
 import { useObjectProperties } from "../../hooks/useObjectProperties";
 import { useObjectAnimations } from "../../hooks/useObjectAnimations";
 import { LayersPanel } from "./LayersPanel";
@@ -48,13 +48,13 @@ import {
 } from "lucide-react";
 
 // Object Types
-import { TextObject } from "../../../../engine/objects/TextObject";
-import { CodeBlockObject } from "../../../../engine/objects/CodeBlockObject";
-import { ChartObject } from "../../../../engine/objects/ChartObject";
-import { BarChartRaceObject } from "../../../../engine/objects/BarChartRaceObject";
-import { CharacterObject } from "../../../../engine/objects/CharacterObject";
-import { LogoCharacterObject } from "../../../../engine/objects/LogoCharacterObject";
-import { ParticleTextObject } from "../../../../engine/objects/ParticleTextObject";
+import { TextObject } from "@core/objects/TextObject";
+import { CodeBlockObject } from "@core/objects/CodeBlockObject";
+import { ChartObject } from "@core/objects/ChartObject";
+import { BarChartRaceObject } from "@core/objects/BarChartRaceObject";
+import { CharacterObject } from "@core/objects/CharacterObject";
+import { LogoCharacterObject } from "@core/objects/LogoCharacterObject";
+import { ParticleTextObject } from "@core/objects/ParticleTextObject";
 
 interface DesktopPropertiesPanelProps {
     engine: Engine | null;

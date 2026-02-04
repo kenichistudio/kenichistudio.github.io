@@ -1,5 +1,5 @@
 import React from "react";
-import { Engine } from "../../../../engine/Core";
+import { Engine } from "@core/Core";
 import { useLayers } from "../../hooks/useLayers";
 import {
     Copy,
@@ -14,8 +14,8 @@ import {
     Lock,
     Unlock
 } from "lucide-react";
-import { TextObject } from "../../../../engine/objects/TextObject";
-import { ChartObject } from "../../../../engine/objects/ChartObject";
+import { TextObject } from "@core/objects/TextObject";
+import { ChartObject } from "@core/objects/ChartObject";
 
 interface LayersPanelProps {
     engine: Engine | null;

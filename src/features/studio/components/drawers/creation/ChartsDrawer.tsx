@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Engine } from "../../../../../engine/Core";
+import { Engine } from "@core/Core";
 import { ChevronUp, ChevronDown } from "lucide-react";
 import { CHART_TYPES, createChart, type ChartType } from "../../../config/chartOptions";
 

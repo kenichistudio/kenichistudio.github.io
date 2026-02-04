@@ -1,8 +1,8 @@
 import React, { useEffect, useState, useRef } from "react";
-import { Engine } from "../../../../../engine/Core";
-import { TextObject } from "../../../../../engine/objects/TextObject";
-import { CodeBlockObject } from "../../../../../engine/objects/CodeBlockObject";
-import { CharacterObject } from "../../../../../engine/objects/CharacterObject";
+import { Engine } from "@core/Core";
+import { TextObject } from "@core/objects/TextObject";
+import { CodeBlockObject } from "@core/objects/CodeBlockObject";
+import { CharacterObject } from "@core/objects/CharacterObject";
 import { ControlRow, ColorPicker } from "../../ui/InspectorUI";
 
 import { CanvasSettings } from "../../../settings/CanvasSettings";

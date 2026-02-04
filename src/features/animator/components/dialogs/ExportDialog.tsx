@@ -35,7 +35,7 @@ const ExportDialog: React.FC<ExportDialogProps> = ({ durationInFrames, component
     // Initial worker setup
     useEffect(() => {
         if (!workerRef.current) {
-            workerRef.current = new Worker(new URL('../../../../engine/workers/export.worker.ts', import.meta.url), { type: 'module' });
+            workerRef.current = new Worker(new URL('../../../../core/workers/export.worker.ts', import.meta.url), { type: 'module' });
             workerRef.current.onmessage = (e) => {
                 const { type, data, error, message } = e.data;
                 if (type === 'LOG') {

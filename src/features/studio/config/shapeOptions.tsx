@@ -1,6 +1,6 @@
-import { Engine } from "../../../engine/Core";
-import { CharacterObject } from "../../../engine/objects/CharacterObject";
-import { LogoCharacterObject } from "../../../engine/objects/LogoCharacterObject";
+import { Engine } from "@core/Core";
+import { CharacterObject } from "@core/objects/CharacterObject";
+import { LogoCharacterObject } from "@core/objects/LogoCharacterObject";
 import { User, Sparkles } from "lucide-react";
 
 export type ShapeType = "character" | "logo";

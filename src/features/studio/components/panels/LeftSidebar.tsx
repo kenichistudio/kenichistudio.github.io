@@ -8,7 +8,7 @@ import {
     LayoutGrid,
     X
 } from "lucide-react";
-import { Engine } from "../../../../engine/Core";
+import { Engine } from "@core/Core";
 import { TEXT_OPTIONS, createText } from "../../config/textOptions";
 import { SHAPE_OPTIONS, createShape } from "../../config/shapeOptions";
 import { CODE_OPTIONS, createCode } from "../../config/codeOptions";
@@ -21,7 +21,7 @@ interface SidebarProps {
     allowedTabs?: Tab[];
 }
 
-import { SquareAd } from "../../../../components/ads/SquareAd";
+import { SquareAd } from "@shared/ads/SquareAd";
 
 export type Tab = "templates" | "text" | "media" | "shapes" | null;
 

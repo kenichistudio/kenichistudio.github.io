@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Engine } from "../engine/Core";
+import { Engine } from "@core/Core";
 
 export const useLayers = (engine: Engine | null, selectedId: string | null) => {
     const [forceUpdate, setForceUpdate] = useState(0);

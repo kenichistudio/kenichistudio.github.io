@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Engine } from "../../../../../engine/Core";
+import { Engine } from "@core/Core";
 import { Slider } from "../../ui/InspectorUI";
 import { BottomSheet } from "../../dock/BottomSheet";
 import { MoveHorizontal, MoveVertical, Scaling, RotateCw, Move } from "lucide-react";

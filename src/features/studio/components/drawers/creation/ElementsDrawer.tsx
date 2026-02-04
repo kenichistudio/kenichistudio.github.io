@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Engine } from "../../../../../engine/Core";
+import { Engine } from "@core/Core";
 import { ShapesDrawerContent } from "./ShapesDrawer";
 import { CodeDrawerContent } from "./CodeDrawer";
 import { Square, Terminal } from "lucide-react";

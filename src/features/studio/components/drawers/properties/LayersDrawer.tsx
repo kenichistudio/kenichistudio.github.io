@@ -1,10 +1,10 @@
 import React from "react";
-import { Engine } from "../../../../../engine/Core";
+import { Engine } from "@core/Core";
 import { BottomSheet } from "../../dock/BottomSheet";
 import { useLayers } from "../../../hooks/useLayers";
 import { Copy, Trash2, Eye, EyeOff, Type, PieChart, Square, ArrowUp, ArrowDown, ChevronUp, ChevronDown, Lock, Unlock } from "lucide-react";
-import { TextObject } from "../../../../../engine/objects/TextObject";
-import { ChartObject } from "../../../../../engine/objects/ChartObject";
+import { TextObject } from "@core/objects/TextObject";
+import { ChartObject } from "@core/objects/ChartObject";
 
 interface LayersDrawerProps {
     engine: Engine | null;

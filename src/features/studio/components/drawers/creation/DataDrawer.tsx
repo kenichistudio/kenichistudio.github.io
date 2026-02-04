@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { BottomSheet } from "../../dock/BottomSheet";
-import { Engine } from "../../../../../engine/Core";
-import { ChartObject } from "../../../../../engine/objects/ChartObject";
-import { BarChartRaceObject } from "../../../../../engine/objects/BarChartRaceObject";
+import { Engine } from "@core/Core";
+import { ChartObject } from "@core/objects/ChartObject";
+import { BarChartRaceObject } from "@core/objects/BarChartRaceObject";
 import { Slider, Toggle, ColorPicker } from "../../ui/InspectorUI";
 import { BarChart3, LineChart, PieChart, Circle } from "lucide-react";
 

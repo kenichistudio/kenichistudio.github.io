@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Engine } from "../../../../../engine/Core";
+import { Engine } from "@core/Core";
 import { ArrowUp, ArrowDown, ArrowLeft, ArrowRight, RotateCcw, Move } from "lucide-react";
 import { BottomSheet } from "../../dock/BottomSheet";
 

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { Engine } from "../../../engine/Core";
-import { ChartObject } from "../../../engine/objects/ChartObject";
+import { Engine } from "@core/Core";
+import { ChartObject } from "@core/objects/ChartObject";
 import { ControlRow, PropertySection, SliderInput, Toggle, IconGrid, SegmentedControl, ColorPicker, Slider } from "../components/ui/InspectorUI";
 import { BarChart, Square, PieChart } from "lucide-react";
 

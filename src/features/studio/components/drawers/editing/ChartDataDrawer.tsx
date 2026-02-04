@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { BottomSheet } from "../../dock/BottomSheet";
-import { Engine } from "../../../../../engine/Core";
-import { ChartObject } from "../../../../../engine/objects/ChartObject";
+import { Engine } from "@core/Core";
+import { ChartObject } from "@core/objects/ChartObject";
 import { ColorPicker } from "../../ui/InspectorUI";
 import { Plus, Trash2 } from "lucide-react";
 
