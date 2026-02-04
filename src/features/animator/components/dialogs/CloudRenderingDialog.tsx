@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useAnimatorStore } from '../../store/animatorStore';
+import { useAnimatorStore } from '../../store';
 
 const CloudRenderingDialog: React.FC = () => {
     const {
@@ -93,8 +93,8 @@ jobs:
                     <button
                         onClick={handleCopy}
                         className={`px-6 py-2.5 rounded-lg font-medium transition-all flex items-center gap-2 ${copied
-                                ? 'bg-green-500/20 text-green-400 border border-green-500/50'
-                                : 'bg-indigo-600 hover:bg-indigo-500 text-white shadow-lg shadow-indigo-500/20'
+                            ? 'bg-green-500/20 text-green-400 border border-green-500/50'
+                            : 'bg-indigo-600 hover:bg-indigo-500 text-white shadow-lg shadow-indigo-500/20'
                             }`}
                     >
                         {copied ? (

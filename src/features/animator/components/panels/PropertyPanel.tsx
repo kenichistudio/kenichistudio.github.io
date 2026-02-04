@@ -1,10 +1,10 @@
 import React from 'react';
-import { useAnimatorStore, type AnimatorTab } from '../../store/animatorStore';
+import { useAnimatorStore, type AnimatorTab } from '../../store';
 import { LayoutGrid, Calculator, Code2, Palette, Activity, Maximize2, Minimize2 } from 'lucide-react';
-import DataEditor from './editors/DataEditor';
-import MathEditor from './editors/MathEditor';
-import CodeEditor from './editors/CodeEditor';
-import StyleEditor from './editors/StyleEditor';
+import DataEditor from '../editors/DataEditor';
+import MathEditor from '../editors/MathEditor';
+import CodeEditor from '../editors/CodeEditor';
+import StyleEditor from '../editors/StyleEditor';
 
 const PropertyPanel: React.FC = () => {
     const { activeTab, setActiveTab, activeCompositionId, isPropertyPanelExpanded, setIsPropertyPanelExpanded } = useAnimatorStore();

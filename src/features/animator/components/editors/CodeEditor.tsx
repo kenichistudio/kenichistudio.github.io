@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useAnimatorStore } from '../../../store/animatorStore';
+import { useAnimatorStore } from '../../store';
 
 const CodeEditor: React.FC = () => {
     const { currentCode, setCurrentCode } = useAnimatorStore();

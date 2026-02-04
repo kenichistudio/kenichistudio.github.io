@@ -3,7 +3,7 @@ import { HelloWorld } from './compositions/HelloWorld';
 import { MathFormula } from './compositions/MathFormula';
 import { BarChartRace } from './compositions/BarChartRace';
 import { CodeBlock } from './compositions/CodeBlock';
-import { useAnimatorStore } from '../store/animatorStore';
+import { useAnimatorStore } from '../features/animator/store';
 
 export const MyRemotionRoot: React.FC = () => {
     // We can pull initial data from store to set default props, 

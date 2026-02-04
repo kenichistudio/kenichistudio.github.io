@@ -1,5 +1,5 @@
 import React from 'react';
-import { useAnimatorStore } from '../../store/animatorStore';
+import { useAnimatorStore } from '../../store';
 
 export const BannerAd: React.FC = () => {
     return (

@@ -1,8 +1,9 @@
 ---
-import EditorLayout from "../../components/animator/EditorLayout";
+import Layout from "../../layouts/Layout.astro";
+import { AnimatorEditor } from "../../features/animator/AnimatorEditor";
 ---
 
-<html lang="en">
+<Layout title="Kinetix Animator" showFooter={false} showAds={false} isApp>
     <head>
         <meta charset="utf-8" />
         <link
@@ -15,6 +16,6 @@ import EditorLayout from "../../components/animator/EditorLayout";
         <title>Kenichi Animator</title>
     </head>
     <body class="bg-neutral-950 text-slate-100 overflow-hidden">
-        <EditorLayout client:only="react" />
+        <AnimatorEditor client:only="react" />
     </body>
-</html>
+</Layout>

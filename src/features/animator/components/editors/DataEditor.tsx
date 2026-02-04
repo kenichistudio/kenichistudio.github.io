@@ -2,7 +2,7 @@ import React from 'react';
 import { Plus, Trash2, GripVertical } from 'lucide-react';
 
 
-import { useAnimatorStore } from '../../../store/animatorStore';
+import { useAnimatorStore } from '../../store';
 
 const DataEditor: React.FC = () => {
     const { barChartData, setBarChartData } = useAnimatorStore();

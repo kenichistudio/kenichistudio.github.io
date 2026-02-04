@@ -4,15 +4,15 @@ import { MyRemotionRoot } from '../../remotion/Root';
 import { BarChartRace } from '../../remotion/compositions/BarChartRace';
 import { MathFormula } from '../../remotion/compositions/MathFormula';
 import { CodeBlock } from '../../remotion/compositions/CodeBlock';
-import PropertyPanel from './PropertyPanel';
-import { useAnimatorStore } from '../../store/animatorStore';
-import ExportDialog from './ExportDialog';
-import CloudRenderingDialog from './CloudRenderingDialog';
-import { BannerAd, InterstitialAd } from './AdComponents';
+import PropertyPanel from './components/panels/PropertyPanel';
+import { useAnimatorStore } from './store';
+import ExportDialog from './components/dialogs/ExportDialog';
+import CloudRenderingDialog from './components/dialogs/CloudRenderingDialog';
+import { BannerAd, InterstitialAd } from './components/ui/SquareAd';
 import { Cloud, Download, Menu, X } from 'lucide-react';
 import { useState } from 'react';
 
-const EditorLayout: React.FC = () => {
+export const AnimatorEditor: React.FC = () => {
     // Mobile: We will just show PropertyPanel in the bottom section
     // Desktop: 'Library' is left, 'PropertyPanel' content is right.
 
@@ -208,8 +208,8 @@ const EditorLayout: React.FC = () => {
 
                     {/* Mobile: Bottom Sheet / Property Panel Area */}
                     <div className={`lg:hidden bg-[#0F172A] border-t border-slate-700 flex flex-col shadow-[0_-10px_40px_-5px_rgba(0,0,0,0.5)] z-20 transition-all duration-300 ${isPropertyPanelExpanded
-                            ? 'absolute inset-0 h-full'
-                            : 'h-[55%]'
+                        ? 'absolute inset-0 h-full'
+                        : 'h-[55%]'
                         }`}>
                         <PropertyPanel />
                     </div>
@@ -224,4 +224,4 @@ const EditorLayout: React.FC = () => {
     );
 };
 
-export default EditorLayout;
+

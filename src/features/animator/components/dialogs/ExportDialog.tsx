@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useAnimatorStore } from '../../store/animatorStore';
+import { useAnimatorStore } from '../../store';
 import { Player, type PlayerRef } from '@remotion/player';
 import { toBlob } from 'html-to-image';
 import download from 'downloadjs';
@@ -35,10 +35,7 @@ const ExportDialog: React.FC<ExportDialogProps> = ({ durationInFrames, component
     // Initial worker setup
     useEffect(() => {
         if (!workerRef.current) {
-            workerRef.current = new Worker(
-                new URL('../../engine/workers/export.worker.ts', import.meta.url),
-                { type: 'module' }
-            );
+            workerRef.current = new Worker(new URL('../../../../engine/workers/export.worker.ts', import.meta.url), { type: 'module' });
             workerRef.current.onmessage = (e) => {
                 const { type, data, error, message } = e.data;
                 if (type === 'LOG') {

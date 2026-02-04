@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useAnimatorStore } from '../../../store/animatorStore';
+import { useAnimatorStore } from '../../store';
 
 const MathEditor: React.FC = () => {
     const { currentLatex, setCurrentLatex } = useAnimatorStore();
