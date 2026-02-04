@@ -1,0 +1,10 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import { SVGLab } from "../../features/svg-lab/SVGLab";
+---
+
+<Layout title="SVG Lab | Kenichi Studio" showFooter={false} showAds={false} isApp>
+    <div class="h-screen w-full bg-white dark:bg-app-bg">
+        <SVGLab client:only="react" />
+    </div>
+</Layout>
