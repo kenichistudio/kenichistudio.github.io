@@ -1,12 +1,12 @@
-// Service Worker for Kinetix Studio
+// Service Worker for Kenichi Studio
 const CACHE_NAME = 'kenichi-studio-cache-v1';
 const ASSETS = [
   '/',
   '/index.html',
   '/manifest.json',
-  '/favicon.svg',
-  '/kenichi_brand_pwa.png',
-  '/kenichi_brand_pwa.png'
+  '/kenichi_brand_pwa.svg',
+  '/pwa-icon-192.png',
+  '/pwa-icon-512.png'
 ];
 
 self.addEventListener('install', (event) => {
