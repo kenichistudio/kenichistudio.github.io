@@ -73,7 +73,7 @@ export const AnimatorEditor: React.FC = () => {
                         {isLibraryOpen ? <X size={20} /> : <Menu size={20} />}
                     </button>
 
-                    <span className="font-bold text-xl tracking-tight text-sky-400">Kinetix</span>
+                    <span className="font-bold text-xl tracking-tight text-sky-400">Kenichi</span>
                     <span className="text-[10px] font-mono bg-sky-500/10 text-sky-400 border border-sky-500/20 px-1.5 py-0.5 rounded">BETA</span>
                 </div>
                 <div className="flex items-center gap-3">

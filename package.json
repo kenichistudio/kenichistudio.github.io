@@ -8,7 +8,10 @@
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro",
-    "bundle": "node scripts/bundle-code.mjs"
+    "bundle": "node scripts/bundle-code.mjs",
+    "logos:generate": "node public/assets/scripts/generate.js",
+    "logos:convert": "node public/assets/scripts/convert_to_png.js",
+    "logos:all": "npm run logos:generate && npm run logos:convert"
   },
   "dependencies": {
     "@astrojs/mdx": "^4.3.12",

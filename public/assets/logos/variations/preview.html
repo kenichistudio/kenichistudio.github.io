@@ -1,0 +1,56 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kenichi Logo Variations</title>
+    <style>
+        body { font-family: 'Outfit', system-ui, sans-serif; background: #eef2f6; display: flex; flex-direction: column; align-items: center; padding: 40px; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 40px; width: 100%; max-width: 1200px; }
+        .card { background: white; padding: 25px; border-radius: 20px; box-shadow: 0 10px 25px -5px rgb(0 0 0 / 0.05); text-align: center; transition: all 0.3s ease; }
+        .card:hover { transform: translateY(-8px); box-shadow: 0 20px 35px -5px rgb(0 0 0 / 0.1); }
+        img { width: 100%; height: auto; border-radius: 24%; box-shadow: 0 10px 20px -3px rgb(0 0 0 / 0.15); transition: transform 0.3s ease; }
+        .card:hover img { transform: scale(1.02); }
+        h3 { margin-top: 20px; color: #1e293b; font-weight: 700; font-size: 1.1em; }
+        p { color: #64748b; font-size: 0.9em; margin-top: 5px; font-weight: 500; }
+        h1 { color: #0f172a; margin-bottom: 50px; font-weight: 800; font-size: 2.5em; letter-spacing: -0.02em; }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <h1>Kenichi Logo Variations</h1>
+    <div class="grid">
+        <div class="card">
+            <img src="./v1_gradient_bg.svg" alt="V1">
+            <h3>V1: Kenichi Blue</h3>
+            <p>Gradient BG, White Mark</p>
+        </div>
+        <div class="card">
+            <img src="./v2_black_bg.svg" alt="V2">
+            <h3>V2: Obsidian</h3>
+            <p>Black BG, Gradient Mark</p>
+        </div>
+        <div class="card">
+            <img src="./v3_white_bg.svg" alt="V3">
+            <h3>V3: Clean</h3>
+            <p>White BG, Black Mark, Shadow</p>
+        </div>
+        <div class="card">
+            <img src="./v4_pale_red.svg" alt="V4">
+            <h3>V4: Ember Inset</h3>
+            <p>Pale Red Gradient, Inner Shadow</p>
+        </div>
+        <div class="card">
+            <img src="./v5_high_shadow.svg" alt="V5">
+            <h3>V5: High Levitation</h3>
+            <p>White BG, Blue Mark, Deep Shadow</p>
+        </div>
+        <div class="card">
+            <img src="./v6_high_shadow_black.svg" alt="V6">
+            <h3>V6: Midnight Levitation</h3>
+            <p>White BG, Black Mark, Deep Shadow</p>
+        </div>
+    </div>
+</body>
+</html>
