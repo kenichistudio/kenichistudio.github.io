@@ -8,7 +8,7 @@ import { BarChartRaceObject } from "@core/objects/BarChartRaceObject";
 import { CharacterObject } from "@core/objects/CharacterObject";
 import { LogoCharacterObject } from "@core/objects/LogoCharacterObject";
 import { ParticleTextObject } from "@core/objects/ParticleTextObject";
-import { LayersPanel } from "./LayersPanel";
+import { LayersPanel } from "../components/panels/LayersPanel";
 
 import {
     Slider,
@@ -22,7 +22,7 @@ import {
     SliderInput,
     SegmentedControl,
     IconGrid
-} from "../ui/InspectorUI";
+} from "../components/ui/InspectorUI";
 import { TextSettings } from "../settings/TextSettings";
 import { CodeBlockSettings } from "../settings/CodeBlockSettings";
 import { ChartSettings } from "../settings/ChartSettings";
@@ -58,7 +58,7 @@ import {
     ArrowLeft
 } from "lucide-react";
 
-import { FontPicker } from "../ui/FontPicker";
+import { FontPicker } from "../components/ui/FontPicker";
 
 interface PropertiesPanelProps {
     engine: Engine | null;
@@ -262,7 +262,7 @@ export const PropertiesPanel = ({ engine, selectedId, isMobileSheet = false, ini
                     <MobileCategoryStrip
                         categories={categories.filter(c => c.id !== "keyboard")}
                         activeCategory={activeMobileCategory}
-                        onSelect={(id) => {
+                        onSelect={(id: string) => {
                             setActiveMobileCategory(id);
                         }}
                     >
@@ -321,15 +321,15 @@ export const PropertiesPanel = ({ engine, selectedId, isMobileSheet = false, ini
                                 <div className="flex gap-4">
                                     <div className="flex flex-col gap-1 items-center">
                                         <span className="text-[9px] text-app-light-text-secondary">Skin</span>
-                                        <ColorPicker value={obj.skinColor} onChange={(v) => handleChange("skinColor", v)} size="sm" />
+                                        <ColorPicker value={obj.skinColor} onChange={(v: string) => handleChange("skinColor", v)} size="sm" />
                                     </div>
                                     <div className="flex flex-col gap-1 items-center">
                                         <span className="text-[9px] text-app-light-text-secondary">Hair</span>
-                                        <ColorPicker value={obj.hairColor} onChange={(v) => handleChange("hairColor", v)} size="sm" />
+                                        <ColorPicker value={obj.hairColor} onChange={(v: string) => handleChange("hairColor", v)} size="sm" />
                                     </div>
                                     <div className="flex flex-col gap-1 items-center">
                                         <span className="text-[9px] text-app-light-text-secondary">Costume</span>
-                                        <ColorPicker value={obj.costumeColor} onChange={(v) => handleChange("costumeColor", v)} size="sm" />
+                                        <ColorPicker value={obj.costumeColor} onChange={(v: string) => handleChange("costumeColor", v)} size="sm" />
                                     </div>
                                 </div>
                             </ControlRow>
@@ -369,7 +369,7 @@ export const PropertiesPanel = ({ engine, selectedId, isMobileSheet = false, ini
                                 <Slider
                                     value={obj.gap}
                                     min={1} max={10}
-                                    onChange={(v) => handleChange("gap", v)}
+                                    onChange={(v: number) => handleChange("gap", v)}
                                     compact={false}
                                 />
                             </div>
@@ -475,7 +475,7 @@ export const PropertiesPanel = ({ engine, selectedId, isMobileSheet = false, ini
                                                     value={obj.particleSize}
                                                     min={1}
                                                     max={10}
-                                                    onChange={(v) => handleChange("particleSize", v)}
+                                                    onChange={(v: number) => handleChange("particleSize", v)}
                                                     formatValue={(v) => `${v}px`}
                                                 />
                                             </ControlRow>
@@ -484,7 +484,7 @@ export const PropertiesPanel = ({ engine, selectedId, isMobileSheet = false, ini
                                                     value={obj.gap}
                                                     min={1}
                                                     max={10}
-                                                    onChange={(v) => handleChange("gap", v)}
+                                                    onChange={(v: number) => handleChange("gap", v)}
                                                     formatValue={(v) => `1/${v}`}
                                                 />
                                                 <div className="text-[10px] text-orange-500 mt-1">Lower gap = more CPU</div>
@@ -492,7 +492,7 @@ export const PropertiesPanel = ({ engine, selectedId, isMobileSheet = false, ini
                                             <ControlRow label="Color" layout="horizontal">
                                                 <ColorPicker
                                                     value={obj.color}
-                                                    onChange={(val) => handleChange("color", val)}
+                                                    onChange={(val: string) => handleChange("color", val)}
                                                 />
                                             </ControlRow>
                                         </PropertySection>
@@ -502,7 +502,7 @@ export const PropertiesPanel = ({ engine, selectedId, isMobileSheet = false, ini
                                                     value={obj.fontSize}
                                                     min={20}
                                                     max={300}
-                                                    onChange={(v) => handleChange("fontSize", v)}
+                                                    onChange={(v: number) => handleChange("fontSize", v)}
                                                     formatValue={(v) => `${v}px`}
                                                 />
                                             </ControlRow>
@@ -579,7 +579,7 @@ export const PropertiesPanel = ({ engine, selectedId, isMobileSheet = false, ini
                                                     <span className="text-[9px] text-app-light-text-secondary uppercase">Skin</span>
                                                     <ColorPicker
                                                         value={obj.skinColor}
-                                                        onChange={(val) => handleChange("skinColor", val)}
+                                                        onChange={(val: string) => handleChange("skinColor", val)}
                                                         size="sm"
                                                     />
                                                 </div>
@@ -587,7 +587,7 @@ export const PropertiesPanel = ({ engine, selectedId, isMobileSheet = false, ini
                                                     <span className="text-[9px] text-app-light-text-secondary uppercase">Hair</span>
                                                     <ColorPicker
                                                         value={obj.hairColor}
-                                                        onChange={(val) => handleChange("hairColor", val)}
+                                                        onChange={(val: string) => handleChange("hairColor", val)}
                                                         size="sm"
                                                     />
                                                 </div>
@@ -595,7 +595,7 @@ export const PropertiesPanel = ({ engine, selectedId, isMobileSheet = false, ini
                                                     <span className="text-[9px] text-app-light-text-secondary uppercase">Costume</span>
                                                     <ColorPicker
                                                         value={obj.costumeColor}
-                                                        onChange={(val) => handleChange("costumeColor", val)}
+                                                        onChange={(val: string) => handleChange("costumeColor", val)}
                                                         size="sm"
                                                     />
                                                 </div>
@@ -615,13 +615,13 @@ export const PropertiesPanel = ({ engine, selectedId, isMobileSheet = false, ini
                                         <ControlRow label="Circle Color" layout="horizontal">
                                             <ColorPicker
                                                 value={obj.circleColor}
-                                                onChange={(val) => handleChange("circleColor", val)}
+                                                onChange={(val: string) => handleChange("circleColor", val)}
                                             />
                                         </ControlRow>
                                         <ControlRow label="Text Color" layout="horizontal">
                                             <ColorPicker
                                                 value={obj.textColor}
-                                                onChange={(val) => handleChange("textColor", val)}
+                                                onChange={(val: string) => handleChange("textColor", val)}
                                             />
                                         </ControlRow>
                                     </PropertySection>
@@ -701,7 +701,7 @@ export const PropertiesPanel = ({ engine, selectedId, isMobileSheet = false, ini
                                                 <Slider
                                                     value={Math.round(obj.rotation || 0)}
                                                     min={-180} max={180}
-                                                    onChange={(v) => handleChange("rotation", v)}
+                                                    onChange={(v: number) => handleChange("rotation", v)}
                                                 />
                                                 <button
                                                     onClick={() => handleChange("rotation", 0)}
@@ -716,7 +716,7 @@ export const PropertiesPanel = ({ engine, selectedId, isMobileSheet = false, ini
                                             <Slider
                                                 value={obj.opacity ?? 1}
                                                 min={0} max={1} step={0.01}
-                                                onChange={(v) => handleChange("opacity", v)}
+                                                onChange={(v: number) => handleChange("opacity", v)}
                                             />
                                         </ControlRow>
 
@@ -755,7 +755,7 @@ export const PropertiesPanel = ({ engine, selectedId, isMobileSheet = false, ini
                                         {'color' in obj && !(obj instanceof TextObject) && !(obj instanceof ChartObject) && !(obj instanceof ParticleTextObject) && (
                                             <div className="pt-4 border-t border-app-light-border dark:border-app-border space-y-4">
                                                 <ControlRow label="Color">
-                                                    <ColorPicker value={(obj as any).color} onChange={(v) => handleChange("color", v)} />
+                                                    <ColorPicker value={(obj as any).color} onChange={(v: string) => handleChange("color", v)} />
                                                 </ControlRow>
                                             </div>
                                         )}
@@ -788,7 +788,7 @@ export const PropertiesPanel = ({ engine, selectedId, isMobileSheet = false, ini
                                     <PropertySection title="Entrance Animation">
                                         <IconGrid
                                             value={(obj as any).enterAnimation || "none"}
-                                            onChange={(v) => handleChange("enterAnimation", v)}
+                                            onChange={(v: string) => handleChange("enterAnimation", v)}
                                             cols={3}
                                             options={[
                                                 { value: "none", label: "None", icon: <X size={16} /> },
@@ -804,8 +804,8 @@ export const PropertiesPanel = ({ engine, selectedId, isMobileSheet = false, ini
                                                 <SliderInput
                                                     value={(obj as any).enterDuration || 1000}
                                                     min={100} max={5000} step={100}
-                                                    onChange={(v) => handleChange("enterDuration", v)}
-                                                    formatValue={(v) => `${(v / 1000).toFixed(1)}s`}
+                                                    onChange={(v: number) => handleChange("enterDuration", v)}
+                                                    formatValue={(v: number) => `${(v / 1000).toFixed(1)}s`}
                                                 />
                                             </ControlRow>
                                         )}
@@ -814,7 +814,7 @@ export const PropertiesPanel = ({ engine, selectedId, isMobileSheet = false, ini
                                     <PropertySection title="Exit Animation">
                                         <IconGrid
                                             value={(obj as any).exitAnimation || "none"}
-                                            onChange={(v) => handleChange("exitAnimation", v)}
+                                            onChange={(v: string) => handleChange("exitAnimation", v)}
                                             cols={3}
                                             options={[
                                                 { value: "none", label: "None", icon: <X size={16} /> },
@@ -829,8 +829,8 @@ export const PropertiesPanel = ({ engine, selectedId, isMobileSheet = false, ini
                                                 <SliderInput
                                                     value={(obj as any).exitDuration || 1000}
                                                     min={100} max={5000} step={100}
-                                                    onChange={(v) => handleChange("exitDuration", v)}
-                                                    formatValue={(v) => `${(v / 1000).toFixed(1)}s`}
+                                                    onChange={(v: number) => handleChange("exitDuration", v)}
+                                                    formatValue={(v: number) => `${(v / 1000).toFixed(1)}s`}
                                                 />
                                             </ControlRow>
                                         )}

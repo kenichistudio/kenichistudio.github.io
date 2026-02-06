@@ -27,27 +27,27 @@ export const useLayers = (engine: Engine | null, selectedId: string | null) => {
     useEffect(() => {
         if (!engine) return;
         updateLayers();
-        // Listen to scene changes?
-        // engine.on("update", updateLayers);
-        // engine.on("scene:change", updateLayers);
-        // assuming standard eventEmitter
 
-        // Placeholder for subscription
-        const interval = setInterval(updateLayers, 1000); // Fallback
-        return () => clearInterval(interval);
+        // Subscribe to engine changes for reactive layers list
+        const originalOnObjectChange = engine.onObjectChange;
+
+        const handleChange = () => {
+            updateLayers();
+            if (originalOnObjectChange) originalOnObjectChange();
+        };
+
+        engine.onObjectChange = handleChange;
+
+        return () => {
+            if (engine.onObjectChange === handleChange) {
+                engine.onObjectChange = originalOnObjectChange;
+            }
+        };
     }, [engine, updateLayers]);
 
     const select = (id: string) => {
         if (!engine) return;
-        // engine.select(id); // ???
-        // Or set selectedId via parent?
-        // The hook assumes parent changes selectedId prop?
-        // Wait, the hook takes selectedId as arg.
-        // So select must likely trigger a callback or engine event that updates the parent.
-        // engine.selection.set(id)?
-        // I'll return a no-op that logs for now if unsure.
-        console.log("Select", id);
-        // Ideally we need a way to set selection on engine or callback.
+        engine.selectObject(id);
     };
 
     const toggleVisibility = (id: string, e: React.MouseEvent) => {
@@ -74,8 +74,14 @@ export const useLayers = (engine: Engine | null, selectedId: string | null) => {
     const duplicate = (id: string, e: React.MouseEvent) => {
         e.stopPropagation();
         if (!engine) return;
-        // engine.duplicate(id)?
-        console.log("Duplicate", id);
+        const obj = engine.scene.get(id);
+        if (obj && (obj as any).clone) {
+            const clone = (obj as any).clone();
+            clone.name = `${obj.name} Copy`;
+            engine.scene.add(clone);
+            engine.render();
+            updateLayers();
+        }
     };
 
     const remove = (id: string, e: React.MouseEvent) => {
@@ -89,15 +95,17 @@ export const useLayers = (engine: Engine | null, selectedId: string | null) => {
     const moveUp = (id: string, e: React.MouseEvent) => {
         e.stopPropagation();
         if (!engine) return;
-        // logic to swap z-index
-        console.log("Move Up", id);
+        engine.scene.moveUp(id);
+        engine.render();
+        updateLayers();
     };
 
     const moveDown = (id: string, e: React.MouseEvent) => {
         e.stopPropagation();
         if (!engine) return;
-        // logic to swap z-index
-        console.log("Move Down", id);
+        engine.scene.moveDown(id);
+        engine.render();
+        updateLayers();
     };
 
     return {
