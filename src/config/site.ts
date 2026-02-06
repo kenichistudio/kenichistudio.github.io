@@ -5,16 +5,16 @@
 
 export const siteConfig = {
   name: 'Kenichi Studio',
-  tagline: 'Simple Tools. Powerful Stories.',
-  description: 'An advanced educational platform and content creation studio designed to make learning engaging through interactive components and a professional creative environment.',
-  url: 'https://simplearyan.github.io/kenichi-studio',
-  
+  tagline: 'The Modern Engine for Visual Storytelling.',
+  description: 'The ultra-fast creative suite for educational content. Generate text-to-diagrams, animate particle text, and export professional bar chart races directly in your browser.',
+  url: 'https://kenichistudio.github.io',
+
   // Social links
   social: {
     github: 'https://github.com/simplearyan/kenichi-studio',
     twitter: '@KenichiStudio',
   },
-  
+
   // Color palette
   colors: {
     primary: '#3b82f6',      // Blue
@@ -23,18 +23,22 @@ export const siteConfig = {
     dark: '#111827',         // Dark background
     light: '#f8fafc',        // Light background
   },
-  
+
   // SEO keywords
   keywords: [
+    'particle text animation',
+    'code typewriter video',
+    'automated bar chart race',
+    'remotion studio',
+    'SVG theme engine',
+    'educational motion graphics',
+    'text-to-diagram',
+    'no-code motion graphics',
     'animation studio',
     'content creation',
     'educational platform',
     'interactive learning',
     'video export',
-    'bar chart race',
-    'data visualization',
-    'browser-based studio',
-    'creative coding',
     'Astro',
     'React',
   ],
