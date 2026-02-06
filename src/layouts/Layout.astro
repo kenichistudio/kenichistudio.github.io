@@ -17,15 +17,64 @@ import "../styles/inspector.css";
 <html lang="en" class={isApp ? "h-full overflow-hidden" : ""}>
     <head>
         <meta charset="UTF-8" />
-        <meta name="description" content="Astro description" />
-        <meta name="viewport" content="width=device-width" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        
+        <!-- Primary Meta Tags -->
+        <meta name="title" content={title} />
+        <meta name="description" content="Free online animation studio. Turn text into flowcharts, animate keyframes, and export professional motion graphics. No design skills required." />
+        <meta name="keywords" content="animation software, diagram creator, motion graphics, flowchart maker, online animator, video export, mermaid diagrams, free animation tool" />
+        <meta name="author" content="SimpleAryan" />
+        <meta name="generator" content={Astro.generator} />
+        
+        <!-- Canonical URL -->
+        <link rel="canonical" href="https://kenichistudio.github.io/" />
+        
+        <!-- Favicon -->
         <link
             rel="icon"
             type="image/svg+xml"
             href={`${import.meta.env.BASE_URL}favicon.svg`}
         />
-        <meta name="generator" content={Astro.generator} />
+        
+        <!-- Open Graph / Facebook -->
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://kenichistudio.github.io/" />
+        <meta property="og:title" content="Kenichi Studio - Create Animated Diagrams & Motion Graphics Online" />
+        <meta property="og:description" content="Free online animation studio. Turn text into flowcharts, animate keyframes, and export professional motion graphics. No design skills required." />
+        <meta property="og:image" content="https://kenichistudio.github.io/og-image.png" />
+        <meta property="og:site_name" content="Kenichi Studio" />
+        
+        <!-- Twitter -->
+        <meta property="twitter:card" content="summary_large_image" />
+        <meta property="twitter:url" content="https://kenichistudio.github.io/" />
+        <meta property="twitter:title" content="Kenichi Studio - Create Animated Diagrams & Motion Graphics" />
+        <meta property="twitter:description" content="Free online animation studio. Turn text into flowcharts, animate keyframes, and export professional motion graphics." />
+        <meta property="twitter:image" content="https://kenichistudio.github.io/twitter-image.png" />
+        
         <title>{title}</title>
+        
+        <!-- Structured Data (Schema.org) -->
+        <script type="application/ld+json">
+        {
+          "@context": "https://schema.org",
+          "@type": "SoftwareApplication",
+          "name": "Kenichi Studio",
+          "applicationCategory": "DesignApplication",
+          "operatingSystem": "Web Browser",
+          "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "USD"
+          },
+          "description": "Free online animation studio for creating diagrams and motion graphics",
+          "url": "https://kenichistudio.github.io/",
+          "author": {
+            "@type": "Person",
+            "name": "SimpleAryan"
+          },
+          "screenshot": "https://kenichistudio.github.io/og-image.png"
+        }
+        </script>
 
         <script is:inline>
             // Check for saved theme or system preference

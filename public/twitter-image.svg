@@ -1,0 +1,35 @@
+<!-- Placeholder for Twitter Card Image -->
+<!-- This file should be replaced with actual Twitter preview image -->
+<!-- Recommended size: 1200x675px -->
+<svg width="1200" height="675" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="twitterGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#3B82F6;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#8B5CF6;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="1200" height="675" fill="url(#twitterGrad)"/>
+  
+  <!-- Content -->
+  <text x="600" y="270" font-family="Arial, sans-serif" font-size="68" font-weight="bold" fill="white" text-anchor="middle">
+    Kenichi Studio
+  </text>
+  
+  <text x="600" y="340" font-family="Arial, sans-serif" font-size="32" fill="rgba(255,255,255,0.9)" text-anchor="middle">
+    Create Animated Diagrams &amp; Motion Graphics
+  </text>
+  
+  <text x="600" y="450" font-family="Arial, sans-serif" font-size="26" fill="rgba(255,255,255,0.85)" text-anchor="middle">
+    ✨ No Design Skills Required
+  </text>
+  
+  <text x="600" y="490" font-family="Arial, sans-serif" font-size="26" fill="rgba(255,255,255,0.85)" text-anchor="middle">
+    ⚡ Export in Seconds
+  </text>
+  
+  <text x="600" y="530" font-family="Arial, sans-serif" font-size="26" fill="rgba(255,255,255,0.85)" text-anchor="middle">
+    🆓 Completely Free
+  </text>
+</svg>
