@@ -8,24 +8,23 @@ import {
     LayoutGrid,
     X
 } from "lucide-react";
-import { Engine } from "@core/Core";
 import { TEXT_OPTIONS, createText } from "../../config/textOptions";
 import { SHAPE_OPTIONS, createShape } from "../../config/shapeOptions";
 import { CODE_OPTIONS, createCode } from "../../config/codeOptions";
 import { CHART_TYPES, createChart } from "../../config/chartOptions";
+import { SquareAd } from "@shared/ads/SquareAd";
+import { useStudio } from "../../context/StudioContext";
 
 interface SidebarProps {
-    engine: Engine | null;
     isMobileSheet?: boolean;
     mobileActiveTab?: Tab;
     allowedTabs?: Tab[];
 }
 
-import { SquareAd } from "@shared/ads/SquareAd";
-
 export type Tab = "templates" | "text" | "media" | "shapes" | null;
 
-export const LeftSidebar = ({ engine, isMobileSheet = false, mobileActiveTab, allowedTabs }: SidebarProps) => {
+export const LeftSidebar = ({ isMobileSheet = false, mobileActiveTab, allowedTabs }: SidebarProps) => {
+    const { engine } = useStudio();
     const defaultTab = allowedTabs && allowedTabs.length > 0 ? allowedTabs[0] : "text";
     const [localActiveTab, setLocalActiveTab] = useState<Tab>(defaultTab);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);

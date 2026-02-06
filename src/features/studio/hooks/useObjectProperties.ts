@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { Engine } from "@core/Core";
+import { useStudio } from "../context/StudioContext";
 import { TextObject } from "@core/objects/TextObject";
 import { CodeBlockObject } from "@core/objects/CodeBlockObject";
 import { ChartObject } from "@core/objects/ChartObject";
@@ -8,7 +9,8 @@ import { CharacterObject } from "@core/objects/CharacterObject";
 import { LogoCharacterObject } from "@core/objects/LogoCharacterObject";
 import { ParticleTextObject } from "@core/objects/ParticleTextObject";
 
-export const useObjectProperties = (engine: Engine | null, selectedId: string | null) => {
+export const useObjectProperties = () => {
+    const { engine, selectedId } = useStudio();
     const [forceUpdate, setForceUpdate] = useState(0);
     const [isRatioLocked, setIsRatioLocked] = useState(true);
 
@@ -16,8 +18,8 @@ export const useObjectProperties = (engine: Engine | null, selectedId: string | 
     useEffect(() => {
         if (!engine) return;
         const onUpdate = () => setForceUpdate(n => n + 1);
-        engine.onObjectChange = onUpdate;
-        return () => { engine.onObjectChange = undefined; }
+        const unsub = engine.on('objectChange', onUpdate);
+        return unsub;
     }, [engine]);
 
     const object = selectedId && engine ? engine.scene.get(selectedId) : null;

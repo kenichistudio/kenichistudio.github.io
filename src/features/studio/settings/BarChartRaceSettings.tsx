@@ -3,13 +3,15 @@ import { Engine } from "@core/Core";
 import { BarChartRaceObject } from "@core/objects/BarChartRaceObject";
 import { ControlRow, PropertySection, SliderInput, Slider, ColorPicker } from "../components/ui/InspectorUI";
 
+import { useStudio } from "../context/StudioContext";
+
 interface BarChartRaceSettingsProps {
     object: BarChartRaceObject;
-    engine: Engine | null;
     onUpdate: () => void;
 }
 
-export const BarChartRaceSettings: React.FC<BarChartRaceSettingsProps> = ({ object: obj, engine, onUpdate }) => {
+export const BarChartRaceSettings: React.FC<BarChartRaceSettingsProps> = ({ object: obj, onUpdate }) => {
+    const { engine } = useStudio();
     const [_, setForceUpdate] = React.useState(0);
 
     if (!engine) return null;

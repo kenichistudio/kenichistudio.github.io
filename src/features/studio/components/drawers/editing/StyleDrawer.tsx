@@ -1,18 +1,24 @@
-import React, { useState } from "react";
-import { Engine } from "@core/Core";
+import React, { useState, useEffect } from "react";
 import { TextObject } from "@core/objects/TextObject";
 import { ColorPicker, Slider, SegmentedControl } from "../../ui/InspectorUI";
 import { AlignLeft, AlignCenter, AlignRight } from "lucide-react";
+import { useStudio } from "../../../context/StudioContext";
 
 interface StyleDrawerProps {
-    engine: Engine | null;
-    selectedId: string | null;
     isOpen: boolean;
     onClose: () => void;
 }
 
-export const StyleDrawerContent: React.FC<{ engine: Engine | null; selectedId: string | null; onClose: () => void }> = ({ engine, selectedId, onClose }) => {
+export const StyleDrawerContent: React.FC<{ onClose: () => void }> = ({ onClose }) => {
     const [forceUpdate, setForceUpdate] = useState(0);
+    const { engine, selectedId } = useStudio();
+
+    useEffect(() => {
+        if (!engine) return;
+        const onUpdate = () => setForceUpdate(n => n + 1);
+        const unsub = engine.on('objectChange', onUpdate);
+        return unsub;
+    }, [engine]);
 
     const obj = selectedId && engine ? engine.scene.get(selectedId) : null;
 
@@ -127,15 +133,14 @@ export const StyleDrawerContent: React.FC<{ engine: Engine | null; selectedId: s
     );
 };
 
-export const StyleDrawer: React.FC<StyleDrawerProps> = ({ engine, selectedId, isOpen, onClose }) => {
-
-    // Preserve old behavior
+export const StyleDrawer: React.FC<StyleDrawerProps> = ({ isOpen, onClose }) => {
+    const { engine, selectedId } = useStudio();
     const obj = selectedId && engine ? engine.scene.get(selectedId) : null;
     if (!isOpen || !obj) return null;
 
     return (
         <div className="fixed bottom-16 left-0 right-0 z-[90] bg-white/95 dark:bg-app-surface/95 backdrop-blur-xl border-t border-slate-200 dark:border-app-border animate-in slide-in-from-bottom-full duration-300 shadow-xl pb-safe">
-            <StyleDrawerContent engine={engine} selectedId={selectedId} onClose={onClose} />
+            <StyleDrawerContent onClose={onClose} />
         </div>
     );
 };

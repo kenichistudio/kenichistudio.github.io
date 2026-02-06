@@ -1,16 +1,9 @@
 import { useState, useRef, useEffect, useCallback } from "react";
+import { useStudio } from "../context/StudioContext";
 
-interface UseTimelineInteractionProps {
-    currentTime: number;
-    totalDuration: number;
-    onSeek: (time: number) => void;
-}
-
-export const useTimelineInteraction = ({
-    currentTime,
-    totalDuration,
-    onSeek
-}: UseTimelineInteractionProps) => {
+export const useTimelineInteraction = () => {
+    const { currentTime, totalDuration, engine } = useStudio();
+    const onSeek = (time: number) => engine?.seek(time);
     const trackRef = useRef<HTMLDivElement>(null);
     const [isDragging, setIsDragging] = useState(false);
 

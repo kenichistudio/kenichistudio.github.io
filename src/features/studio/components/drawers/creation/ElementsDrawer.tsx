@@ -1,17 +1,15 @@
 import React, { useState } from "react";
-import { Engine } from "@core/Core";
 import { ShapesDrawerContent } from "./ShapesDrawer";
 import { CodeDrawerContent } from "./CodeDrawer";
 import { Square, Terminal } from "lucide-react";
+import { useStudio } from "../../../context/StudioContext";
+import { BottomSheet } from "../../dock/BottomSheet";
 
 interface ElementsDrawerContentProps {
-    engine: Engine | null;
     onClose: () => void;
 }
 
-import { BottomSheet } from "../../dock/BottomSheet";
-
-export const ElementsDrawer: React.FC<ElementsDrawerContentProps & { isOpen: boolean }> = ({ engine, onClose, isOpen }) => {
+export const ElementsDrawer: React.FC<ElementsDrawerContentProps & { isOpen: boolean }> = ({ onClose, isOpen }) => {
     return (
         <BottomSheet
             isOpen={isOpen}
@@ -21,12 +19,13 @@ export const ElementsDrawer: React.FC<ElementsDrawerContentProps & { isOpen: boo
             snaps={[0.5, 0.95]}
             variant="dock"
         >
-            <ElementsDrawerContent engine={engine} onClose={onClose} />
+            <ElementsDrawerContent onClose={onClose} />
         </BottomSheet>
     );
 };
 
-export const ElementsDrawerContent: React.FC<ElementsDrawerContentProps> = ({ engine, onClose }) => {
+export const ElementsDrawerContent: React.FC<ElementsDrawerContentProps> = ({ onClose }) => {
+    const { engine } = useStudio();
     const [activeSubTab, setActiveSubTab] = useState<'shapes' | 'code'>('shapes');
 
     return (
@@ -34,9 +33,9 @@ export const ElementsDrawerContent: React.FC<ElementsDrawerContentProps> = ({ en
             {/* Content Area */}
             <div className="flex-1 overflow-y-auto">
                 {activeSubTab === 'shapes' ? (
-                    <ShapesDrawerContent engine={engine} onClose={onClose} />
+                    <ShapesDrawerContent onClose={onClose} />
                 ) : (
-                    <CodeDrawerContent engine={engine} onClose={onClose} />
+                    <CodeDrawerContent onClose={onClose} />
                 )}
             </div>
 

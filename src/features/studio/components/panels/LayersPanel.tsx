@@ -17,13 +17,14 @@ import {
 import { TextObject } from "@core/objects/TextObject";
 import { ChartObject } from "@core/objects/ChartObject";
 
+import { useStudio } from "../../context/StudioContext";
+
 interface LayersPanelProps {
-    engine: Engine | null;
-    selectedId: string | null;
 }
 
-export const LayersPanel: React.FC<LayersPanelProps> = ({ engine, selectedId }) => {
-    const { layers, select, toggleVisibility, toggleLock, duplicate, remove, moveUp, moveDown } = useLayers(engine, selectedId);
+export const LayersPanel: React.FC<LayersPanelProps> = () => {
+    const { engine, selectedId } = useStudio();
+    const { layers, select, toggleVisibility, toggleLock, duplicate, remove, moveUp, moveDown } = useLayers();
 
     if (!engine) return null;
 

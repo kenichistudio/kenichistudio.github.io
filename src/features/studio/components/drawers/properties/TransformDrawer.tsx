@@ -1,23 +1,22 @@
 import React, { useState } from "react";
-import { Engine } from "@core/Core";
 import { Slider } from "../../ui/InspectorUI";
 import { BottomSheet } from "../../dock/BottomSheet";
 import { MoveHorizontal, MoveVertical, Scaling, RotateCw, Move } from "lucide-react";
 import { AdjustDrawerContent } from "./AdjustDrawer";
 import { PositionDrawerContent } from "./PositionDrawer";
+import { useStudio } from "../../../context/StudioContext";
 
 interface TransformDrawerProps {
-    engine: Engine | null;
-    selectedId: string | null;
     isOpen: boolean;
     onClose: () => void;
 }
 
 type TransformTab = 'size' | 'rotate' | 'position';
 
-export const TransformDrawer: React.FC<TransformDrawerProps> = ({ engine, selectedId, isOpen, onClose }) => {
+export const TransformDrawer: React.FC<TransformDrawerProps> = ({ isOpen, onClose }) => {
     const [activeTab, setActiveTab] = useState<TransformTab>('size');
     const [forceUpdate, setForceUpdate] = useState(0);
+    const { engine, selectedId } = useStudio();
 
     // Reset tab when opening
     React.useEffect(() => {
@@ -86,12 +85,12 @@ export const TransformDrawer: React.FC<TransformDrawerProps> = ({ engine, select
                     )}
                     {activeTab === 'rotate' && (
                         <div className="animate-in fade-in duration-200">
-                            <AdjustDrawerContent engine={engine} selectedId={selectedId} onClose={onClose} />
+                            <AdjustDrawerContent onClose={onClose} />
                         </div>
                     )}
                     {activeTab === 'position' && (
                         <div className="animate-in fade-in duration-200">
-                            <PositionDrawerContent engine={engine} selectedId={selectedId} onClose={onClose} />
+                            <PositionDrawerContent onClose={onClose} />
                         </div>
                     )}
                 </div>

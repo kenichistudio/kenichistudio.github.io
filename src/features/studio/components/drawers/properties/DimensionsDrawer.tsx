@@ -1,21 +1,27 @@
-import React, { useState } from "react";
-import { Engine } from "@core/Core";
+import React, { useState, useEffect } from "react";
 import { Slider } from "../../ui/InspectorUI";
 import { BottomSheet } from "../../dock/BottomSheet";
 import { MoveHorizontal, MoveVertical, RotateCcw, Scaling } from "lucide-react";
+import { useStudio } from "../../../context/StudioContext";
 
 interface DimensionsDrawerProps {
-    engine: Engine | null;
-    selectedId: string | null;
     isOpen: boolean;
     onClose: () => void;
 }
 
 type DimensionsProperty = 'width' | 'height';
 
-export const DimensionsDrawerContent: React.FC<{ engine: Engine | null; selectedId: string | null; onClose: () => void }> = ({ engine, selectedId, onClose }) => {
+export const DimensionsDrawerContent: React.FC<{ onClose: () => void }> = ({ onClose }) => {
     const [forceUpdate, setForceUpdate] = useState(0);
     const [activeProperty, setActiveProperty] = useState<DimensionsProperty>('width');
+    const { engine, selectedId } = useStudio();
+
+    useEffect(() => {
+        if (!engine) return;
+        const onUpdate = () => setForceUpdate(n => n + 1);
+        const unsub = engine.on('objectChange', onUpdate);
+        return unsub;
+    }, [engine]);
 
     const obj = selectedId && engine ? engine.scene.get(selectedId) : null;
 
@@ -89,7 +95,7 @@ export const DimensionsDrawerContent: React.FC<{ engine: Engine | null; selected
     );
 };
 
-export const DimensionsDrawer: React.FC<DimensionsDrawerProps> = ({ engine, selectedId, isOpen, onClose }) => {
+export const DimensionsDrawer: React.FC<DimensionsDrawerProps> = ({ isOpen, onClose }) => {
     return (
         <BottomSheet
             isOpen={isOpen}
@@ -97,7 +103,7 @@ export const DimensionsDrawer: React.FC<DimensionsDrawerProps> = ({ engine, sele
             title="Dimensions"
             variant="dock"
         >
-            <DimensionsDrawerContent engine={engine} selectedId={selectedId} onClose={onClose} />
+            <DimensionsDrawerContent onClose={onClose} />
         </BottomSheet>
     );
 };

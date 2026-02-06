@@ -1,5 +1,7 @@
 import { Scene } from "./Scene";
 
+export type EngineEvent = 'timeUpdate' | 'playStateChange' | 'selectionChange' | 'objectChange' | 'resize' | 'durationChange';
+
 export class Engine {
     canvas: HTMLCanvasElement;
     ctx: CanvasRenderingContext2D;
@@ -12,6 +14,31 @@ export class Engine {
     isLooping: boolean = true;
     playbackRate: number = 1;
 
+    // Event System
+    private _listeners: Map<EngineEvent, Set<Function>> = new Map();
+
+    on(event: EngineEvent, callback: Function) {
+        if (!this._listeners.has(event)) {
+            this._listeners.set(event, new Set());
+        }
+        this._listeners.get(event)!.add(callback);
+        return () => this.off(event, callback);
+    }
+
+    off(event: EngineEvent, callback: Function) {
+        this._listeners.get(event)?.delete(callback);
+    }
+
+    private emit(event: EngineEvent, ...args: any[]) {
+        this._listeners.get(event)?.forEach(cb => cb(...args));
+
+        // Backward compatibility for single hooks
+        const hookName = `on${event.charAt(0).toUpperCase() + event.slice(1)}`;
+        if ((this as any)[hookName]) {
+            (this as any)[hookName](...args);
+        }
+    }
+
     resize(width: number, height: number) {
         if (this.scene.width === 0 || this.scene.height === 0) {
             this.canvas.width = width;
@@ -20,7 +47,7 @@ export class Engine {
             this.scene.height = height;
             this.render();
             // Call resize anyway to set initial aspect?
-            this.onResize?.(width, height);
+            this.emit('resize', width, height);
             return;
         }
 
@@ -71,7 +98,7 @@ export class Engine {
         });
 
         this.render();
-        this.onResize?.(width, height);
+        this.emit('resize', width, height);
     }
 
     // Loop
@@ -85,8 +112,7 @@ export class Engine {
     private _dragStartY = 0;
     private _initialObjState: { x: number, y: number } | null = null;
 
-    // Event hooks
-    // Event hooks
+    // Backward compatibility hooks (deprecated)
     onTimeUpdate?: (time: number) => void;
     onPlayStateChange?: (isPlaying: boolean) => void;
     onSelectionChange?: (id: string | null) => void;
@@ -98,9 +124,9 @@ export class Engine {
         this.totalDuration = Math.max(1000, duration); // Minimum 1 second
         if (this.currentTime > this.totalDuration) {
             this.currentTime = this.totalDuration;
-            this.onTimeUpdate?.(this.currentTime);
+            this.emit('timeUpdate', this.currentTime);
         }
-        this.onDurationChange?.(this.totalDuration);
+        this.emit('durationChange', this.totalDuration);
     }
 
     constructor(canvas: HTMLCanvasElement) {
@@ -111,7 +137,7 @@ export class Engine {
         this.scene = new Scene();
         this.scene.onUpdate = () => {
             this.render(); // Always re-render on visual change
-            this.onObjectChange?.(); // Notify listeners (UI)
+            this.emit('objectChange');
         };
 
         this._setupInteraction();
@@ -190,7 +216,7 @@ export class Engine {
             obj.x = this._initialObjState.x + dx;
             obj.y = this._initialObjState.y + dy;
             this.render();
-            this.onObjectChange?.();
+            this.emit('objectChange');
         }
     }
 
@@ -223,7 +249,7 @@ export class Engine {
     selectObject(id: string | null) {
         this.selectedObjectId = id;
         this.render(); // Redraw selection box
-        this.onSelectionChange?.(id);
+        this.emit('selectionChange', id);
     }
 
     play() {
@@ -236,20 +262,20 @@ export class Engine {
         this.isPlaying = true;
         this._lastFrameTime = performance.now();
         this._rafId = requestAnimationFrame(this._loop);
-        this.onPlayStateChange?.(true);
+        this.emit('playStateChange', true);
     }
 
     pause() {
         if (!this.isPlaying) return;
         this.isPlaying = false;
         cancelAnimationFrame(this._rafId);
-        this.onPlayStateChange?.(false);
+        this.emit('playStateChange', false);
     }
 
     seek(time: number) {
         this.currentTime = Math.max(0, Math.min(time, this.totalDuration));
         this.render();
-        this.onTimeUpdate?.(this.currentTime);
+        this.emit('timeUpdate', this.currentTime);
     }
 
     private _loop = (now: number) => {
@@ -271,7 +297,7 @@ export class Engine {
 
         this.currentTime = nextTime;
         this.render();
-        this.onTimeUpdate?.(this.currentTime);
+        this.emit('timeUpdate', this.currentTime);
 
         this._rafId = requestAnimationFrame(this._loop);
     }

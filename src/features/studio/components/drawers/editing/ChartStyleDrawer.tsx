@@ -1,13 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { BottomSheet } from "../../dock/BottomSheet";
-import { Engine } from "@core/Core";
 import { ChartObject } from "@core/objects/ChartObject";
 import { ColorPicker, ControlRow, Slider } from "../../ui/InspectorUI";
 import { Type, Droplets, AlignCenter, LayoutTemplate } from "lucide-react";
+import { useStudio } from "../../../context/StudioContext";
 
 interface ChartStyleDrawerProps {
-    engine: Engine | null;
-    selectedId: string | null;
     isOpen: boolean;
     onClose: () => void;
 }
@@ -21,13 +19,21 @@ const FONTS = [
     { name: 'Oswald', label: 'Oswald' },
 ];
 
-export const ChartStyleDrawer: React.FC<ChartStyleDrawerProps> = ({ engine, selectedId, isOpen, onClose }) => {
+export const ChartStyleDrawer: React.FC<ChartStyleDrawerProps> = ({ isOpen, onClose }) => {
     // Only 'font' and 'visuals' tabs now. Axis merged into Visuals.
     const [activeSubTab, setActiveSubTab] = useState<'font' | 'visuals'>('font');
     const [forceUpdate, setForceUpdate] = useState(0);
+    const { engine, selectedId } = useStudio();
 
     const selectedObject = (engine && selectedId) ? engine.scene.get(selectedId) : null;
     const isChart = selectedObject instanceof ChartObject;
+
+    useEffect(() => {
+        if (!engine) return;
+        const onUpdate = () => setForceUpdate(n => n + 1);
+        const unsub = engine.on('objectChange', onUpdate);
+        return unsub;
+    }, [engine]);
 
     const handleChange = (key: string, value: any) => {
         if (!isChart || !engine) return;

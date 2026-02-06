@@ -1,18 +1,17 @@
 import React, { useState, useEffect } from "react";
 import { BottomSheet } from "../../dock/BottomSheet";
-import { Engine } from "@core/Core";
 import { ChartObject } from "@core/objects/ChartObject";
 import { ColorPicker } from "../../ui/InspectorUI";
 import { Plus, Trash2 } from "lucide-react";
+import { useStudio } from "../../../context/StudioContext";
 
 interface ChartDataDrawerProps {
-    engine: Engine | null;
-    selectedId: string | null;
     isOpen: boolean;
     onClose: () => void;
 }
 
-export const ChartDataDrawer: React.FC<ChartDataDrawerProps> = ({ engine, selectedId, isOpen, onClose }) => {
+export const ChartDataDrawer: React.FC<ChartDataDrawerProps> = ({ isOpen, onClose }) => {
+    const { engine, selectedId } = useStudio();
     const [forceUpdate, setForceUpdate] = useState(0);
 
     const selectedObject = (engine && selectedId) ? engine.scene.get(selectedId) : null;
@@ -20,10 +19,10 @@ export const ChartDataDrawer: React.FC<ChartDataDrawerProps> = ({ engine, select
 
     useEffect(() => {
         if (!engine) return;
-        const onObjChange = () => setForceUpdate(n => n + 1);
-        // Subscribe logic would go here if engine exposed granular events, 
-        // effectively we rely on parent re-renders or manual force updates
-    }, [engine, selectedId]);
+        const onUpdate = () => setForceUpdate(n => n + 1);
+        const unsub = engine.on('objectChange', onUpdate);
+        return unsub;
+    }, [engine]);
 
     const handleChange = (index: number, key: 'label' | 'value' | 'color', value: any) => {
         if (!isChart || !engine) return;

@@ -1,9 +1,8 @@
 import React, { useState } from "react";
-import { Engine } from "@core/Core";
 import { ControlRow, ColorPicker } from "../components/ui/InspectorUI";
+import { useStudio } from "../context/StudioContext";
 
 interface CanvasSettingsProps {
-    engine: Engine | null;
     onResize?: (width: number, height: number) => void;
     onUpdate?: () => void;
     variant?: 'desktop' | 'mobile';
@@ -39,7 +38,8 @@ const PRESET_RESOLUTIONS = [
 
 const PRESET_DURATIONS = [5, 10, 15, 30, 60];
 
-const MobileCanvasSettings: React.FC<CanvasSettingsProps & { forceUpdate: any, setForceUpdate: any }> = ({ engine, onResize, onUpdate, setForceUpdate }) => {
+const MobileCanvasSettings: React.FC<CanvasSettingsProps & { forceUpdate: any, setForceUpdate: any }> = ({ onResize, onUpdate, setForceUpdate }) => {
+    const { engine } = useStudio();
     const [activeTab, setActiveTab] = useState<'ratio' | 'res' | 'bg' | 'duration'>('ratio');
     if (!engine) return null;
 
@@ -277,7 +277,8 @@ const MobileCanvasSettings: React.FC<CanvasSettingsProps & { forceUpdate: any, s
 
 import { Smartphone, Monitor, Palette, Clock, Check } from "lucide-react";
 
-const DesktopCanvasSettings: React.FC<CanvasSettingsProps & { forceUpdate: any, setForceUpdate: any }> = ({ engine, onResize, onUpdate, setForceUpdate }) => {
+const DesktopCanvasSettings: React.FC<CanvasSettingsProps & { forceUpdate: any, setForceUpdate: any }> = ({ onResize, onUpdate, setForceUpdate }) => {
+    const { engine } = useStudio();
     const [activeTab, setActiveTab] = useState<'ratio' | 'res' | 'bg' | 'duration'>('ratio');
 
     if (!engine) return null;

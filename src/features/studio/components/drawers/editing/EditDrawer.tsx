@@ -1,5 +1,4 @@
 import React, { useEffect, useState, useRef } from "react";
-import { Engine } from "@core/Core";
 import { TextObject } from "@core/objects/TextObject";
 import { CodeBlockObject } from "@core/objects/CodeBlockObject";
 import { CharacterObject } from "@core/objects/CharacterObject";
@@ -7,17 +6,17 @@ import { ControlRow, ColorPicker } from "../../ui/InspectorUI";
 
 import { CanvasSettings } from "../../../settings/CanvasSettings";
 import { MobilePropertyContainer } from "../../ui/InspectorUI";
+import { useStudio } from "../../../context/StudioContext";
 
 interface EditDrawerProps {
-    engine: Engine | null;
-    selectedId: string | null;
     isOpen: boolean;
     onClose: () => void;
 }
 
-export const EditDrawer: React.FC<EditDrawerProps> = ({ engine, selectedId, isOpen, onClose }) => {
+export const EditDrawer: React.FC<EditDrawerProps> = ({ isOpen, onClose }) => {
     // Force Update for reactivity
     const [_, setForceUpdate] = useState(0);
+    const { engine, selectedId } = useStudio();
 
     // Text Specific State
     const [initialEditText, setInitialEditText] = useState("");
@@ -27,8 +26,8 @@ export const EditDrawer: React.FC<EditDrawerProps> = ({ engine, selectedId, isOp
     useEffect(() => {
         if (!engine) return;
         const onUpdate = () => setForceUpdate(n => n + 1);
-        engine.onObjectChange = onUpdate;
-        return () => { engine.onObjectChange = undefined; }
+        const unsub = engine.on('objectChange', onUpdate);
+        return unsub;
     }, [engine]);
 
     // Initialize Text Edit State when opening
@@ -65,7 +64,6 @@ export const EditDrawer: React.FC<EditDrawerProps> = ({ engine, selectedId, isOp
                 </div>
                 <div className="flex-1 overflow-y-auto p-4 custom-scrollbar">
                     <CanvasSettings
-                        engine={engine}
                         onUpdate={() => setForceUpdate(n => n + 1)}
                         variant="mobile"
                     />

@@ -1,12 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { Engine } from "@core/Core";
 import { CodeBlockObject } from "@core/objects/CodeBlockObject";
 import { Check, Palette } from "lucide-react";
 import { Slider } from "../../ui/InspectorUI";
+import { useStudio } from "../../../context/StudioContext";
 
 interface ThemeDrawerProps {
-    engine: Engine | null;
-    selectedId: string | null;
     isOpen: boolean;
     onClose: () => void;
 }
@@ -19,8 +17,16 @@ const THEMES = [
     { id: 'dracula', label: 'Dracula', color: '#282a36', textColor: '#f8f8f2' },
 ];
 
-export const ThemeDrawer: React.FC<ThemeDrawerProps> = ({ engine, selectedId, isOpen, onClose }) => {
+export const ThemeDrawer: React.FC<ThemeDrawerProps> = ({ isOpen, onClose }) => {
     const [forceUpdate, setForceUpdate] = useState(0);
+    const { engine, selectedId } = useStudio();
+
+    useEffect(() => {
+        if (!engine) return;
+        const onUpdate = () => setForceUpdate(n => n + 1);
+        const unsub = engine.on('objectChange', onUpdate);
+        return unsub;
+    }, [engine]);
 
     const obj = selectedId && engine ? engine.scene.get(selectedId) : null;
     const isCodeBlock = obj instanceof CodeBlockObject;

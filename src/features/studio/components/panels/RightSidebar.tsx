@@ -56,9 +56,9 @@ import { CharacterObject } from "@core/objects/CharacterObject";
 import { LogoCharacterObject } from "@core/objects/LogoCharacterObject";
 import { ParticleTextObject } from "@core/objects/ParticleTextObject";
 
+import { useStudio } from "../../context/StudioContext";
+
 interface DesktopPropertiesPanelProps {
-    engine: Engine | null;
-    selectedId: string | null;
     onResize?: (w: number, h: number) => void;
     isExpanded?: boolean;
     onToggleExpand?: () => void;
@@ -66,7 +66,8 @@ interface DesktopPropertiesPanelProps {
 
 type Tab = "properties" | "layers" | "animations";
 
-export const RightSidebar: React.FC<DesktopPropertiesPanelProps> = ({ engine, selectedId, onResize, isExpanded, onToggleExpand }) => {
+export const RightSidebar: React.FC<DesktopPropertiesPanelProps> = ({ onResize, isExpanded, onToggleExpand }) => {
+    const { engine, selectedId } = useStudio();
     const [activeTab, setActiveTab] = useState<Tab>("properties");
 
     // Use our new unified hook
@@ -78,7 +79,7 @@ export const RightSidebar: React.FC<DesktopPropertiesPanelProps> = ({ engine, se
         isRatioLocked,
         setIsRatioLocked,
         renderTrigger
-    } = useObjectProperties(engine, selectedId);
+    } = useObjectProperties();
 
     // Force re-render when engine updates (via hook's renderTrigger)
     // The hook manages its own state updates, but we might need to pass it down to sub-components
@@ -233,7 +234,6 @@ export const RightSidebar: React.FC<DesktopPropertiesPanelProps> = ({ engine, se
                 <div className="pt-2 border-t border-app-light-border dark:border-app-border">
                     <TextSettings
                         object={object}
-                        engine={engine}
                         variant="desktop"
                         section="all"
                     />
@@ -246,7 +246,6 @@ export const RightSidebar: React.FC<DesktopPropertiesPanelProps> = ({ engine, se
             return (
                 <CodeBlockSettings
                     object={object}
-                    engine={engine}
                     variant="desktop"
                     onUpdate={() => { }}
                 />
@@ -258,7 +257,6 @@ export const RightSidebar: React.FC<DesktopPropertiesPanelProps> = ({ engine, se
             return (
                 <ChartSettings
                     object={object}
-                    engine={engine}
                     onUpdate={() => { }}
                 />
             );
@@ -268,7 +266,6 @@ export const RightSidebar: React.FC<DesktopPropertiesPanelProps> = ({ engine, se
             return (
                 <BarChartRaceSettings
                     object={object}
-                    engine={engine}
                     onUpdate={() => { }}
                 />
             );
@@ -367,7 +364,7 @@ export const RightSidebar: React.FC<DesktopPropertiesPanelProps> = ({ engine, se
         getAnimation,
         availableEnterAnimations,
         availableExitAnimations
-    } = useObjectAnimations(engine, selectedId);
+    } = useObjectAnimations();
 
     const [activeAnimTab, setActiveAnimTab] = useState<'enter' | 'exit'>('enter');
 
@@ -504,7 +501,7 @@ export const RightSidebar: React.FC<DesktopPropertiesPanelProps> = ({ engine, se
             <div className="flex-1 overflow-y-auto px-4 pb-20 custom-scrollbar space-y-4">
 
                 {activeTab === 'layers' && (
-                    <LayersPanel engine={engine} selectedId={selectedId} />
+                    <LayersPanel />
                 )}
 
                 {activeTab === 'animations' && renderAnimationsSection()}
@@ -516,7 +513,6 @@ export const RightSidebar: React.FC<DesktopPropertiesPanelProps> = ({ engine, se
                             <div className="animate-in slide-in-from-right-4 duration-300">
                                 <PropertySection title="Canvas Settings" defaultOpen={true}>
                                     <CanvasSettings
-                                        engine={engine}
                                         onResize={onResize}
                                         onUpdate={() => { }}
                                     />

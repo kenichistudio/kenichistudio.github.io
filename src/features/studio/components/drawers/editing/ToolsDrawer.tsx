@@ -1,5 +1,4 @@
 import React, { useMemo } from "react";
-import { Engine } from "@core/Core";
 import { BottomSheet } from "../../dock/BottomSheet";
 import { AdjustDrawerContent } from "../properties/AdjustDrawer";
 import { MotionDrawerContent } from "../properties/MotionDrawer";
@@ -9,17 +8,16 @@ import { SettingsDrawerContent } from "./SettingsDrawer";
 import { EditDrawer } from "./EditDrawer";
 import { DimensionsDrawerContent } from "../properties/DimensionsDrawer";
 import { PositionDrawerContent } from "../properties/PositionDrawer";
-
+import { useStudio } from "../../../context/StudioContext";
 import { CanvasSettings } from "../../../settings/CanvasSettings";
 
 interface ToolsDrawerProps {
-    engine: Engine | null;
-    selectedId: string | null;
     activeTab: string | null;
     onClose: () => void;
 }
 
-export const ToolsDrawer: React.FC<ToolsDrawerProps> = ({ engine, selectedId, activeTab, onClose }) => {
+export const ToolsDrawer: React.FC<ToolsDrawerProps> = ({ activeTab, onClose }) => {
+    const { engine, selectedId } = useStudio();
 
     // Determine if we should be open
     const isOpen = useMemo(() => {
@@ -43,25 +41,25 @@ export const ToolsDrawer: React.FC<ToolsDrawerProps> = ({ engine, selectedId, ac
 
     const content = useMemo(() => {
         switch (activeTab) {
-            case 'adjust': return <AdjustDrawerContent engine={engine} selectedId={selectedId} onClose={onClose} />;
-            case 'dimensions': return <DimensionsDrawerContent engine={engine} selectedId={selectedId} onClose={onClose} />;
-            case 'position': return <PositionDrawerContent engine={engine} selectedId={selectedId} onClose={onClose} />;
-            case 'motion': return <MotionDrawerContent engine={engine} selectedId={selectedId} onClose={onClose} />;
-            case 'style': return <StyleDrawerContent engine={engine} selectedId={selectedId} onClose={onClose} />;
-            case 'font': return <FontDrawerContent engine={engine} selectedId={selectedId} onClose={onClose} />;
-            case 'settings': return <SettingsDrawerContent engine={engine} selectedId={selectedId} onClose={onClose} />;
-            case 'edit': return <EditDrawer engine={engine} selectedId={selectedId} isOpen={activeTab === 'edit'} onClose={onClose} />;
-            case 'canvas': return <CanvasSettings engine={engine} variant="mobile" />;
+            case 'adjust': return <AdjustDrawerContent onClose={onClose} />;
+            case 'dimensions': return <DimensionsDrawerContent onClose={onClose} />;
+            case 'position': return <PositionDrawerContent onClose={onClose} />;
+            case 'motion': return <MotionDrawerContent onClose={onClose} />;
+            case 'style': return <StyleDrawerContent onClose={onClose} />;
+            case 'font': return <FontDrawerContent onClose={onClose} />;
+            case 'settings': return <SettingsDrawerContent onClose={onClose} />;
+            case 'edit': return <EditDrawer isOpen={activeTab === 'edit'} onClose={onClose} />;
+            case 'canvas': return <CanvasSettings variant="mobile" />;
             default: return null;
         }
-    }, [activeTab, engine, selectedId, onClose]);
+    }, [activeTab, onClose]);
 
     // Use Close on empty content or if no object is selected (though editor handles deselect)
     // Allow 'canvas' tab to open even if no object is selected
     if (!selectedId && activeTab !== 'canvas') return null;
 
     if (activeTab === 'edit') {
-        return <EditDrawer engine={engine} selectedId={selectedId} isOpen={activeTab === 'edit'} onClose={onClose} />;
+        return <EditDrawer isOpen={activeTab === 'edit'} onClose={onClose} />;
     }
 
     return (

@@ -1,33 +1,25 @@
 import React, { useState } from "react";
 import { Play, Pause, Maximize, Settings, Smartphone, RectangleHorizontal, Square, Check, Grid3x3, Ban, Crosshair, ScanLine, Baseline, SkipBack } from "lucide-react";
 
+import { useStudio } from "../../context/StudioContext";
+
 interface CanvasControlsProps {
-    isPlaying: boolean;
-    onPlayPause: () => void;
-    onToggleFullscreen: () => void;
     aspectRatio: number;
     onChangeAspectRatio: (ratio: number) => void;
     onOpenCanvasSettings: () => void;
-    currentTime: number;
-    totalDuration: number;
     activeGuide: string;
     onGuideChange: (guide: string) => void;
-    onSeek: (time: number) => void;
 }
 
 export const CanvasControls: React.FC<CanvasControlsProps> = ({
-    isPlaying,
-    onPlayPause,
-    onToggleFullscreen,
     aspectRatio,
     onChangeAspectRatio,
     onOpenCanvasSettings,
-    currentTime,
-    totalDuration,
     activeGuide,
     onGuideChange,
-    onSeek
 }) => {
+    const { currentTime, totalDuration, isPlaying, togglePlay, engine, toggleFullscreen } = useStudio();
+    const onSeek = (time: number) => engine?.seek(time);
     const [showRatioMenu, setShowRatioMenu] = useState(false);
     const [showGuideMenu, setShowGuideMenu] = useState(false);
 
@@ -68,7 +60,7 @@ export const CanvasControls: React.FC<CanvasControlsProps> = ({
 
                 {/* Play/Pause - Redesigned */}
                 <button
-                    onClick={onPlayPause}
+                    onClick={togglePlay}
                     className="w-10 h-10 flex items-center justify-center bg-primary active:bg-primary-hover dark:bg-accent dark:active:bg-accent-hover text-white dark:text-slate-900 rounded-full shadow-lg transition-transform active:scale-95"
                 >
                     {isPlaying ? <Pause size={20} fill="currentColor" /> : <Play size={20} fill="currentColor" className="ml-0.5" />}
@@ -156,7 +148,7 @@ export const CanvasControls: React.FC<CanvasControlsProps> = ({
 
             {/* Fullscreen */}
             <button
-                onClick={onToggleFullscreen}
+                onClick={() => toggleFullscreen()}
                 className="p-2 rounded-full hover:bg-app-light-surface-hover dark:hover:bg-app-surface-hover transition-colors text-slate-700 dark:text-slate-200"
             >
                 <Maximize size={18} />

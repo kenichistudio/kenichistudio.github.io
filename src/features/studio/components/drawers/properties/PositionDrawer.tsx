@@ -1,16 +1,22 @@
 import React, { useState, useEffect } from "react";
-import { Engine } from "@core/Core";
 import { ArrowUp, ArrowDown, ArrowLeft, ArrowRight, RotateCcw, Move } from "lucide-react";
 import { BottomSheet } from "../../dock/BottomSheet";
+import { useStudio } from "../../../context/StudioContext";
 
 interface PositionDrawerProps {
-    engine: Engine | null;
-    selectedId: string | null;
     onClose: () => void;
 }
 
-export const PositionDrawerContent: React.FC<PositionDrawerProps> = ({ engine, selectedId, onClose }) => {
+export const PositionDrawerContent: React.FC<PositionDrawerProps> = ({ onClose }) => {
     const [forceUpdate, setForceUpdate] = useState(0);
+    const { engine, selectedId } = useStudio();
+
+    useEffect(() => {
+        if (!engine) return;
+        const onUpdate = () => setForceUpdate(n => n + 1);
+        const unsub = engine.on('objectChange', onUpdate);
+        return unsub;
+    }, [engine]);
 
     const obj = selectedId && engine ? engine.scene.get(selectedId) : null;
 

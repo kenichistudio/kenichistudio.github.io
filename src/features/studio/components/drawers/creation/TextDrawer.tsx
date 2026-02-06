@@ -1,15 +1,15 @@
 import React, { useState } from "react";
-import { Engine } from "@core/Core";
 import { TEXT_OPTIONS, TEXT_EFFECTS, createText } from "../../../config/textOptions";
 import { ChevronUp, ChevronDown, Type, Wand2 } from "lucide-react";
+import { useStudio } from "../../../context/StudioContext";
 
 interface TextDrawerProps {
-    engine: Engine | null;
     isOpen: boolean;
     onClose: () => void;
 }
 
-export const TextDrawer: React.FC<TextDrawerProps> = ({ engine, isOpen, onClose }) => {
+export const TextDrawer: React.FC<TextDrawerProps> = ({ isOpen, onClose }) => {
+    const { engine } = useStudio();
     const [isExpanded, setIsExpanded] = useState(false);
 
     if (!isOpen) return null;

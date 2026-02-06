@@ -1,21 +1,27 @@
 import React, { useState, useEffect } from "react";
-import { Engine } from "@core/Core";
 import { Slider } from "../../ui/InspectorUI";
 import { BottomSheet } from "../../dock/BottomSheet";
 import { RotateCw, RotateCcw, Layout, AlignHorizontalSpaceAround, AlignVerticalSpaceAround } from "lucide-react";
+import { useStudio } from "../../../context/StudioContext";
 
 interface AdjustDrawerProps {
-    engine: Engine | null;
-    selectedId: string | null;
     isOpen: boolean;
     onClose: () => void;
 }
 
 type AdjustProperty = 'rotation';
 
-export const AdjustDrawerContent: React.FC<{ engine: Engine | null; selectedId: string | null; onClose: () => void }> = ({ engine, selectedId, onClose }) => {
+export const AdjustDrawerContent: React.FC<{ onClose: () => void }> = ({ onClose }) => {
     const [forceUpdate, setForceUpdate] = useState(0);
     const [activeProperty, setActiveProperty] = useState<AdjustProperty>('rotation');
+    const { engine, selectedId } = useStudio();
+
+    useEffect(() => {
+        if (!engine) return;
+        const onUpdate = () => setForceUpdate(n => n + 1);
+        const unsub = engine.on('objectChange', onUpdate);
+        return unsub;
+    }, [engine]);
 
     const obj = selectedId && engine ? engine.scene.get(selectedId) : null;
 
@@ -108,7 +114,7 @@ export const AdjustDrawerContent: React.FC<{ engine: Engine | null; selectedId: 
     );
 };
 
-export const AdjustDrawer: React.FC<AdjustDrawerProps> = ({ engine, selectedId, isOpen, onClose }) => {
+export const AdjustDrawer: React.FC<AdjustDrawerProps> = ({ isOpen, onClose }) => {
     return (
         <BottomSheet
             isOpen={isOpen}
@@ -116,7 +122,7 @@ export const AdjustDrawer: React.FC<AdjustDrawerProps> = ({ engine, selectedId, 
             title="Adjust"
             variant="dock"
         >
-            <AdjustDrawerContent engine={engine} selectedId={selectedId} onClose={onClose} />
+            <AdjustDrawerContent onClose={onClose} />
         </BottomSheet>
     );
 };

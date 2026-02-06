@@ -2,21 +2,14 @@ import React from "react";
 import { Play, Pause, SkipBack } from "lucide-react";
 import { useTimelineInteraction } from "../../hooks/useTimelineInteraction";
 
+import { useStudio } from "../../context/StudioContext";
+
 interface TimelineProps {
-    currentTime: number;
-    totalDuration: number;
-    isPlaying: boolean;
-    onPlayPause: () => void;
-    onSeek: (time: number) => void;
 }
 
-export const TimelineMobile = ({
-    currentTime,
-    totalDuration,
-    isPlaying,
-    onPlayPause,
-    onSeek
-}: TimelineProps) => {
+export const TimelineMobile = () => {
+    const { currentTime, totalDuration, isPlaying, togglePlay, engine } = useStudio();
+    const onSeek = (time: number) => engine?.seek(time);
     const {
         trackRef,
         isDragging,
@@ -24,7 +17,7 @@ export const TimelineMobile = ({
         handleSeek,
         formatTime,
         progress
-    } = useTimelineInteraction({ currentTime, totalDuration, onSeek });
+    } = useTimelineInteraction();
 
     return (
         <div className="w-full bg-white dark:bg-app-bg border-t border-slate-200 dark:border-app-border flex flex-col select-none pb-safe">

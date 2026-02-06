@@ -1,17 +1,15 @@
 import React, { useMemo } from "react";
-import { Engine } from "@core/Core";
 import { BottomSheet } from "../../dock/BottomSheet";
-
 import { ElementsDrawerContent } from "./ElementsDrawer";
-
+import { useStudio } from "../../../context/StudioContext";
 
 interface AssetsDrawerProps {
-    engine: Engine | null;
     activeTab: string | null;
     onClose: () => void;
 }
 
-export const AssetsDrawer: React.FC<AssetsDrawerProps> = ({ engine, activeTab, onClose }) => {
+export const AssetsDrawer: React.FC<AssetsDrawerProps> = ({ activeTab, onClose }) => {
+    const { engine } = useStudio();
     const [isExpanded, setIsExpanded] = React.useState(false);
 
     // Reset expansion when tab changes

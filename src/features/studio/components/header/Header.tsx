@@ -3,24 +3,20 @@ import {
     Settings, Grid3x3, Coffee, Heart, Camera, Download,
     MoreVertical, ChevronLeft, FileVideo, Sun, Moon
 } from "lucide-react";
+import { useStudio } from '../../context/StudioContext';
 
 interface HeaderProps {
     onExport: () => void;
     onSnapshot: () => void;
     onSettings: () => void;
-    currentGuide: "none" | "center" | "thirds" | "golden";
-    onGuideChange: (type: "none" | "center" | "thirds" | "golden") => void;
-    resolution?: { width: number, height: number };
 }
 
 export const Header = ({
     onExport,
     onSnapshot,
-    onSettings,
-    currentGuide,
-    onGuideChange,
-    resolution = { width: 1920, height: 1080 }
+    onSettings
 }: HeaderProps) => {
+    const { activeGuide: currentGuide, setGuide: onGuideChange, resolution } = useStudio();
     const [showMobileMenu, setShowMobileMenu] = useState(false);
     const [showGuidesMenu, setShowGuidesMenu] = useState(false);
 

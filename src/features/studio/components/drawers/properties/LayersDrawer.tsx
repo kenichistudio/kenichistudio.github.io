@@ -1,20 +1,19 @@
 import React from "react";
-import { Engine } from "@core/Core";
 import { BottomSheet } from "../../dock/BottomSheet";
 import { useLayers } from "../../../hooks/useLayers";
 import { Copy, Trash2, Eye, EyeOff, Type, PieChart, Square, ArrowUp, ArrowDown, ChevronUp, ChevronDown, Lock, Unlock } from "lucide-react";
 import { TextObject } from "@core/objects/TextObject";
 import { ChartObject } from "@core/objects/ChartObject";
+import { useStudio } from "../../../context/StudioContext";
 
 interface LayersDrawerProps {
-    engine: Engine | null;
-    selectedId: string | null;
     isOpen: boolean;
     onClose: () => void;
 }
 
-export const LayersDrawer: React.FC<LayersDrawerProps> = ({ engine, selectedId, isOpen, onClose }) => {
-    const { layers, select, toggleVisibility, toggleLock, duplicate, remove, moveUp, moveDown } = useLayers(engine, selectedId);
+export const LayersDrawer: React.FC<LayersDrawerProps> = ({ isOpen, onClose }) => {
+    const { engine, selectedId } = useStudio();
+    const { layers, select, toggleVisibility, toggleLock, duplicate, remove, moveUp, moveDown } = useLayers();
     const [snap, setSnap] = React.useState<number>(0.5);
 
     if (!engine) return null;

@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { Engine } from "@core/Core";
 import {
     Ban, Zap, ArrowUp, ArrowDown, Maximize, Minimize, Keyboard, LogIn, LogOut,
     ArrowLeft, ArrowRight // Added new requirements from shared hook if any
@@ -7,22 +6,23 @@ import {
 import { TextObject } from "@core/objects/TextObject";
 import { Slider } from "../../ui/InspectorUI";
 import { useObjectAnimations } from "../../../hooks/useObjectAnimations";
+import { useStudio } from "../../../context/StudioContext";
 
 interface MotionDrawerProps {
-    engine: Engine | null;
-    selectedId: string | null;
     isOpen: boolean;
     onClose: () => void;
 }
 
-export const MotionDrawerContent: React.FC<{ engine: Engine | null; selectedId: string | null; onClose: () => void }> = ({ engine, selectedId, onClose }) => {
+export const MotionDrawerContent: React.FC<{ onClose: () => void }> = ({ onClose }) => {
     const {
         updateAnimation,
         getAnimation,
         availableEnterAnimations,
         availableExitAnimations,
         renderTrigger
-    } = useObjectAnimations(engine, selectedId);
+    } = useObjectAnimations();
+
+    const { selectedId } = useStudio();
 
     const [activeTab, setActiveTab] = useState<'enter' | 'exit'>('enter');
 
@@ -125,14 +125,14 @@ export const MotionDrawerContent: React.FC<{ engine: Engine | null; selectedId: 
     );
 };
 
-export const MotionDrawer: React.FC<MotionDrawerProps> = ({ engine, selectedId, isOpen, onClose }) => {
-    // Preserve old behavior for direct usage (if any)
+export const MotionDrawer: React.FC<MotionDrawerProps> = ({ isOpen, onClose }) => {
+    const { engine, selectedId } = useStudio();
     const obj = selectedId && engine ? engine.scene.get(selectedId) : null;
     if (!isOpen || !obj) return null;
 
     return (
         <div className="fixed bottom-16 left-0 right-0 z-[90] bg-white/95 dark:bg-app-surface/95 backdrop-blur-xl border-t border-slate-200 dark:border-app-border animate-in slide-in-from-bottom-full duration-300 shadow-xl pb-safe">
-            <MotionDrawerContent engine={engine} selectedId={selectedId} onClose={onClose} />
+            <MotionDrawerContent onClose={onClose} />
         </div>
     );
 };

@@ -1,15 +1,15 @@
 import React, { useState } from "react";
-import { Engine } from "@core/Core";
 import { ChevronUp, ChevronDown } from "lucide-react";
 import { CHART_TYPES, createChart, type ChartType } from "../../../config/chartOptions";
+import { useStudio } from "../../../context/StudioContext";
 
 interface ChartsDrawerProps {
-    engine: Engine | null;
     isOpen: boolean;
     onClose: () => void;
 }
 
-export const ChartsDrawer: React.FC<ChartsDrawerProps> = ({ engine, isOpen, onClose }) => {
+export const ChartsDrawer: React.FC<ChartsDrawerProps> = ({ isOpen, onClose }) => {
+    const { engine } = useStudio();
     const [isExpanded, setIsExpanded] = useState(false);
 
     if (!isOpen) return null;

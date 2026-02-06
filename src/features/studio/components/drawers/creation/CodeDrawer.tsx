@@ -1,15 +1,15 @@
 import React from "react";
-import { Engine } from "@core/Core";
 import { CODE_OPTIONS, createCode } from "../../../config/codeOptions";
 import { BottomSheet } from "../../dock/BottomSheet";
+import { useStudio } from "../../../context/StudioContext";
 
 interface CodeDrawerProps {
-    engine: Engine | null;
     isOpen: boolean;
     onClose: () => void;
 }
 
-export const CodeDrawerContent: React.FC<{ engine: Engine | null; onClose: () => void }> = ({ engine, onClose }) => {
+export const CodeDrawerContent: React.FC<{ onClose: () => void }> = ({ onClose }) => {
+    const { engine } = useStudio();
     const handleAdd = (type: any) => {
         if (!engine) return;
         createCode(engine, type);
@@ -46,7 +46,7 @@ export const CodeDrawerContent: React.FC<{ engine: Engine | null; onClose: () =>
     );
 };
 
-export const CodeDrawer: React.FC<CodeDrawerProps> = ({ engine, isOpen, onClose }) => {
+export const CodeDrawer: React.FC<CodeDrawerProps> = ({ isOpen, onClose }) => {
     return (
         <BottomSheet
             isOpen={isOpen}
@@ -55,7 +55,7 @@ export const CodeDrawer: React.FC<CodeDrawerProps> = ({ engine, isOpen, onClose 
             initialSnap={0.5}
             snaps={[0.5, 0.9]}
         >
-            <CodeDrawerContent engine={engine} onClose={onClose} />
+            <CodeDrawerContent onClose={onClose} />
         </BottomSheet>
     );
 };

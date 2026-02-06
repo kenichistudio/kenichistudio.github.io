@@ -3,15 +3,17 @@ import { Engine } from "@core/Core";
 import { CodeBlockObject } from "@core/objects/CodeBlockObject";
 import { ControlRow, PropertySection, SliderInput, Toggle, Slider } from "../components/ui/InspectorUI";
 
+import { useStudio } from "../context/StudioContext";
+
 interface CodeBlockSettingsProps {
     object: CodeBlockObject;
-    engine: Engine | null;
     variant: "desktop" | "mobile";
     activeTab?: string;
     onUpdate: () => void;
 }
 
-export const CodeBlockSettings: React.FC<CodeBlockSettingsProps> = ({ object: obj, engine, variant, activeTab, onUpdate }) => {
+export const CodeBlockSettings: React.FC<CodeBlockSettingsProps> = ({ object: obj, variant, activeTab, onUpdate }) => {
+    const { engine } = useStudio();
     if (!engine) return null;
 
     const handleChange = (key: string, value: any) => {

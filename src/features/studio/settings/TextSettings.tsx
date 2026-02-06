@@ -3,9 +3,10 @@ import { Engine } from "@core/Core";
 import { TextObject } from "@core/objects/TextObject";
 import { ControlRow, ColorPicker, Slider, Toggle, PropertySection } from "../components/ui/InspectorUI";
 
+import { useStudio } from "../context/StudioContext";
+
 interface TextSettingsProps {
     object: TextObject;
-    engine: Engine;
     onUpdate?: () => void;
     variant?: 'desktop' | 'mobile';
     section?: 'all' | 'content' | 'font' | 'style';
@@ -13,14 +14,15 @@ interface TextSettingsProps {
 
 export const TextSettings: React.FC<TextSettingsProps> = ({
     object: obj,
-    engine,
     onUpdate,
     variant = 'desktop',
     section = 'all'
 }) => {
+    const { engine } = useStudio();
     const [forceUpdate, setForceUpdate] = useState(0);
 
     const handleChange = (key: string, value: any) => {
+        if (!engine) return;
         (obj as any)[key] = value;
         engine.render();
         setForceUpdate(n => n + 1);

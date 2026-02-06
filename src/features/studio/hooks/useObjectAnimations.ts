@@ -1,7 +1,7 @@
-import { useState, useCallback } from 'react';
-import { Engine } from '@core/Core';
+import { useState, useCallback, useEffect } from 'react';
 import { Ban, Zap, ArrowUp, ArrowDown, Maximize, Minimize, Keyboard, ArrowLeft, ArrowRight } from 'lucide-react';
 import { TextObject } from '@core/objects/TextObject';
+import { useStudio } from '../context/StudioContext';
 
 export type AnimationType = 'enter' | 'exit';
 
@@ -28,8 +28,17 @@ export const EXIT_ANIMATIONS: AnimationDefinition[] = [
     { id: 'scaleOut', label: 'Pop Out', icon: Minimize },
 ];
 
-export const useObjectAnimations = (engine: Engine | null, selectedId: string | null) => {
+export const useObjectAnimations = () => {
+    const { engine, selectedId } = useStudio();
     const [forceUpdate, setForceUpdate] = useState(0);
+
+    // Subscribe to engine updates
+    useEffect(() => {
+        if (!engine) return;
+        const onUpdate = () => setForceUpdate(n => n + 1);
+        const unsub = engine.on('objectChange', onUpdate);
+        return unsub;
+    }, [engine]);
 
     const object = selectedId && engine ? engine.scene.get(selectedId) : null;
 

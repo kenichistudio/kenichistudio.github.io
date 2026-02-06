@@ -2,21 +2,14 @@ import React, { useState } from "react";
 import { Play, Pause, SkipBack, Layers, Music, Type, ZoomIn, ZoomOut, Scissors } from "lucide-react";
 import { useTimelineInteraction } from "../../hooks/useTimelineInteraction";
 
+import { useStudio } from "../../context/StudioContext";
+
 interface TimelineProps {
-    currentTime: number;
-    totalDuration: number;
-    isPlaying: boolean;
-    onPlayPause: () => void;
-    onSeek: (time: number) => void;
 }
 
-export const TimelineDesktop = ({
-    currentTime,
-    totalDuration,
-    isPlaying,
-    onPlayPause,
-    onSeek
-}: TimelineProps) => {
+export const TimelineDesktop = () => {
+    const { currentTime, totalDuration, isPlaying, togglePlay, engine } = useStudio();
+    const onSeek = (time: number) => engine?.seek(time);
     const {
         trackRef,
         isDragging,
@@ -24,7 +17,7 @@ export const TimelineDesktop = ({
         handleSeek,
         formatTime,
         progress
-    } = useTimelineInteraction({ currentTime, totalDuration, onSeek });
+    } = useTimelineInteraction();
 
     const [zoom, setZoom] = useState(1); // 1 = 100%
 
@@ -35,7 +28,7 @@ export const TimelineDesktop = ({
             <div className="h-10 border-b border-slate-200 dark:border-app-border flex items-center justify-between px-4 bg-slate-50 dark:bg-app-surface">
                 <div className="flex items-center gap-2">
                     <button
-                        onClick={onPlayPause}
+                        onClick={togglePlay}
                         className="p-1.5 hover:bg-slate-200 dark:hover:bg-app-surface-hover rounded-md transition-colors text-slate-700 dark:text-slate-300"
                     >
                         {isPlaying ? <Pause size={16} fill="currentColor" /> : <Play size={16} fill="currentColor" />}

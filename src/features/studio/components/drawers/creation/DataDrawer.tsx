@@ -1,19 +1,18 @@
 import React, { useState, useEffect } from "react";
 import { BottomSheet } from "../../dock/BottomSheet";
-import { Engine } from "@core/Core";
 import { ChartObject } from "@core/objects/ChartObject";
 import { BarChartRaceObject } from "@core/objects/BarChartRaceObject";
 import { Slider, Toggle, ColorPicker } from "../../ui/InspectorUI";
 import { BarChart3, LineChart, PieChart, Circle } from "lucide-react";
+import { useStudio } from "../../../context/StudioContext";
 
 interface DataDrawerProps {
-    engine: Engine | null;
-    selectedId: string | null;
     isOpen: boolean;
     onClose: () => void;
 }
 
-export const DataDrawer: React.FC<DataDrawerProps> = ({ engine, selectedId, isOpen, onClose }) => {
+export const DataDrawer: React.FC<DataDrawerProps> = ({ isOpen, onClose }) => {
+    const { engine, selectedId } = useStudio();
     const [forceUpdate, setForceUpdate] = useState(0);
 
     const selectedObject = (engine && selectedId) ? engine.scene.get(selectedId) : null;
@@ -21,9 +20,10 @@ export const DataDrawer: React.FC<DataDrawerProps> = ({ engine, selectedId, isOp
 
     useEffect(() => {
         if (!engine) return;
-        const onObjChange = () => setForceUpdate(n => n + 1);
-        // Subscribe if needed
-    }, [engine, selectedId]);
+        const onUpdate = () => setForceUpdate(n => n + 1);
+        const unsub = engine.on('objectChange', onUpdate);
+        return unsub;
+    }, [engine]);
 
     const handleChange = (key: string, value: any) => {
         if (!selectedObject || !engine) return;

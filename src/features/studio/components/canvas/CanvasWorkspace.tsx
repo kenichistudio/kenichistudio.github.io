@@ -1,20 +1,24 @@
 import React, { forwardRef } from "react";
 import { Play, Pause, Maximize, Minimize } from "lucide-react";
 
+import { useStudio } from "../../context/StudioContext";
+
 interface CanvasWorkspaceProps {
-    aspectRatio?: number;
-    isPlaying?: boolean;
-    onPlayPause?: () => void;
-    onToggleFullscreen?: () => void;
-    isFullscreen?: boolean;
     hideOverlayControls?: boolean;
-    activeGuide?: string;
 }
 
 export const CanvasWorkspace = forwardRef<HTMLCanvasElement, CanvasWorkspaceProps>((props, ref) => {
+    const {
+        aspectRatio,
+        isPlaying,
+        togglePlay,
+        isFullscreen,
+        toggleFullscreen,
+        activeGuide
+    } = useStudio();
 
     const renderGuideOverlay = () => {
-        switch (props.activeGuide) {
+        switch (activeGuide) {
             case 'thirds':
                 return (
                     <div className="absolute inset-0 pointer-events-none z-30 opacity-50">
@@ -78,7 +82,7 @@ export const CanvasWorkspace = forwardRef<HTMLCanvasElement, CanvasWorkspaceProp
         return () => observer.disconnect();
     }, []);
 
-    const targetRatio = props.aspectRatio || 16 / 9;
+    const targetRatio = aspectRatio || 16 / 9;
     const containerRatio = containerSize.w / containerSize.h;
 
     // If container is wider than target: constrained by height (h-full)
@@ -106,12 +110,12 @@ export const CanvasWorkspace = forwardRef<HTMLCanvasElement, CanvasWorkspaceProp
                     <button
                         onClick={(e) => {
                             e.stopPropagation();
-                            props.onPlayPause?.();
+                            togglePlay();
                         }}
                         className="p-1.5 hover:bg-white/20 rounded-full transition-colors"
-                        title={props.isPlaying ? "Pause" : "Play"}
+                        title={isPlaying ? "Pause" : "Play"}
                     >
-                        {props.isPlaying ? <Pause size={16} fill="currentColor" /> : <Play size={16} fill="currentColor" />}
+                        {isPlaying ? <Pause size={16} fill="currentColor" /> : <Play size={16} fill="currentColor" />}
                     </button>
 
                     <div className="w-px h-4 bg-white/20 mx-1" />
@@ -119,12 +123,12 @@ export const CanvasWorkspace = forwardRef<HTMLCanvasElement, CanvasWorkspaceProp
                     <button
                         onClick={(e) => {
                             e.stopPropagation();
-                            props.onToggleFullscreen?.();
+                            toggleFullscreen(containerRef.current);
                         }}
                         className="p-1.5 hover:bg-white/20 rounded-full transition-colors"
-                        title={props.isFullscreen ? "Exit Fullscreen" : "Fullscreen"}
+                        title={isFullscreen ? "Exit Fullscreen" : "Fullscreen"}
                     >
-                        {props.isFullscreen ? <Minimize size={16} /> : <Maximize size={16} />}
+                        {isFullscreen ? <Minimize size={16} /> : <Maximize size={16} />}
                     </button>
                 </div>
             )}

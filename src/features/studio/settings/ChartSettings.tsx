@@ -4,13 +4,15 @@ import { ChartObject } from "@core/objects/ChartObject";
 import { ControlRow, PropertySection, SliderInput, Toggle, IconGrid, SegmentedControl, ColorPicker, Slider } from "../components/ui/InspectorUI";
 import { BarChart, Square, PieChart } from "lucide-react";
 
+import { useStudio } from "../context/StudioContext";
+
 interface ChartSettingsProps {
     object: ChartObject;
-    engine: Engine | null;
     onUpdate: () => void;
 }
 
-export const ChartSettings: React.FC<ChartSettingsProps> = ({ object: obj, engine, onUpdate }) => {
+export const ChartSettings: React.FC<ChartSettingsProps> = ({ object: obj, onUpdate }) => {
+    const { engine } = useStudio();
     const [_, setForceUpdate] = useState(0);
 
     if (!engine) return null;

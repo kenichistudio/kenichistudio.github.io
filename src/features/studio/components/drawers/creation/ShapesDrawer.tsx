@@ -1,15 +1,15 @@
 import React from "react";
-import { Engine } from "@core/Core";
 import { SHAPE_OPTIONS, createShape } from "../../../config/shapeOptions";
 import { BottomSheet } from "../../dock/BottomSheet";
+import { useStudio } from "../../../context/StudioContext";
 
 interface ShapesDrawerProps {
-    engine: Engine | null;
     isOpen: boolean;
     onClose: () => void;
 }
 
-export const ShapesDrawerContent: React.FC<{ engine: Engine | null; onClose: () => void }> = ({ engine, onClose }) => {
+export const ShapesDrawerContent: React.FC<{ onClose: () => void }> = ({ onClose }) => {
+    const { engine } = useStudio();
     const handleAdd = (type: any) => {
         if (!engine) return;
         createShape(engine, type);
@@ -40,7 +40,7 @@ export const ShapesDrawerContent: React.FC<{ engine: Engine | null; onClose: () 
     );
 };
 
-export const ShapesDrawer: React.FC<ShapesDrawerProps> = ({ engine, isOpen, onClose }) => {
+export const ShapesDrawer: React.FC<ShapesDrawerProps> = ({ isOpen, onClose }) => {
     return (
         <BottomSheet
             isOpen={isOpen}
@@ -49,7 +49,7 @@ export const ShapesDrawer: React.FC<ShapesDrawerProps> = ({ engine, isOpen, onCl
             initialSnap={0.5}
             snaps={[0.5, 0.9]}
         >
-            <ShapesDrawerContent engine={engine} onClose={onClose} />
+            <ShapesDrawerContent onClose={onClose} />
         </BottomSheet>
     );
 };
