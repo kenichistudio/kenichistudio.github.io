@@ -9,71 +9,74 @@ export default {
         extend: {
             fontFamily: {
                 sans: ['Inter', 'sans-serif'],
-                hand: ['Kalam', 'cursive'],
+                hand: ['Kalam', 'cursive'], // For that hand-drawn feel
             },
             colors: {
-                // Site Colors (Marketing Pages)
-                site: {
-                    bg: {
-                        primary: 'var(--site-bg-primary)',
-                        secondary: 'var(--site-bg-secondary)',
-                        tertiary: 'var(--site-bg-tertiary)',
-                    },
-                    text: {
-                        primary: 'var(--site-text-primary)',
-                        secondary: 'var(--site-text-secondary)',
-                        tertiary: 'var(--site-text-tertiary)',
-                    },
-                    border: {
-                        primary: 'var(--site-border-primary)',
-                        secondary: 'var(--site-border-secondary)',
-                    },
-                    accent: {
-                        primary: 'var(--site-accent-primary)',
-                        hover: 'var(--site-accent-hover)',
-                        light: 'var(--site-accent-light)',
-                    },
-                    'accent-secondary': {
-                        DEFAULT: 'var(--site-accent-secondary)',
-                        light: 'var(--site-accent-secondary-light)',
-                    },
-                },
-                
-                // App Colors (Studio Applications)
-                app: {
-                    bg: {
-                        primary: 'var(--app-bg-primary)',
-                        secondary: 'var(--app-bg-secondary)',
-                        tertiary: 'var(--app-bg-tertiary)',
-                    },
-                    text: {
-                        primary: 'var(--app-text-primary)',
-                        secondary: 'var(--app-text-secondary)',
-                        tertiary: 'var(--app-text-tertiary)',
-                    },
-                    border: {
-                        primary: 'var(--app-border-primary)',
-                        secondary: 'var(--app-border-secondary)',
-                    },
-                    accent: {
-                        primary: 'var(--app-accent-primary)',
-                        hover: 'var(--app-accent-hover)',
-                    },
-                    'accent-secondary': {
-                        DEFAULT: 'var(--app-accent-secondary)',
-                        hover: 'var(--app-accent-secondary-hover)',
-                    },
-                },
-                
-                // Legacy tokens (backward compatibility)
                 primary: {
-                    DEFAULT: 'var(--site-accent-primary)',
-                    hover: 'var(--site-accent-hover)',
-                    light: 'var(--site-accent-light)',
+                    DEFAULT: '#3B82F6', // Blue-500
+                    hover: '#2563EB',   // Blue-600
+                    light: '#60A5FA',   // Blue-400
+                    subtle: '#93C5FD',  // Blue-300
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                 },
+
+
+                app: {
+                    bg: '#141414',
+                    surface: '#1C1C1C',
+                    border: '#2C2C2C',
+                    'surface-hover': '#252525',
+                    // Light Mode (Neutral Gray)
+                    light: {
+                        bg: '#FFFFFF',
+                        surface: '#F9FAFB', // Gray-50
+                        border: '#E5E7EB',  // Gray-200
+                        'surface-hover': '#F3F4F6', // Gray-100
+                    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                },
+                // Unified Accent System
                 accent: {
-                    DEFAULT: 'var(--app-accent-secondary)',
-                    hover: 'var(--app-accent-secondary-hover)',
+                    DEFAULT: '#EAB308', // Yellow-500
+                    hover: '#CA8A04',   // Yellow-600
+                    light: '#FACC15',   // Yellow-400
+                    subtle: '#FDE047',  // Yellow-300
                 },
             },
             animation: {

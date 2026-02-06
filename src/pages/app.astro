@@ -1,11 +1,13 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import { StudioEditor } from "../features/studio/StudioEditor";
+import LoadingStudio from "../components/LoadingStudio.astro";
 ---
 
 <Layout title="Kenichi App" showFooter={false} showAds={false} isApp>
+    <LoadingStudio />
     <div
-        class="h-full w-full overflow-hidden bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 relative"
+        class="h-full w-full overflow-hidden bg-app-bg text-app-text-primary relative"
     >
         <StudioEditor client:only="react" />
     </div>

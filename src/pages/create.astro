@@ -1,12 +1,14 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import { StudioEditor } from "../features/studio/StudioEditor";
+import LoadingStudio from "../components/LoadingStudio.astro";
 ---
 
 <Layout title="Kenichi Studio" showFooter={false} showAds={false} isApp>
+    <LoadingStudio />
     <!-- Dark/Light mode is handled by Layout usually, but we force specific classes for the app -->
     <div
-        class="h-full w-full overflow-hidden bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 relative"
+        class="h-full w-full overflow-hidden bg-app-bg text-app-text-primary relative"
     >
         <StudioEditor client:only="react" />
     </div>

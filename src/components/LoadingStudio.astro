@@ -1,0 +1,98 @@
+---
+// Loading animation for Studio Editor
+---
+
+<div
+    id="studio-loader"
+    class="fixed inset-0 z-[9999] bg-slate-50 dark:bg-slate-950 flex items-center justify-center transition-opacity duration-500"
+>
+    <div class="flex flex-col items-center gap-6">
+        <!-- Animated Logo -->
+        <div class="relative">
+            <div
+                class="w-20 h-20 bg-gradient-to-br from-blue-500 to-violet-500 rounded-2xl flex items-center justify-center shadow-2xl shadow-blue-500/50 animate-pulse"
+            >
+                <span class="text-white font-bold text-3xl">K</span>
+            </div>
+            <!-- Spinning Ring -->
+            <div class="absolute inset-0 -m-2">
+                <svg class="w-24 h-24 animate-spin" viewBox="0 0 100 100">
+                    <circle
+                        cx="50"
+                        cy="50"
+                        r="45"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="3"
+                        stroke-dasharray="70 200"
+                        stroke-linecap="round"
+                        class="text-blue-500 opacity-30"></circle>
+                </svg>
+            </div>
+        </div>
+
+        <!-- Loading Text -->
+        <div class="text-center">
+            <h2 class="text-xl font-bold text-slate-900 dark:text-white mb-2">
+                Loading Studio
+            </h2>
+            <p class="text-sm text-slate-500 dark:text-slate-400 animate-pulse">
+                Preparing your canvas...
+            </p>
+        </div>
+
+        <!-- Progress Dots -->
+        <div class="flex gap-2">
+            <div
+                class="w-2 h-2 bg-blue-500 rounded-full animate-bounce"
+                style="animation-delay: 0ms;"
+            >
+            </div>
+            <div
+                class="w-2 h-2 bg-violet-500 rounded-full animate-bounce"
+                style="animation-delay: 150ms;"
+            >
+            </div>
+            <div
+                class="w-2 h-2 bg-blue-500 rounded-full animate-bounce"
+                style="animation-delay: 300ms;"
+            >
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Hide loader when the page is fully loaded
+    window.addEventListener("load", () => {
+        const loader = document.getElementById("studio-loader");
+        if (loader) {
+            // Add a small delay to ensure smooth transition
+            setTimeout(() => {
+                loader.style.opacity = "0";
+                setTimeout(() => {
+                    loader.style.display = "none";
+                }, 500);
+            }, 300);
+        }
+    });
+
+    // Fallback: Hide after 5 seconds even if load event doesn't fire
+    setTimeout(() => {
+        const loader = document.getElementById("studio-loader");
+        if (loader && loader.style.display !== "none") {
+            loader.style.opacity = "0";
+            setTimeout(() => {
+                loader.style.display = "none";
+            }, 500);
+        }
+    }, 5000);
+</script>
+
+<style>
+    @keyframes spin {
+        to {
+            transform: rotate(360deg);
+        }
+    }
+</style>
