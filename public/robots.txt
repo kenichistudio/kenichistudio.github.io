@@ -1,0 +1,20 @@
+# Kenichi Studio - Robots.txt
+
+User-agent: *
+Allow: /
+
+# Sitemaps
+Sitemap: https://simplearyan.github.io/kenichi-studio/sitemap.xml
+
+# Disallow development/build artifacts
+Disallow: /_astro/
+Disallow: /dist/
+Disallow: /.git/
+
+# Allow all public assets
+Allow: /assets/
+Allow: /manifest.json
+Allow: /sw.js
+
+# Crawl-delay (optional, helps prevent server overload)
+Crawl-delay: 1

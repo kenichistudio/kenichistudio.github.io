@@ -5,26 +5,26 @@ export const seoConfig = {
   defaultTitle: `${siteConfig.name} - ${siteConfig.tagline}`,
   defaultDescription: siteConfig.description,
   baseUrl: siteConfig.url,
-  defaultImage: `${siteConfig.url}/assets/images/social/og-image.png`,
-  twitterImage: `${siteConfig.url}/assets/images/social/twitter-card.png`,
+  defaultImage: `${siteConfig.url}/assets/images/social/og-image.svg`,
+  twitterImage: `${siteConfig.url}/assets/images/social/twitter-card.svg`,
   author: 'SimpleAryan',
-  
+
   keywords: siteConfig.keywords,
-  
+
   // Open Graph
   og: {
     siteName: siteConfig.name,
     type: 'website',
     locale: 'en_US',
   },
-  
+
   // Twitter
   twitter: {
     card: 'summary_large_image',
     site: siteConfig.social.twitter,
     creator: siteConfig.social.twitter,
   },
-  
+
   // Schema.org structured data
   schema: {
     '@context': 'https://schema.org',
