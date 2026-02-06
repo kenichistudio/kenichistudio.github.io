@@ -57,6 +57,7 @@ export const StudioEditor = ({ allowedTabs }: StudioEditorProps) => {
     const [exportProgress, setExportProgress] = useState(0);
     const [isFullscreen, setIsFullscreen] = useState(false);
     const [activeGuide, setActiveGuide] = useState("none");
+    const [resolution, setResolution] = useState({ width: 1920, height: 1080 });
 
     // Mobile Bottom Sheet State
     const [activeBottomTab, setActiveBottomTab] = useState<BottomDockTab>(null);
@@ -127,7 +128,10 @@ export const StudioEditor = ({ allowedTabs }: StudioEditorProps) => {
         newEngine.onTimeUpdate = (t) => setCurrentTime(t);
         newEngine.onPlayStateChange = (p) => setIsPlaying(p);
         newEngine.onSelectionChange = (id) => setSelectedId(id);
-        newEngine.onResize = (w, h) => setCanvasAspectRatio(w / h);
+        newEngine.onResize = (w, h) => {
+            setCanvasAspectRatio(w / h);
+            setResolution({ width: w, height: h });
+        };
         newEngine.onDurationChange = (d) => {
             // Force re-render of Timeline/UI
             setCurrentTime(t => t); // fast way to trigger update? or maybe add a state?
@@ -279,6 +283,7 @@ export const StudioEditor = ({ allowedTabs }: StudioEditorProps) => {
                 }}
                 currentGuide={currentGuide}
                 onGuideChange={handleGuideChange}
+                resolution={resolution}
             />
 
             {/* Main Workspace */}

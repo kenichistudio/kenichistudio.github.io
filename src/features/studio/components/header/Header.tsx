@@ -10,6 +10,7 @@ interface HeaderProps {
     onSettings: () => void;
     currentGuide: "none" | "center" | "thirds" | "golden";
     onGuideChange: (type: "none" | "center" | "thirds" | "golden") => void;
+    resolution?: { width: number, height: number };
 }
 
 export const Header = ({
@@ -17,7 +18,8 @@ export const Header = ({
     onSnapshot,
     onSettings,
     currentGuide,
-    onGuideChange
+    onGuideChange,
+    resolution = { width: 1920, height: 1080 }
 }: HeaderProps) => {
     const [showMobileMenu, setShowMobileMenu] = useState(false);
     const [showGuidesMenu, setShowGuidesMenu] = useState(false);
@@ -38,12 +40,23 @@ export const Header = ({
             {/* LEFT: Logo / Back */}
             <div className="flex items-center gap-3">
                 <a href="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
-                    <div className="w-9 h-9 bg-black dark:bg-white rounded-xl flex items-center justify-center text-white dark:text-black font-bold shadow-lg shadow-black/10 dark:shadow-white/10">
-                        K
+                    <div className="w-10 h-10 flex items-center justify-center">
+                        <img
+                            src="/assets/logos/variations/v7_inner_shadow_gradient_bg.svg"
+                            alt="Kenichi Logo"
+                            className="w-full h-full object-contain drop-shadow-md"
+                        />
                     </div>
-                    <span className="font-bold text-lg hidden lg:block text-slate-900 dark:text-white tracking-tight">
-                        Kenichi Studio
-                    </span>
+                    <div className="flex flex-col -gap-1">
+                        <span className="font-bold text-base hidden lg:block text-slate-900 dark:text-white tracking-tight leading-none">
+                            Kenichi Studio
+                        </span>
+                        {resolution && (
+                            <span className="text-[10px] font-mono text-slate-400 dark:text-slate-500 hidden lg:block leading-none mt-0.5">
+                                {resolution.width} &times; {resolution.height}
+                            </span>
+                        )}
+                    </div>
                 </a>
             </div>
 
