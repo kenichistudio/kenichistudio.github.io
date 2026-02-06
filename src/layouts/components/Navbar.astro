@@ -9,18 +9,23 @@ const links = [
 ---
 
 <nav
-    class="w-full z-50 bg-white/80 backdrop-blur-md border-b border-slate-200/50 sticky top-0"
+    class="w-full z-50 bg-white/80 dark:bg-slate-950/80 backdrop-blur-md border-b border-slate-200/50 dark:border-white/10 sticky top-0"
 >
     <div class="container mx-auto px-6 h-20 flex items-center justify-between">
         {/* Logo */}
         <a
             href={import.meta.env.BASE_URL}
-            class="flex items-center gap-2 font-bold text-xl tracking-tight text-slate-900 group z-50 relative"
+            class="flex items-center gap-2 font-bold text-xl tracking-tight text-slate-900 dark:text-white group z-50 relative"
         >
             <img
                 src={`${import.meta.env.BASE_URL}assets/logos/variations/v5_high_shadow.svg`}
                 alt="Kenichi Logo"
-                class="w-8 h-8 group-hover:scale-110 transition-transform"
+                class="w-8 h-8 group-hover:scale-110 transition-transform dark:hidden"
+            />
+            <img
+                src={`${import.meta.env.BASE_URL}assets/logos/variations/v2_black_bg.svg`}
+                alt="Kenichi Logo"
+                class="w-8 h-8 group-hover:scale-110 transition-transform hidden dark:block"
             />
             Kenichi
         </a>
@@ -31,7 +36,7 @@ const links = [
                 links.map((link) => (
                     <a
                         href={link.href}
-                        class="text-base font-medium text-slate-600 hover:text-slate-900 transition-colors"
+                        class="text-base font-medium text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white transition-colors"
                     >
                         {link.label}
                     </a>
@@ -40,36 +45,67 @@ const links = [
 
             <a
                 href={`${import.meta.env.BASE_URL}app`}
-                class="px-5 py-2.5 bg-gradient-to-r from-blue-600 to-purple-600 text-white text-sm font-bold rounded-full shadow-lg shadow-blue-500/20 hover:scale-105 transition-all"
+                class="px-6 py-2.5 bg-slate-900 dark:bg-primary text-white font-bold rounded-xl hover:bg-slate-800 dark:hover:bg-primary-hover transition-all shadow-lg shadow-slate-900/20 dark:shadow-primary/20"
             >
                 Launch App
             </a>
+
+            {/* Theme Toggle */}
+            <button
+                id="theme-toggle"
+                class="p-2 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-white/10 rounded-lg transition-colors"
+                aria-label="Toggle theme"
+            >
+                <svg
+                    class="w-5 h-5 dark:hidden"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                >
+                    <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"
+                    ></path>
+                </svg>
+                <svg
+                    class="w-5 h-5 hidden dark:block"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                >
+                    <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"
+                    ></path>
+                </svg>
+            </button>
         </div>
 
         {/* Mobile Menu Button */}
         <button
-            id="mobile-menu-btn"
-            class="md:hidden z-50 text-slate-900 focus:outline-none"
+            id="mobile-menu-toggle"
+            class="md:hidden p-2 text-slate-900 dark:text-white hover:bg-slate-100 dark:hover:bg-white/10 rounded-lg transition-colors z-50 relative"
+            aria-label="Toggle menu"
         >
-            <span class="icon-menu block">
-                <Menu className="w-8 h-8" />
-            </span>
-            <span class="icon-close hidden">
-                <X className="w-8 h-8" />
-            </span>
+            <Menu size={24} className="menu-icon" />
+            <X size={24} className="close-icon hidden" />
         </button>
     </div>
 
     {/* Mobile Overlay */}
     <div
         id="mobile-menu"
-        class="fixed inset-0 bg-white z-40 flex flex-col items-center justify-center gap-8 opacity-0 pointer-events-none transition-all duration-300 translate-y-[-100%] md:hidden h-[100dvh] w-screen"
+        class="fixed inset-0 bg-white dark:bg-slate-950 z-40 flex flex-col items-center justify-center gap-8 opacity-0 pointer-events-none transition-all duration-300 translate-y-[-100%] md:hidden h-[100dvh] w-screen"
     >
         {
             links.map((link) => (
                 <a
                     href={link.href}
-                    class="text-3xl font-bold text-slate-900 hover:text-blue-600 transition-colors mobile-link"
+                    class="text-3xl font-bold text-slate-900 dark:text-white hover:text-primary dark:hover:text-primary-light transition-colors mobile-link"
                 >
                     {link.label}
                 </a>
@@ -77,7 +113,7 @@ const links = [
         }
         <a
             href={`${import.meta.env.BASE_URL}app`}
-            class="mt-4 px-8 py-4 bg-slate-900 text-white text-xl font-bold rounded-full hover:bg-slate-800 transition-transform hover:scale-105 mobile-link shadow-xl"
+            class="mt-4 px-8 py-4 bg-slate-900 dark:bg-primary text-white text-xl font-bold rounded-full hover:bg-slate-800 dark:hover:bg-primary-hover transition-transform hover:scale-105 mobile-link shadow-xl"
         >
             Launch Kenichi
         </a>
@@ -85,10 +121,11 @@ const links = [
 </nav>
 
 <script>
-    const menuBtn = document.getElementById("mobile-menu-btn");
+    // Mobile Menu Toggle
+    const menuBtn = document.getElementById("mobile-menu-toggle");
     const mobileMenu = document.getElementById("mobile-menu");
-    const iconMenu = document.querySelector(".icon-menu");
-    const iconClose = document.querySelector(".icon-close");
+    const iconMenu = document.querySelector(".menu-icon");
+    const iconClose = document.querySelector(".close-icon");
     const mobileLinks = document.querySelectorAll(".mobile-link");
     let isMenuOpen = false;
 
@@ -129,6 +166,27 @@ const links = [
                 iconClose.classList.add("hidden");
                 document.body.style.overflow = "";
             });
+        });
+    }
+
+    // Theme Toggle
+    const themeToggle = document.getElementById("theme-toggle");
+
+    if (themeToggle) {
+        themeToggle.addEventListener("click", () => {
+            const html = document.documentElement;
+            const currentTheme = html.classList.contains("dark")
+                ? "dark"
+                : "light";
+            const newTheme = currentTheme === "dark" ? "light" : "dark";
+
+            if (newTheme === "dark") {
+                html.classList.add("dark");
+            } else {
+                html.classList.remove("dark");
+            }
+
+            localStorage.setItem("theme", newTheme);
         });
     }
 </script>

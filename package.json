@@ -58,6 +58,7 @@
   },
   "devDependencies": {
     "@types/webfontloader": "^1.6.38",
-    "sass": "^1.97.2"
+    "sass": "^1.97.2",
+    "sharp": "^0.34.5"
   }
 }

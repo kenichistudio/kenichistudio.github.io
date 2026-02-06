@@ -1,38 +1,47 @@
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import sharp from 'sharp';
 
-const fs = require('fs');
-const path = require('path');
-const sharp = require('sharp');
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 // Configuration
-const inputDir = path.join(__dirname, '../assets/logos/variations');
-const outputDir = path.join(__dirname, '../assets/logos/png');
-const size = 1024; // High-res output
+const inputDir = path.resolve(__dirname, '../logos/variations');
+const outputDir = path.resolve(__dirname, '../logos/png');
+// size is now hardcoded in the sharp resize function
 
-// Ensure output directory exists
+// Create output directory if it doesn't exist
 if (!fs.existsSync(outputDir)) {
     fs.mkdirSync(outputDir, { recursive: true });
 }
 
 async function convertSVGs() {
     try {
-        const files = fs.readdirSync(inputDir).filter(file => file.endsWith('.svg'));
+        // Get all SVG files
+        const svgFiles = fs.readdirSync(inputDir).filter(file => file.endsWith('.svg'));
         
-        console.log(`Found ${files.length} SVG files to convert...`);
+        console.log(`Found ${svgFiles.length} SVG files to convert...`);
 
-        for (const file of files) {
+        // Convert each SVG to PNG
+        for (const file of svgFiles) {
             const inputPath = path.join(inputDir, file);
-            const outputFilename = file.replace('.svg', '.png');
-            const outputPath = path.join(outputDir, outputFilename);
-
-            console.log(`Converting: ${file} -> ${outputFilename}`);
-
-            await sharp(inputPath)
-                .resize(size, size)
-                .png()
-                .toFile(outputPath);
+            const outputPath = path.join(outputDir, file.replace('.svg', '.png'));
+            
+            try {
+                await sharp(inputPath)
+                    .resize(1024, 1024) // Hardcoded size
+                    .png()
+                    .toFile(outputPath);
+                
+                console.log(`✓ Converted ${file} → ${path.basename(outputPath)}`);
+            } catch (error) {
+                console.error(`✗ Failed to convert ${file}:`, error.message);
+            }
         }
 
-        console.log('✅ Conversion complete! PNGs saved to assets/logos/png/');
+        console.log('\nConversion complete!');
+        console.log(`Output directory: ${outputDir}`);
 
     } catch (err) {
         console.error('❌ Error converting files:', err);
