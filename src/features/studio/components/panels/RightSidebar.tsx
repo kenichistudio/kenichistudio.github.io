@@ -132,19 +132,19 @@ export const RightSidebar: React.FC<DesktopPropertiesPanelProps> = ({ engine, se
                     </div>
 
                     {/* Alignment & Nudge - New Feature */}
-                    <div className="flex items-center gap-2 p-1 bg-slate-50 dark:bg-app-surface/50 rounded-lg border border-slate-100 dark:border-app-border">
+                    <div className="flex items-center gap-2 p-1 bg-app-light-surface dark:bg-app-surface/50 rounded-lg border border-app-light-border dark:border-app-border">
                         {/* Alignment Buttons */}
-                        <div className="flex flex-col gap-1 pr-2 border-r border-slate-200 dark:border-white/10">
+                        <div className="flex flex-col gap-1 pr-2 border-r border-app-light-border dark:border-white/10">
                             <button
                                 onClick={() => handleAlign('horizontal')}
-                                className="p-1.5 hover:bg-white dark:hover:bg-slate-700 rounded text-slate-500 hover:text-indigo-500 transition-colors"
+                                className="p-1.5 hover:bg-app-light-bg dark:hover:bg-app-surface-hover rounded text-app-light-text-secondary hover:text-accent transition-colors"
                                 title="Center Horizontally"
                             >
                                 <AlignHorizontalSpaceAround size={14} />
                             </button>
                             <button
                                 onClick={() => handleAlign('vertical')}
-                                className="p-1.5 hover:bg-white dark:hover:bg-slate-700 rounded text-slate-500 hover:text-indigo-500 transition-colors"
+                                className="p-1.5 hover:bg-app-light-bg dark:hover:bg-app-surface-hover rounded text-app-light-text-secondary hover:text-accent transition-colors"
                                 title="Center Vertically"
                             >
                                 <AlignVerticalSpaceAround size={14} />
@@ -153,12 +153,12 @@ export const RightSidebar: React.FC<DesktopPropertiesPanelProps> = ({ engine, se
 
                         {/* Nudge Controls (Mini D-Pad) */}
                         <div className="flex-1 flex items-center justify-center gap-1">
-                            <button onClick={() => handleNudge('x', -1)} className="p-1 hover:bg-white dark:hover:bg-slate-700 rounded text-slate-500 hover:text-indigo-500 transition-colors"><ArrowLeft size={14} /></button>
+                            <button onClick={() => handleNudge('x', -1)} className="p-1 hover:bg-app-light-bg dark:hover:bg-app-surface-hover rounded text-app-light-text-secondary hover:text-accent transition-colors"><ArrowLeft size={14} /></button>
                             <div className="flex flex-col gap-1">
-                                <button onClick={() => handleNudge('y', -1)} className="p-1 hover:bg-white dark:hover:bg-slate-700 rounded text-slate-500 hover:text-indigo-500 transition-colors"><ArrowUp size={14} /></button>
-                                <button onClick={() => handleNudge('y', 1)} className="p-1 hover:bg-white dark:hover:bg-slate-700 rounded text-slate-500 hover:text-indigo-500 transition-colors"><ArrowDown size={14} /></button>
+                                <button onClick={() => handleNudge('y', -1)} className="p-1 hover:bg-app-light-bg dark:hover:bg-app-surface-hover rounded text-app-light-text-secondary hover:text-accent transition-colors"><ArrowUp size={14} /></button>
+                                <button onClick={() => handleNudge('y', 1)} className="p-1 hover:bg-app-light-bg dark:hover:bg-app-surface-hover rounded text-app-light-text-secondary hover:text-accent transition-colors"><ArrowDown size={14} /></button>
                             </div>
-                            <button onClick={() => handleNudge('x', 1)} className="p-1 hover:bg-white dark:hover:bg-slate-700 rounded text-slate-500 hover:text-indigo-500 transition-colors"><ArrowRight size={14} /></button>
+                            <button onClick={() => handleNudge('x', 1)} className="p-1 hover:bg-app-light-bg dark:hover:bg-app-surface-hover rounded text-app-light-text-secondary hover:text-accent transition-colors"><ArrowRight size={14} /></button>
                         </div>
                     </div>
                 </ControlRow>
@@ -186,16 +186,16 @@ export const RightSidebar: React.FC<DesktopPropertiesPanelProps> = ({ engine, se
 
                     <div className="flex items-center justify-between mt-2">
                         <button
-                            className="flex items-center gap-2 text-[10px] text-slate-500 hover:text-indigo-500 transition-colors"
+                            className="flex items-center gap-2 text-[10px] text-app-light-text-secondary hover:text-accent transition-colors"
                             onClick={() => setIsRatioLocked(!isRatioLocked)}
                         >
-                            {isRatioLocked ? <Link2 size={12} /> : <Unlink2 size={12} />}
+                            {isRatioLocked ? <Link2 size={12} className="text-accent" /> : <Unlink2 size={12} />}
                             <span>Constrain Proportions</span>
                         </button>
 
                         <button
                             onClick={() => { updateProperty("rotation", 0); }}
-                            className="text-[10px] text-slate-400 hover:text-slate-700 underline decoration-dotted"
+                            className="text-[10px] text-app-light-text-secondary hover:text-app-light-text-primary underline decoration-dotted"
                         >
                             Reset
                         </button>
@@ -230,7 +230,7 @@ export const RightSidebar: React.FC<DesktopPropertiesPanelProps> = ({ engine, se
         // Text
         if (object instanceof TextObject) {
             return (
-                <div className="pt-2 border-t border-slate-100 dark:border-slate-800/50">
+                <div className="pt-2 border-t border-app-light-border dark:border-app-border">
                     <TextSettings
                         object={object}
                         engine={engine}
@@ -280,7 +280,7 @@ export const RightSidebar: React.FC<DesktopPropertiesPanelProps> = ({ engine, se
                 <PropertySection title="Character" defaultOpen={true}>
                     <ControlRow label="Animation">
                         <select
-                            className="w-full bg-slate-100 dark:bg-slate-800 rounded-lg p-2 text-xs outline-none"
+                            className="w-full bg-app-light-surface-hover dark:bg-app-surface rounded-lg p-2 text-xs outline-none"
                             value={object.currentAnimation}
                             onChange={(e) => updateProperty("currentAnimation", e.target.value)}
                         >
@@ -293,7 +293,7 @@ export const RightSidebar: React.FC<DesktopPropertiesPanelProps> = ({ engine, se
                     </ControlRow>
                     <ControlRow label="Costume">
                         <select
-                            className="w-full bg-slate-100 dark:bg-slate-800 rounded-lg p-2 text-xs outline-none"
+                            className="w-full bg-app-light-surface-hover dark:bg-app-surface rounded-lg p-2 text-xs outline-none"
                             value={object.costume}
                             onChange={(e) => updateProperty("costume", e.target.value)}
                         >
@@ -317,14 +317,14 @@ export const RightSidebar: React.FC<DesktopPropertiesPanelProps> = ({ engine, se
                 <PropertySection title="Particle Text" defaultOpen={true}>
                     <ControlRow label="Text">
                         <textarea
-                            className="w-full bg-slate-100 dark:bg-slate-800 rounded-lg p-2 text-xs border-transparent focus:border-indigo-500 outline-none resize-y min-h-[60px]"
+                            className="w-full bg-app-light-surface-hover dark:bg-app-surface rounded-lg p-2 text-xs border-transparent focus:border-accent outline-none resize-y min-h-[60px]"
                             value={object.text}
                             onChange={(e) => updateProperty("text", e.target.value)}
                         />
                     </ControlRow>
                     <ControlRow label="Effect">
                         <select
-                            className="w-full bg-slate-100 dark:bg-slate-800 rounded-lg p-2 text-xs outline-none"
+                            className="w-full bg-app-light-surface-hover dark:bg-app-surface rounded-lg p-2 text-xs outline-none"
                             value={object.animType}
                             onChange={(e) => updateProperty("animType", e.target.value)}
                         >
@@ -374,7 +374,7 @@ export const RightSidebar: React.FC<DesktopPropertiesPanelProps> = ({ engine, se
     const renderAnimationsSection = () => {
         if (!object) {
             return (
-                <div className="flex flex-col items-center justify-center h-40 text-slate-400">
+                <div className="flex flex-col items-center justify-center h-40 text-app-light-text-secondary">
                     <Sparkles size={24} className="mb-2 opacity-50" />
                     <span className="text-xs">No Object Selected</span>
                 </div>
@@ -390,12 +390,12 @@ export const RightSidebar: React.FC<DesktopPropertiesPanelProps> = ({ engine, se
         return (
             <div className="space-y-4">
                 {/* Animation Type Tabs */}
-                <div className="flex p-1 bg-slate-100 dark:bg-app-surface border border-slate-200 dark:border-app-border rounded-xl">
+                <div className="flex p-1 bg-app-light-surface dark:bg-app-surface border border-app-light-border dark:border-app-border rounded-xl">
                     <button
                         onClick={() => setActiveAnimTab('enter')}
                         className={`flex-1 py-1 px-3 text-xs font-bold rounded-lg transition-all ${activeAnimTab === 'enter'
-                            ? "bg-white dark:bg-indigo-500 text-indigo-600 dark:text-white shadow-sm"
-                            : "text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200"
+                            ? "bg-app-light-bg dark:bg-accent text-accent dark:text-app-text-primary shadow-sm"
+                            : "text-app-light-text-secondary dark:text-app-text-secondary hover:text-app-light-text-primary dark:hover:text-app-text-primary"
                             }`}
                     >
                         Enter
@@ -403,8 +403,8 @@ export const RightSidebar: React.FC<DesktopPropertiesPanelProps> = ({ engine, se
                     <button
                         onClick={() => setActiveAnimTab('exit')}
                         className={`flex-1 py-1 px-3 text-xs font-bold rounded-lg transition-all ${activeAnimTab === 'exit'
-                            ? "bg-white dark:bg-indigo-500 text-indigo-600 dark:text-white shadow-sm"
-                            : "text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200"
+                            ? "bg-app-light-bg dark:bg-accent text-accent dark:text-app-text-primary shadow-sm"
+                            : "text-app-light-text-secondary dark:text-app-text-secondary hover:text-app-light-text-primary dark:hover:text-app-text-primary"
                             }`}
                     >
                         Exit
@@ -422,8 +422,8 @@ export const RightSidebar: React.FC<DesktopPropertiesPanelProps> = ({ engine, se
                                     className={`
                                         flex flex-col items-center justify-center gap-2 p-2 rounded-xl border transition-all aspect-square
                                         ${isActive
-                                            ? "bg-indigo-50 dark:bg-indigo-500/20 border-indigo-500 text-indigo-600 dark:text-indigo-400"
-                                            : "bg-slate-50 dark:bg-app-surface/50 border-transparent hover:border-slate-200 dark:hover:border-slate-700 text-slate-500"
+                                            ? "bg-accent/10 dark:bg-accent/10 border-accent text-accent dark:text-accent-light"
+                                            : "bg-app-light-surface dark:bg-app-surface/50 border-transparent hover:border-app-light-border dark:hover:border-app-border text-app-light-text-secondary"
                                         }
                                     `}
                                 >
@@ -464,7 +464,7 @@ export const RightSidebar: React.FC<DesktopPropertiesPanelProps> = ({ engine, se
     // --- Main Render ---
 
     return (
-        <div className="flex flex-col h-full bg-white dark:bg-app-bg text-slate-900 dark:text-slate-200">
+        <div className="flex flex-col h-full bg-app-light-bg dark:bg-app-bg text-app-light-text-primary dark:text-app-text-primary">
             {/* 1. Tabs & Toggles */}
             <div className="flex items-center gap-2 mx-4 mt-4 mb-4 shrink-0">
                 <div className="flex-1 flex items-center p-1 bg-app-light-surface dark:bg-app-surface rounded-xl shadow-inner">
@@ -475,8 +475,8 @@ export const RightSidebar: React.FC<DesktopPropertiesPanelProps> = ({ engine, se
                             className={`
                                 flex-1 py-1.5 text-xs font-bold rounded-lg capitalize transition-all flex items-center justify-center gap-1.5
                                 ${activeTab === tab
-                                    ? "bg-white dark:bg-app-bg text-indigo-600 dark:text-indigo-400 shadow-sm transform scale-100"
-                                    : "text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200"
+                                    ? "bg-app-light-bg dark:bg-app-bg text-accent dark:text-accent-light shadow-sm transform scale-100"
+                                    : "text-app-light-text-secondary dark:text-app-text-secondary hover:text-app-light-text-primary dark:hover:text-app-text-primary"
                                 }
                             `}
                         >
@@ -492,7 +492,7 @@ export const RightSidebar: React.FC<DesktopPropertiesPanelProps> = ({ engine, se
                 {onToggleExpand && (
                     <button
                         onClick={onToggleExpand}
-                        className="p-2 bg-app-light-surface dark:bg-app-surface hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-500 hover:text-indigo-500 rounded-xl transition-colors shadow-sm"
+                        className="p-2 bg-app-light-surface dark:bg-app-surface hover:bg-app-light-surface-hover dark:hover:bg-app-surface-hover text-app-light-text-secondary hover:text-accent rounded-xl transition-colors shadow-sm"
                         title={isExpanded ? "Collapse Sidebar" : "Expand Sidebar"}
                     >
                         {isExpanded ? <ChevronsRight size={16} /> : <ChevronsLeft size={16} />}

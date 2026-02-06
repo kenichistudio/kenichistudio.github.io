@@ -1,83 +1,99 @@
 /* Kenichi Studio - Dual Color System */
 
 :root {
-  /* ========================================
+   /* ========================================
      SITE COLORS - Marketing Pages
      Light Mode (Default)
      ======================================== */
-  
-  /* Backgrounds */
-  --site-bg-primary: #FFFFFF;
-  --site-bg-secondary: #F8FAFC;      /* slate-50 */
-  --site-bg-tertiary: #F1F5F9;       /* slate-100 */
-  
-  /* Text */
-  --site-text-primary: #0F172A;      /* slate-900 */
-  --site-text-secondary: #475569;    /* slate-600 */
-  --site-text-tertiary: #64748B;     /* slate-500 */
-  
-  /* Borders */
-  --site-border-primary: #E2E8F0;    /* slate-200 */
-  --site-border-secondary: #CBD5E1;  /* slate-300 */
-  
-  /* Accent Colors */
-  --site-accent-primary: #3B82F6;    /* blue-500 */
-  --site-accent-hover: #2563EB;      /* blue-600 */
-  --site-accent-light: #60A5FA;      /* blue-400 */
-  
-  --site-accent-secondary: #8B5CF6;  /* violet-500 */
-  --site-accent-secondary-light: #A78BFA; /* violet-400 */
-  
-  /* ========================================
+
+   /* Backgrounds */
+   --site-bg-primary: #FFFFFF;
+   --site-bg-secondary: #F8FAFC;
+   /* slate-50 */
+   --site-bg-tertiary: #F1F5F9;
+   /* slate-100 */
+
+   /* Text */
+   --site-text-primary: #0F172A;
+   /* slate-900 */
+   --site-text-secondary: #475569;
+   /* slate-600 */
+   --site-text-tertiary: #64748B;
+   /* slate-500 */
+
+   /* Borders */
+   --site-border-primary: #E2E8F0;
+   /* slate-200 */
+   --site-border-secondary: #CBD5E1;
+   /* slate-300 */
+
+   /* Accent Colors */
+   --site-accent-primary: #3B82F6;
+   /* blue-500 */
+   --site-accent-hover: #2563EB;
+   /* blue-600 */
+   --site-accent-light: #60A5FA;
+   /* blue-400 */
+
+   --site-accent-secondary: #8B5CF6;
+   /* violet-500 */
+   --site-accent-secondary-light: #A78BFA;
+   /* violet-400 */
+
+   /* ========================================
      APP COLORS - Studio Applications
      Dark Mode (Default for Apps)
      ======================================== */
-  
-  /* Backgrounds */
-  --app-bg-primary: #141414;         /* Custom dark */
-  --app-bg-secondary: #1C1C1C;       /* Custom surface */
-  --app-bg-tertiary: #252525;        /* Custom hover */
-  
-  /* Text */
-  --app-text-primary: #FFFFFF;
-  --app-text-secondary: #A1A1AA;     /* zinc-400 */
-  --app-text-tertiary: #71717A;      /* zinc-500 */
-  
-  /* Borders */
-  --app-border-primary: #2C2C2C;     /* Custom */
-  --app-border-secondary: #3F3F46;   /* zinc-700 */
-  
-  /* Accent Colors */
-  --app-accent-primary: #3B82F6;     /* blue-500 */
-  --app-accent-hover: #60A5FA;       /* blue-400 */
-  
-  --app-accent-secondary: #EAB308;   /* yellow-500 */
-  --app-accent-secondary-hover: #FACC15; /* yellow-400 */
+
+   /* Backgrounds */
+   --app-bg: 0 0% 8%;
+   /* #141414 */
+   --app-surface: 0 0% 11%;
+   /* #1C1C1C */
+   --app-surface-hover: 0 0% 15%;
+   /* #252525 */
+
+   /* Text */
+   --app-text-primary: 0 0% 100%;
+   /* #FFFFFF */
+   --app-text-secondary: 240 5% 65%;
+   /* zinc-400 */
+   --app-text-tertiary: 240 4% 46%;
+   /* zinc-500 */
+
+   /* Borders */
+   --app-border: 0 0% 17%;
+   /* #2C2C2C */
+   --app-border-secondary: 240 5% 26%;
+   /* zinc-700 */
+
+   /* Legacy/Direct Bindings (HSL computed) */
+   --app-bg-primary: hsl(var(--app-bg));
+   --app-bg-secondary: hsl(var(--app-surface));
+   --app-bg-tertiary: hsl(var(--app-surface-hover));
+   --app-text-primary-hex: hsl(var(--app-text-primary));
+   --app-border-primary: hsl(var(--app-border));
+
+   /* Accent Colors */
+   --app-accent-primary: #3B82F6;
+   /* blue-500 */
+   --app-accent-hover: #60A5FA;
+   /* blue-400 */
+
+   --app-accent-secondary: #EAB308;
+   /* yellow-500 */
+   --app-accent-secondary-hover: #FACC15;
+   /* yellow-400 */
 }
 
-/* Dark Mode - Site Colors */
-.dark {
-  /* Site Backgrounds */
-  --site-bg-primary: #020617;        /* slate-950 */
-  --site-bg-secondary: #0F172A;      /* slate-900 */
-  --site-bg-tertiary: #1E293B;       /* slate-800 */
-  
-  /* Site Text */
-  --site-text-primary: #F8FAFC;      /* slate-50 */
-  --site-text-secondary: #94A3B8;    /* slate-400 */
-  --site-text-tertiary: #64748B;     /* slate-500 */
-  
-  /* Site Borders */
-  --site-border-primary: rgba(255, 255, 255, 0.1);
-  --site-border-secondary: rgba(255, 255, 255, 0.05);
-  
-  /* Site Accent Colors (Lighter in dark mode) */
-  --site-accent-primary: #60A5FA;    /* blue-400 */
-  --site-accent-hover: #3B82F6;      /* blue-500 */
-  --site-accent-light: #93C5FD;      /* blue-300 */
-  
-  --site-accent-secondary: #A78BFA;  /* violet-400 */
-  --site-accent-secondary-light: #C4B5FD; /* violet-300 */
-  
-  /* App colors remain the same in dark mode (dark-first design) */
+/* App Light Mode - For forced light mode or explicitly toggled light studio */
+:root:not(.dark) {
+   /* Site remains light default, but we can specifically target app containers if needed. 
+     For now, we define app light tokens here for use in components via Tailwind. */
+   --app-light-bg: 0 0% 100%;
+   --app-light-surface: 210 40% 98%;
+   --app-light-surface-hover: 210 40% 96%;
+   --app-light-border: 214 32% 91%;
+   --app-light-text-primary: 215 25% 27%;
+   --app-light-text-secondary: 215 16% 47%;
 }

@@ -35,42 +35,30 @@ export default {
 
 
 
-
-
                 },
 
 
                 app: {
-                    bg: '#141414',
-                    surface: '#1C1C1C',
-                    border: '#2C2C2C',
-                    'surface-hover': '#252525',
-                    // Light Mode (Neutral Gray)
+                    bg: 'hsl(var(--app-bg) / <alpha-value>)',
+                    surface: 'hsl(var(--app-surface) / <alpha-value>)',
+                    'surface-hover': 'hsl(var(--app-surface-hover) / <alpha-value>)',
+                    border: 'hsl(var(--app-border) / <alpha-value>)',
+                    text: {
+                        primary: 'hsl(var(--app-text-primary) / <alpha-value>)',
+                        secondary: 'hsl(var(--app-text-secondary) / <alpha-value>)',
+                    },
+                    // Light Mode Variants (specifically for Studio Light Mode)
                     light: {
-                        bg: '#FFFFFF',
-                        surface: '#F9FAFB', // Gray-50
-                        border: '#E5E7EB',  // Gray-200
-                        'surface-hover': '#F3F4F6', // Gray-100
+                        bg: 'hsl(var(--app-light-bg) / <alpha-value>)',
+                        surface: 'hsl(var(--app-light-surface) / <alpha-value>)',
+                        border: 'hsl(var(--app-light-border) / <alpha-value>)',
+                        'surface-hover': 'hsl(var(--app-light-surface-hover) / <alpha-value>)',
+                        text: {
+                            primary: 'hsl(var(--app-light-text-primary) / <alpha-value>)',
+                            secondary: 'hsl(var(--app-light-text-secondary) / <alpha-value>)',
+                        }
                     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-                },
+               },
                 // Unified Accent System
                 accent: {
                     DEFAULT: '#EAB308', // Yellow-500

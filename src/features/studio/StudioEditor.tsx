@@ -265,7 +265,7 @@ export const StudioEditor = ({ allowedTabs }: StudioEditorProps) => {
     };
 
     return (
-        <div ref={rootRef} className="flex flex-col h-screen overflow-hidden bg-slate-50 dark:bg-app-bg relative font-sans text-slate-900 dark:text-slate-200 selection:bg-indigo-500/30">
+        <div ref={rootRef} className="flex flex-col h-screen overflow-hidden bg-app-light-surface dark:bg-app-bg relative font-sans text-app-light-text-primary dark:text-app-text-primary selection:bg-indigo-500/30">
 
             {/* Landscape Lock Overlay Removed */}
 
@@ -288,12 +288,12 @@ export const StudioEditor = ({ allowedTabs }: StudioEditorProps) => {
                 </div >
 
                 {/* Center Content Area - Scrollable on Mobile */}
-                <div className="flex-1 flex flex-col min-w-0 lg:min-w-0 bg-slate-100 dark:bg-app-bg relative overflow-y-auto lg:overflow-hidden pb-32 lg:pb-0">
+                <div className="flex-1 flex flex-col min-w-0 lg:min-w-0 bg-app-light-surface dark:bg-app-bg relative overflow-y-auto lg:overflow-hidden pb-32 lg:pb-0">
 
                     {/* Sticky Canvas Container (Mobile) / Flex Item (Desktop) */}
                     <div
                         ref={mainCanvasContainerRef}
-                        className="relative z-40 lg:relative flex flex-col w-full min-w-0 min-h-0 bg-slate-100 dark:bg-app-bg border-b border-slate-200 dark:border-app-border lg:border-none lg:flex-1"
+                        className="relative z-40 lg:relative flex flex-col w-full min-w-0 min-h-0 bg-app-light-surface dark:bg-app-bg border-b border-app-light-border dark:border-app-border lg:border-none lg:flex-1"
                     >
                         <div className="w-full h-auto max-h-[55vh] lg:max-h-none lg:flex-1 lg:min-h-0 flex items-center justify-center bg-slate-900/5 dark:bg-black/20 p-0 mt-8 mb-4">
                             <CanvasWorkspace
@@ -331,7 +331,7 @@ export const StudioEditor = ({ allowedTabs }: StudioEditorProps) => {
                         />
 
                         {/* Timeline (Desktop) */}
-                        <div className="hidden lg:block shrink-0 p-2 lg:p-4 z-10 bg-slate-100 dark:bg-app-bg border-slate-200 dark:border-app-border">
+                        <div className="hidden lg:block shrink-0 p-2 lg:p-4 z-10 bg-app-light-surface dark:bg-app-bg border-app-light-border dark:border-app-border">
                             <div className="h-auto lg:h-32">
                                 <TimelineDesktop
                                     currentTime={currentTime}
@@ -344,7 +344,7 @@ export const StudioEditor = ({ allowedTabs }: StudioEditorProps) => {
                         </div>
 
                         {/* Timeline (Mobile) - Integrated below canvas */}
-                        <div className="lg:hidden z-10 bg-white dark:bg-app-bg border-t border-slate-200 dark:border-app-border">
+                        <div className="lg:hidden z-10 bg-app-light-bg dark:bg-app-bg border-t border-app-light-border dark:border-app-border">
                             <TimelineMobile
                                 currentTime={currentTime}
                                 totalDuration={engine?.totalDuration || 5000}
@@ -464,7 +464,7 @@ export const StudioEditor = ({ allowedTabs }: StudioEditorProps) => {
                 {/* Right Sidebar - Desktop Only */}
                 <div className={`
                     hidden lg:flex
-                    ${isRightSidebarExpanded ? 'w-[450px]' : 'w-80'} border-l border-slate-200 dark:border-app-border bg-white dark:bg-app-bg shrink-0 flex-col overflow-hidden min-h-0
+                    ${isRightSidebarExpanded ? 'w-[450px]' : 'w-80'} border-l border-app-light-border dark:border-app-border bg-app-light-bg dark:bg-app-bg shrink-0 flex-col overflow-hidden min-h-0
                     relative z-auto h-auto
                     transition-[width,transform] duration-300 ease-in-out
                     ${rightSidebarOpen ? 'translate-x-0' : 'translate-x-full !w-0 border-none'}
@@ -491,7 +491,7 @@ export const StudioEditor = ({ allowedTabs }: StudioEditorProps) => {
                             {/* Dialog Container */}
                             <div className={`
                             pointer-events-auto relative 
-                            w-full lg:max-w-md bg-white dark:bg-app-surface 
+                            w-full lg:max-w-md bg-app-light-bg dark:bg-app-surface 
                             rounded-t-2xl lg:rounded-2xl 
                             shadow-2xl shadow-black/50 
                             flex flex-col overflow-hidden
@@ -501,15 +501,15 @@ export const StudioEditor = ({ allowedTabs }: StudioEditorProps) => {
                                 {/* Header */}
                                 <div className="flex items-center justify-between p-4 lg:p-6 border-b border-app-light-border dark:border-app-border">
                                     <div>
-                                        <h3 className="text-lg lg:text-xl font-bold text-slate-900 dark:text-white">
+                                        <h3 className="text-lg lg:text-xl font-bold text-app-light-text-primary dark:text-app-text-primary">
                                             {isExporting ? 'Exporting...' : 'Export Video'}
                                         </h3>
-                                        {!isExporting && <p className="text-xs lg:text-sm text-slate-500 dark:text-slate-400">Save to your device</p>}
+                                        {!isExporting && <p className="text-xs lg:text-sm text-app-light-text-secondary dark:text-app-text-secondary">Save to your device</p>}
                                     </div>
                                     {!isExporting && (
                                         <button
                                             onClick={() => setShowExportDialog(false)}
-                                            className="p-2 -mr-2 text-slate-400 hover:text-slate-900 dark:hover:text-white rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+                                            className="p-2 -mr-2 text-app-light-text-secondary hover:text-app-light-text-primary dark:hover:text-app-text-primary rounded-full hover:bg-app-light-surface dark:hover:bg-app-surface transition-colors"
                                         >
                                             <X size={20} />
                                         </button>
@@ -543,9 +543,9 @@ export const StudioEditor = ({ allowedTabs }: StudioEditorProps) => {
                                                 </div>
                                             </div>
 
-                                            <p className="text-sm text-slate-600 dark:text-slate-300">
+                                            <p className="text-sm text-app-light-text-secondary dark:text-app-text-secondary">
                                                 Rendering your masterpiece.<br />
-                                                <span className="text-xs text-slate-400">Please keep this tab open.</span>
+                                                <span className="text-xs text-app-light-text-secondary/70">Please keep this tab open.</span>
                                             </p>
 
                                             {/* Ad Container */}
@@ -555,10 +555,10 @@ export const StudioEditor = ({ allowedTabs }: StudioEditorProps) => {
 
                                             {/* Simplified Logs (Collapsible) */}
                                             <details className="w-full text-left">
-                                                <summary className="text-xs text-slate-400 cursor-pointer hover:text-slate-600 dark:hover:text-slate-300 mb-2 list-none text-center">
+                                                <summary className="text-xs text-app-light-text-secondary cursor-pointer hover:text-app-light-text-primary dark:hover:text-app-text-primary mb-2 list-none text-center">
                                                     Show Details
                                                 </summary>
-                                                <div className="w-full bg-slate-50 dark:bg-slate-900/50 rounded-lg p-3 h-24 overflow-y-auto font-mono text-[10px] text-slate-500">
+                                                <div className="w-full bg-app-light-surface dark:bg-app-surface/50 rounded-lg p-3 h-24 overflow-y-auto font-mono text-[10px] text-app-light-text-secondary">
                                                     {exportLogs.length === 0 ? (
                                                         <div className="italic opacity-50">Initializing...</div>
                                                     ) : (
@@ -580,23 +580,23 @@ export const StudioEditor = ({ allowedTabs }: StudioEditorProps) => {
                                         <div className="space-y-6">
                                             {/* Filename Input */}
                                             <div className="space-y-2">
-                                                <label className="text-xs font-bold uppercase text-slate-500">Filename</label>
-                                                <div className="flex bg-slate-100 dark:bg-slate-800 rounded-xl overflow-hidden border border-transparent focus-within:border-blue-500 transition-colors">
+                                                <label className="text-xs font-bold uppercase text-app-light-text-secondary">Filename</label>
+                                                <div className="flex bg-app-light-surface dark:bg-app-surface rounded-xl overflow-hidden border border-transparent focus-within:border-accent transition-colors">
                                                     <input
                                                         type="text"
                                                         value={exportConfig.filename}
                                                         onChange={(e) => setExportConfig({ ...exportConfig, filename: e.target.value })}
-                                                        className="flex-1 bg-transparent border-none px-4 py-3 text-sm font-medium text-slate-900 dark:text-white placeholder:text-slate-400 focus:ring-0"
+                                                        className="flex-1 bg-transparent border-none px-4 py-3 text-sm font-medium text-app-light-text-primary dark:text-app-text-primary placeholder:text-app-light-text-secondary/50 focus:ring-0"
                                                         placeholder="my-video"
                                                     />
-                                                    <div className="px-4 py-3 text-sm text-slate-400 bg-slate-200/50 dark:bg-slate-700/50">
+                                                    <div className="px-4 py-3 text-sm text-app-light-text-secondary bg-app-light-surface-hover/50 dark:bg-app-surface-hover/50">
                                                         .{exportConfig.format}
                                                     </div>
                                                 </div>
                                             </div>
 
                                             <div className="space-y-2">
-                                                <label className="text-xs font-bold uppercase text-slate-500 dark:text-slate-400">Format</label>
+                                                <label className="text-xs font-bold uppercase text-app-light-text-secondary">Format</label>
                                                 <div className="grid grid-cols-3 gap-2">
                                                     <button
                                                         onClick={() => setExportConfig({ ...exportConfig, format: 'mp4' })}
@@ -610,7 +610,7 @@ export const StudioEditor = ({ allowedTabs }: StudioEditorProps) => {
                                                     >
                                                         <Film size={20} className="mx-auto mb-1.5" />
                                                         <div className="font-bold text-xs">MP4</div>
-                                                        {exportConfig.format === 'mp4' && <div className="absolute top-1 right-1 text-black dark:text-white"><Check size={12} /></div>}
+                                                        {exportConfig.format === 'mp4' && <div className="absolute top-1 right-1 text-app-light-text-primary dark:text-app-text-primary"><Check size={12} /></div>}
                                                     </button>
 
                                                     <button
@@ -625,7 +625,7 @@ export const StudioEditor = ({ allowedTabs }: StudioEditorProps) => {
                                                     >
                                                         <FileVideo size={20} className="mx-auto mb-1.5" />
                                                         <div className="font-bold text-xs">WebM</div>
-                                                        {exportConfig.format === 'webm' && <div className="absolute top-1 right-1 text-black dark:text-white"><Check size={12} /></div>}
+                                                        {exportConfig.format === 'webm' && <div className="absolute top-1 right-1 text-app-light-text-primary dark:text-app-text-primary"><Check size={12} /></div>}
                                                     </button>
 
                                                     <button
@@ -640,14 +640,14 @@ export const StudioEditor = ({ allowedTabs }: StudioEditorProps) => {
                                                     >
                                                         <Clapperboard size={20} className="mx-auto mb-1.5" />
                                                         <div className="font-bold text-xs">MOV</div>
-                                                        {exportConfig.format === 'mov' && <div className="absolute top-1 right-1 text-black dark:text-white"><Check size={12} /></div>}
+                                                        {exportConfig.format === 'mov' && <div className="absolute top-1 right-1 text-app-light-text-primary dark:text-app-text-primary"><Check size={12} /></div>}
                                                     </button>
                                                 </div>
                                             </div>
 
                                             {/* Quality/Mode Selection */}
                                             <div className="space-y-2">
-                                                <label className="text-xs font-bold uppercase text-slate-500">Process</label>
+                                                <label className="text-xs font-bold uppercase text-app-light-text-secondary">Process</label>
                                                 <div className="grid grid-cols-2 gap-3">
                                                     <button
                                                         onClick={() => {
@@ -694,7 +694,7 @@ export const StudioEditor = ({ allowedTabs }: StudioEditorProps) => {
                                             <div className="pt-2">
                                                 <button
                                                     onClick={() => setShowExportAdvanced(!showExportAdvanced)}
-                                                    className="flex items-center gap-2 text-xs font-bold text-slate-500 hover:text-slate-900 dark:hover:text-white transition-colors"
+                                                    className="flex items-center gap-2 text-xs font-bold text-app-light-text-secondary hover:text-app-light-text-primary dark:hover:text-app-text-primary transition-colors"
                                                 >
                                                     {showExportAdvanced ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
                                                     <span>Advanced Options</span>
@@ -704,7 +704,7 @@ export const StudioEditor = ({ allowedTabs }: StudioEditorProps) => {
                                                 {showExportAdvanced && (
                                                     <div className="mt-4 space-y-4 animate-in slide-in-from-top-2 duration-200">
                                                         <div className="space-y-2">
-                                                            <label className="text-xs font-bold uppercase text-slate-500">Frame Rate</label>
+                                                            <label className="text-xs font-bold uppercase text-app-light-text-secondary">Frame Rate</label>
                                                             <div className="grid grid-cols-3 gap-2">
                                                                 {[24, 30, 60].map(fps => (
                                                                     <button
@@ -729,14 +729,14 @@ export const StudioEditor = ({ allowedTabs }: StudioEditorProps) => {
 
                                             <button
                                                 onClick={handleExport}
-                                                className="w-full py-4 mt-2 bg-black dark:bg-white hover:bg-slate-800 dark:hover:bg-slate-200 text-white dark:text-black rounded-xl font-bold text-base shadow-lg shadow-black/10 dark:shadow-white/10 active:scale-95 transition-all flex items-center justify-center gap-2"
+                                                className="w-full py-4 mt-2 bg-app-light-text-primary dark:bg-app-text-primary hover:bg-app-light-text-primary/90 dark:hover:bg-app-text-primary/90 text-app-light-bg dark:text-app-bg rounded-xl font-bold text-base shadow-lg shadow-black/10 dark:shadow-white/10 active:scale-95 transition-all flex items-center justify-center gap-2"
                                             >
                                                 <span>Export Video</span>
                                                 <Download size={18} />
                                             </button>
 
                                             <div className="text-center">
-                                                <p className="text-[10px] text-slate-400 dark:text-slate-500">
+                                                <p className="text-[10px] text-app-light-text-secondary/70">
                                                     By continuing, you likely agree to our <a href="#" className="underline">Terms</a>.
                                                 </p>
                                             </div>
