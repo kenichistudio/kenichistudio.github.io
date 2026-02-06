@@ -9,6 +9,9 @@ interface Props {
 const { title, showFooter = true, showAds = true, isApp = false } = Astro.props;
 import Footer from "@/layouts/components/Footer.astro";
 import VerticalAd from "@shared/ads/VerticalAd.astro";
+import SEOHead from "@/components/seo/SEOHead.astro";
+import PWAMeta from "@/components/pwa/PWAMeta.astro";
+import ThemeScript from "@/components/pwa/ThemeScript.astro";
 import "../styles/typography.css";
 import "../styles/inspector.css";
 ---
@@ -17,39 +20,18 @@ import "../styles/inspector.css";
 <html lang="en" class={isApp ? "h-full overflow-hidden" : ""}>
     <head>
         <meta charset="UTF-8" />
-        <meta name="description" content="Astro description" />
         <meta name="viewport" content="width=device-width" />
-        <link
-            rel="icon"
-            type="image/svg+xml"
-            href={`${import.meta.env.BASE_URL}favicon.svg`}
-        />
         <meta name="generator" content={Astro.generator} />
         <title>{title}</title>
 
-        <script is:inline>
-            // Check for saved theme or system preference
-            const theme = (() => {
-                if (
-                    typeof localStorage !== "undefined" &&
-                    localStorage.getItem("theme")
-                ) {
-                    return localStorage.getItem("theme");
-                }
-                if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
-                    return "dark";
-                }
-                return "light";
-            })();
+        <!-- SEO Meta Tags -->
+        <SEOHead title={title} />
 
-            if (theme === "light") {
-                document.documentElement.classList.remove("dark");
-            } else {
-                document.documentElement.classList.add("dark");
-            }
+        <!-- PWA Meta Tags -->
+        <PWAMeta />
 
-            window.localStorage.setItem("theme", theme);
-        </script>
+        <!-- Theme Initialization -->
+        <ThemeScript />
 
         <!-- Google AdSense -->
         <script
@@ -63,17 +45,6 @@ import "../styles/inspector.css";
         <link
             href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&family=Inter:wght@400;500;600;700&family=Kalam:wght@300;400;700&family=Outfit:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap"
             rel="stylesheet"
-        />
-
-        <!-- PWA Meta -->
-        <link
-            rel="manifest"
-            href={`${import.meta.env.BASE_URL}manifest.json`}
-        />
-        <meta name="theme-color" content="#3b82f6" />
-        <link
-            rel="apple-touch-icon"
-            href={`${import.meta.env.BASE_URL}pwa-icon-192.png`}
         />
     </head>
     <body
@@ -93,23 +64,6 @@ import "../styles/inspector.css";
             )
         }
 
-        <script define:vars={{ base: import.meta.env.BASE_URL }}>
-            if ("serviceWorker" in navigator) {
-                window.addEventListener("load", () => {
-                    navigator.serviceWorker
-                        .register(base + "sw.js")
-                        .then((registration) => {
-                            console.log("SW Registered: ", registration);
-                        })
-                        .catch((registrationError) => {
-                            console.log(
-                                "SW Registration Failed: ",
-                                registrationError,
-                            );
-                        });
-                });
-            }
-        </script>
         <slot />
         {showFooter && <Footer />}
     </body>

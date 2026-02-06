@@ -1,0 +1,42 @@
+---
+import { pwaConfig } from "@/config/pwa";
+---
+
+<!-- PWA Meta Tags -->
+<link
+    rel="manifest"
+    href={`${import.meta.env.BASE_URL}${pwaConfig.manifestPath}`}
+/>
+<meta name="theme-color" content={pwaConfig.themeColor} />
+<link
+    rel="apple-touch-icon"
+    href={`${import.meta.env.BASE_URL}${pwaConfig.icons.appleTouchIcon}`}
+/>
+
+<!-- Favicon -->
+<link
+    rel="icon"
+    type="image/svg+xml"
+    href={`${import.meta.env.BASE_URL}${pwaConfig.icons.favicon}`}
+/>
+
+<!-- Service Worker Registration -->
+<script
+    define:vars={{
+        base: import.meta.env.BASE_URL,
+        swPath: pwaConfig.serviceWorker.path,
+    }}
+>
+    if ("serviceWorker" in navigator) {
+        window.addEventListener("load", () => {
+            navigator.serviceWorker
+                .register(base + swPath)
+                .then((registration) => {
+                    console.log("SW Registered:", registration);
+                })
+                .catch((error) => {
+                    console.log("SW Registration Failed:", error);
+                });
+        });
+    }
+</script>

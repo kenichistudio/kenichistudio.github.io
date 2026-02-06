@@ -1,0 +1,8 @@
+---
+import { seoConfig } from "@/config/seo";
+
+const structuredData = JSON.stringify(seoConfig.schema);
+---
+
+<!-- Schema.org Structured Data -->
+<script type="application/ld+json" set:html={structuredData} />

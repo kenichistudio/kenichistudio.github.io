@@ -1,21 +1,30 @@
 {
-    "name": "Kinetix Studio",
-    "short_name": "Kinetix",
-    "description": "A powerful browser-based creative coding studio.",
+    "name": "Kenichi Studio - Animation & Content Creation",
+    "short_name": "Kenichi",
+    "description": "An advanced educational platform and content creation studio. Create animated diagrams, bar chart races, and export videos directly from your browser.",
     "start_url": "/",
     "display": "standalone",
     "background_color": "#111827",
     "theme_color": "#3b82f6",
+    "categories": [
+        "productivity",
+        "graphics",
+        "education",
+        "utilities"
+    ],
+    "orientation": "any",
     "icons": [
         {
-            "src": "/pwa-icon-192.png",
+            "src": "/assets/icons/icon-192.png",
             "sizes": "192x192",
-            "type": "image/png"
+            "type": "image/png",
+            "purpose": "any maskable"
         },
         {
-            "src": "/pwa-icon-512.png",
+            "src": "/assets/icons/icon-512.png",
             "sizes": "512x512",
-            "type": "image/png"
+            "type": "image/png",
+            "purpose": "any maskable"
         }
     ]
 }
