@@ -89,10 +89,11 @@ export const StudioProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     const setAspectRatio = useCallback((ratio: number) => {
         setAspectRatioState(ratio);
         const width = 1920;
-        const height = 1920 / ratio;
+        const height = Math.round(1920 / ratio);
         engine?.resize(width, height);
         setResolutionState({ width, height });
     }, [engine]);
+
 
     const setGuide = useCallback((guide: string) => {
         if (!engine) return;

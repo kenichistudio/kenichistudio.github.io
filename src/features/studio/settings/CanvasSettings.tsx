@@ -39,9 +39,10 @@ const PRESET_RESOLUTIONS = [
 const PRESET_DURATIONS = [5, 10, 15, 30, 60];
 
 const MobileCanvasSettings: React.FC<CanvasSettingsProps & { forceUpdate: any, setForceUpdate: any }> = ({ onResize, onUpdate, setForceUpdate }) => {
-    const { engine } = useStudio();
+    const { engine, setResolution } = useStudio();
     const [activeTab, setActiveTab] = useState<'ratio' | 'res' | 'bg' | 'duration'>('ratio');
     if (!engine) return null;
+
 
     return (
         <div className="flex flex-col h-full bg-white dark:bg-neutral-900">
@@ -76,8 +77,7 @@ const MobileCanvasSettings: React.FC<CanvasSettingsProps & { forceUpdate: any, s
                                                 h = Math.round(w / ratio.val);
                                             }
 
-                                            engine.resize(w, h);
-                                            onResize?.(w, h);
+                                            setResolution(w, h);
                                             setForceUpdate((n: number) => n + 1);
                                             onUpdate?.();
                                         }}
@@ -119,8 +119,7 @@ const MobileCanvasSettings: React.FC<CanvasSettingsProps & { forceUpdate: any, s
                                                 h = Math.round(w / currentRatio);
                                             }
 
-                                            engine.resize(w, h);
-                                            onResize?.(w, h);
+                                            setResolution(w, h);
                                             setForceUpdate((n: number) => n + 1);
                                             onUpdate?.();
                                         }}
@@ -278,7 +277,7 @@ const MobileCanvasSettings: React.FC<CanvasSettingsProps & { forceUpdate: any, s
 import { Smartphone, Monitor, Palette, Clock, Check } from "lucide-react";
 
 const DesktopCanvasSettings: React.FC<CanvasSettingsProps & { forceUpdate: any, setForceUpdate: any }> = ({ onResize, onUpdate, setForceUpdate }) => {
-    const { engine } = useStudio();
+    const { engine, setResolution } = useStudio();
     const [activeTab, setActiveTab] = useState<'ratio' | 'res' | 'bg' | 'duration'>('ratio');
 
     if (!engine) return null;
@@ -356,8 +355,7 @@ const DesktopCanvasSettings: React.FC<CanvasSettingsProps & { forceUpdate: any, 
                                                 h = Math.round(w / ratio.val);
                                             }
 
-                                            engine.resize(w, h);
-                                            onResize?.(w, h);
+                                            setResolution(w, h);
                                             setForceUpdate((n: number) => n + 1);
                                             onUpdate?.();
                                         }}
@@ -399,8 +397,7 @@ const DesktopCanvasSettings: React.FC<CanvasSettingsProps & { forceUpdate: any, 
                                                 h = Math.round(w / currentRatio);
                                             }
 
-                                            engine.resize(w, h);
-                                            onResize?.(w, h);
+                                            setResolution(w, h);
                                             setForceUpdate((n: number) => n + 1);
                                             onUpdate?.();
                                         }}
