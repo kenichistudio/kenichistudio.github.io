@@ -249,7 +249,7 @@ export const RightSidebar: React.FC<DesktopPropertiesPanelProps> = ({ onResize, 
                 <CodeBlockSettings
                     object={object}
                     variant="desktop"
-                    onUpdate={() => { }}
+                    onUpdate={() => engine?.render()}
                 />
             );
         }
@@ -259,7 +259,7 @@ export const RightSidebar: React.FC<DesktopPropertiesPanelProps> = ({ onResize, 
             return (
                 <ChartSettings
                     object={object}
-                    onUpdate={() => { }}
+                    onUpdate={() => engine?.render()}
                 />
             );
         }
@@ -268,7 +268,7 @@ export const RightSidebar: React.FC<DesktopPropertiesPanelProps> = ({ onResize, 
             return (
                 <BarChartRaceSettings
                     object={object}
-                    onUpdate={() => { }}
+                    onUpdate={() => engine?.render()}
                 />
             );
         }
@@ -278,7 +278,7 @@ export const RightSidebar: React.FC<DesktopPropertiesPanelProps> = ({ onResize, 
             return (
                 <SmartChartSettings
                     object={object}
-                    onUpdate={() => { }}
+                    onUpdate={() => engine?.render()}
                 />
             );
         }

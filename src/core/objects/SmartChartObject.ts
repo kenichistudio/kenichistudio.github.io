@@ -46,7 +46,7 @@ export interface RaceDataPoint {
     values: Record<string, number>;
 }
 
-export type SmartChartType = "bar" | "scatter" | "bubble" | "race";
+export type SmartChartType = "bar" | "scatter" | "bubble" | "race" | "split";
 
 export class SmartChartObject extends KinetixObject {
     // Data Source
@@ -58,10 +58,20 @@ export class SmartChartObject extends KinetixObject {
     public chartType: SmartChartType = "bar";
 
     // Configuration
-    public padding = { top: 40, right: 40, bottom: 60, left: 60 };
+    // Configuration
+    public padding = { top: 60, right: 40, bottom: 60, left: 60 }; // Balanced padding
     public barGap = 0.2; // 20% gap
     public axisColor = "#666";
+    public gridColor = "#333";
     public fontFamily = "Inter";
+    public cornerRadius = 4;
+
+    // Toggles
+    public showGrid = true;
+    public showAxes = true;
+    public showLabels = true;
+    public showValues = true;
+    public labelPosition: "inside" | "outside" | "axis" = "axis";
 
     constructor(id: string) {
         super(id, "SmartChart");
@@ -211,6 +221,52 @@ export class SmartChartObject extends KinetixObject {
         if (this.chartType === "bar") this.layoutBarChart(drawW, drawH, startX, startY);
         else if (this.chartType === "scatter") this.layoutScatterPlot(drawW, drawH, startX, startY);
         else if (this.chartType === "race") this.layoutBarRace(drawW, drawH, startX, startY);
+        else if (this.chartType === "split") this.layoutSplit(drawW, drawH, startX, startY);
+    }
+
+    private layoutSplit(drawW: number, drawH: number, startX: number, startY: number) {
+        // Group nodes by 'group' property
+        const groups: Record<string, VisualNode[]> = {};
+        const activeNodes = this.nodes.filter(n => n.target.opacity > 0);
+
+        activeNodes.forEach(node => {
+            const g = node.group || "Other";
+            if (!groups[g]) groups[g] = [];
+            groups[g].push(node);
+        });
+
+        const groupKeys = Object.keys(groups).sort();
+        const groupCount = groupKeys.length;
+        if (groupCount === 0) return;
+
+        // Split width into columns
+        const colWidth = drawW / groupCount;
+
+        groupKeys.forEach((key, colIndex) => {
+            const groupNodes = groups[key];
+            const colX = startX + (colIndex * colWidth);
+            const centerX = colX + colWidth / 2;
+
+            // Stack vertically in each column (simple stack for now)
+            // Or bubble pack? Let's do bubble pack like Beeswarm
+
+            // Simple Vertical Stack for MVP
+            const nodeHeight = 30;
+            const totalHeight = groupNodes.length * (nodeHeight + 5);
+            let currentY = startY + (drawH - totalHeight) / 2; // Center vertically
+
+            groupNodes.forEach(node => {
+                node.target.x = centerX - 15;
+                node.target.y = currentY;
+                node.target.width = 30;
+                node.target.height = 30;
+                node.target.shape = "circle";
+                node.target.rotation = 0;
+                node.target.opacity = 1;
+
+                currentY += nodeHeight + 5;
+            });
+        });
     }
 
     private layoutBarRace(drawW: number, drawH: number, startX: number, startY: number) {
