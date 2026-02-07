@@ -8,6 +8,7 @@ import { TextSettings } from "../../settings/TextSettings";
 import { CodeBlockSettings } from "../../settings/CodeBlockSettings";
 import { ChartSettings } from "../../settings/ChartSettings";
 import { BarChartRaceSettings } from "../../settings/BarChartRaceSettings";
+import { SmartChartSettings } from "../../settings/SmartChartSettings";
 
 import {
     PropertySection,
@@ -55,6 +56,7 @@ import { BarChartRaceObject } from "@core/objects/BarChartRaceObject";
 import { CharacterObject } from "@core/objects/CharacterObject";
 import { LogoCharacterObject } from "@core/objects/LogoCharacterObject";
 import { ParticleTextObject } from "@core/objects/ParticleTextObject";
+import { SmartChartObject } from "@core/objects/SmartChartObject";
 
 import { useStudio } from "../../context/StudioContext";
 
@@ -272,6 +274,15 @@ export const RightSidebar: React.FC<DesktopPropertiesPanelProps> = ({ onResize, 
         }
 
         // Character
+        if (object instanceof SmartChartObject) {
+            return (
+                <SmartChartSettings
+                    object={object}
+                    onUpdate={() => { }}
+                />
+            );
+        }
+
         if (object instanceof CharacterObject) {
             return (
                 <PropertySection title="Character" defaultOpen={true}>

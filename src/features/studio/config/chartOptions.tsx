@@ -1,9 +1,10 @@
 import { Engine } from "@core/Core";
 import { ChartObject } from "@core/objects/ChartObject";
 import { BarChartRaceObject } from "@core/objects/BarChartRaceObject";
-import { RectangleHorizontal, Smartphone, Square, BarChart3, TrendingUp, AreaChart, ScatterChart, PieChart as PieIcon, Circle, GripHorizontal, Activity } from "lucide-react";
+import { SmartChartObject } from "@core/objects/SmartChartObject";
+import { RectangleHorizontal, Smartphone, Square, BarChart3, TrendingUp, AreaChart, ScatterChart, PieChart as PieIcon, Circle, GripHorizontal, Activity, Sparkles } from "lucide-react";
 
-export type ChartType = "bar" | "line" | "area" | "scatter" | "pie" | "donut" | "race";
+export type ChartType = "bar" | "line" | "area" | "scatter" | "pie" | "donut" | "race" | "smart";
 
 export interface ChartOption {
     type: ChartType;
@@ -21,6 +22,7 @@ export const CHART_TYPES: ChartOption[] = [
     { type: "pie", label: "Pie Chart", icon: PieIcon, colorClass: "text-pink-500", description: "Show proportions" },
     { type: "donut", label: "Donut Chart", icon: Circle, colorClass: "text-cyan-500", description: "Show proportions with style" },
     { type: "race", label: "Bar Race", icon: Activity, colorClass: "text-indigo-500", description: "Animated ranking race" },
+    { type: "smart", label: "Smart Chart", icon: Sparkles, colorClass: "text-amber-500", description: "Morphing Data Viz" },
 ];
 
 const getNextName = (engine: Engine, base: string) => {
@@ -58,6 +60,17 @@ export const createChart = (engine: Engine, type: ChartType) => {
         race.x = engine.scene.width / 2 - 300;
         race.y = engine.scene.height / 2 - 200;
         engine.scene.add(race);
+        engine.render();
+        return;
+    }
+
+    if (type === "smart") {
+        const name = getNextName(engine, "Smart Chart");
+        const chart = new SmartChartObject(`smart-${Date.now()}`);
+        chart.name = name;
+        chart.x = engine.scene.width / 2 - 300;
+        chart.y = engine.scene.height / 2 - 200;
+        engine.scene.add(chart);
         engine.render();
         return;
     }

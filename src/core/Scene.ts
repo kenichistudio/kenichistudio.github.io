@@ -6,12 +6,14 @@ import { ChartRenderer } from "./renderers/ChartRenderer";
 import { BarChartRaceRenderer } from "./renderers/BarChartRaceRenderer";
 import { CodeBlockRenderer } from "./renderers/CodeBlockRenderer";
 import { ParticleTextRenderer } from "./renderers/ParticleTextRenderer";
+import { SmartChartRenderer } from "./renderers/SmartChartRenderer";
 
 import { TextObject } from "./objects/TextObject";
 import { ImageObject } from "./objects/ImageObject";
 import { ChartObject } from "./objects/ChartObject";
 import { BarChartRaceObject } from "./objects/BarChartRaceObject";
 import { CodeBlockObject } from "./objects/CodeBlockObject";
+import { SmartChartObject } from "./objects/SmartChartObject";
 
 // Register Renderers
 renderSystem.register('TextObject', new TextRenderer());
@@ -20,6 +22,7 @@ renderSystem.register('ChartObject', new ChartRenderer());
 renderSystem.register('BarChartRaceObject', new BarChartRaceRenderer());
 renderSystem.register('CodeBlockObject', new CodeBlockRenderer());
 renderSystem.register('ParticleTextObject', new ParticleTextRenderer());
+renderSystem.register('SmartChartObject', new SmartChartRenderer());
 
 export type GuideType = 'none' | 'center' | 'thirds' | 'golden';
 
