@@ -16,9 +16,9 @@ export class LogoCharacterObject extends KinetixObject {
     circleColor: string = "#fca5a5"; // Peach/Orange
     textColor: string = "#1e293b";
 
-    private _scene: Scene | null = null;
-    private _particles: Particle[] = [];
-    private _lastText: string = "";
+    public _scene: Scene | null = null;
+    public _particles: Particle[] = [];
+    public _lastText: string = "";
 
     // Performance: Don't update particles every frame if idle? 
     // Ideally update always for smooth interaction

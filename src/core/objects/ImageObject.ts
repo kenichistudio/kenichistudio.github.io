@@ -2,8 +2,8 @@ import { KinetixObject } from "../Object";
 
 export class ImageObject extends KinetixObject {
     src: string;
-    private _image: HTMLImageElement | null = null;
-    private _loaded = false;
+    public image: HTMLImageElement | null = null;
+    public loaded = false;
 
     constructor(id: string, src: string) {
         super(id, "Image");
@@ -13,10 +13,10 @@ export class ImageObject extends KinetixObject {
 
     loadImage() {
         if (typeof window === 'undefined') return;
-        this._image = new Image();
-        this._image.src = this.src;
-        this._image.onload = () => {
-            this._loaded = true;
+        this.image = new Image();
+        this.image.src = this.src;
+        this.image.onload = () => {
+            this.loaded = true;
             // Auto size if new?
             if (this.width === 100 && this.height === 100) {
                 // Standardize roughly
@@ -25,15 +25,8 @@ export class ImageObject extends KinetixObject {
     }
 
     draw(ctx: CanvasRenderingContext2D, time: number) {
-        if (this._loaded && this._image) {
-            ctx.drawImage(this._image, this.x, this.y, this.width, this.height);
-        } else {
-            // Placeholder
-            ctx.fillStyle = "#334155";
-            ctx.fillRect(this.x, this.y, this.width, this.height);
-            ctx.fillStyle = "#94a3b8";
-            ctx.fillText("Loading...", this.x + 10, this.y + 20);
-        }
+        // Deprecated: Rendering handled by ImageRenderer via RenderSystem.
+        console.warn("ImageObject.draw() called directly. This method is deprecated. Use RenderSystem.");
     }
 
     clone(): ImageObject {

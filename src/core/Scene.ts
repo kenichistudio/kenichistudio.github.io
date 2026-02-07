@@ -1,4 +1,25 @@
 import type { KinetixObject } from "./Object";
+import { renderSystem } from "./systems/RenderSystem";
+import { TextRenderer } from "./renderers/TextRenderer";
+import { ImageRenderer } from "./renderers/ImageRenderer";
+import { ChartRenderer } from "./renderers/ChartRenderer";
+import { BarChartRaceRenderer } from "./renderers/BarChartRaceRenderer";
+import { CodeBlockRenderer } from "./renderers/CodeBlockRenderer";
+import { ParticleTextRenderer } from "./renderers/ParticleTextRenderer";
+
+import { TextObject } from "./objects/TextObject";
+import { ImageObject } from "./objects/ImageObject";
+import { ChartObject } from "./objects/ChartObject";
+import { BarChartRaceObject } from "./objects/BarChartRaceObject";
+import { CodeBlockObject } from "./objects/CodeBlockObject";
+
+// Register Renderers
+renderSystem.register('TextObject', new TextRenderer());
+renderSystem.register('ImageObject', new ImageRenderer());
+renderSystem.register('ChartObject', new ChartRenderer());
+renderSystem.register('BarChartRaceObject', new BarChartRaceRenderer());
+renderSystem.register('CodeBlockObject', new CodeBlockRenderer());
+renderSystem.register('ParticleTextObject', new ParticleTextRenderer());
 
 export type GuideType = 'none' | 'center' | 'thirds' | 'golden';
 
@@ -55,20 +76,8 @@ export class Scene {
         ctx.fillStyle = this.backgroundColor;
         ctx.fillRect(0, 0, this.width, this.height);
 
-        // Render Objects
-        for (const obj of this.objects) {
-            if (!obj.visible) continue;
-
-            ctx.save();
-            // Apply global object transform? 
-            // Usually objects handle their own drawing relative to x,y
-            // But we could apply scene camera transforms here later
-
-            ctx.globalAlpha = obj.opacity;
-            obj.draw(ctx, time, totalDuration);
-
-            ctx.restore();
-        }
+        // Render Objects via System
+        renderSystem.render(ctx, this, time, totalDuration || 0);
 
         // Render Guides
         if (this.guideType !== 'none') {

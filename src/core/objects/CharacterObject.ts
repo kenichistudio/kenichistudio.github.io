@@ -14,7 +14,7 @@ export class CharacterObject extends KinetixObject {
     accessory: "none" | "glasses" | "hat" = "none";
 
     // Internal animation state
-    private _animOffset = 0;
+    public animOffset = 0;
 
     constructor(id: string) {
         super(id, "Character");
