@@ -13,6 +13,9 @@ export class SmartChartRenderer implements IRenderer<SmartChartObject> {
 
         const lerpFactor = 0.15; // Speed of morphing
 
+        // 1.5 Update Object Logic (Race Data Interpolation)
+        object.update(time);
+
         // 2. Interpolate & Draw Nodes
         object.nodes.forEach(node => {
             // Update Current State -> Target State
