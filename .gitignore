@@ -35,3 +35,10 @@ task.md
 # Keep ads.txt
 !public/ads.txt
 !public/robots.txt
+
+# Playwright
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
+/playwright/.auth/
