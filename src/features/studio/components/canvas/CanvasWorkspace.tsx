@@ -2,6 +2,7 @@ import React, { forwardRef } from "react";
 import { Play, Pause, Maximize, Minimize } from "lucide-react";
 
 import { useStudio } from "../../context/StudioContext";
+import { useStudioStore } from "../../store/useStudioStore";
 
 interface CanvasWorkspaceProps {
     hideOverlayControls?: boolean;
@@ -10,12 +11,12 @@ interface CanvasWorkspaceProps {
 export const CanvasWorkspace = forwardRef<HTMLCanvasElement, CanvasWorkspaceProps>((props, ref) => {
     const {
         aspectRatio,
-        isPlaying,
         togglePlay,
         isFullscreen,
         toggleFullscreen,
         activeGuide
     } = useStudio();
+    const isPlaying = useStudioStore(s => s.isPlaying);
 
     const renderGuideOverlay = () => {
         switch (activeGuide) {

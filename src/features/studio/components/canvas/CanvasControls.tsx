@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Play, Pause, Maximize, Settings, Smartphone, RectangleHorizontal, Square, Check, Grid3x3, Ban, Crosshair, ScanLine, Baseline, SkipBack } from "lucide-react";
 
 import { useStudio } from "../../context/StudioContext";
+import { useStudioStore } from "../../store/useStudioStore";
 
 interface CanvasControlsProps {
     aspectRatio: number;
@@ -18,7 +19,10 @@ export const CanvasControls: React.FC<CanvasControlsProps> = ({
     activeGuide,
     onGuideChange,
 }) => {
-    const { currentTime, totalDuration, isPlaying, togglePlay, engine, toggleFullscreen } = useStudio();
+    const { togglePlay, engine, toggleFullscreen } = useStudio();
+    const currentTime = useStudioStore(s => s.currentTime);
+    const totalDuration = useStudioStore(s => s.totalDuration);
+    const isPlaying = useStudioStore(s => s.isPlaying);
     const onSeek = (time: number) => engine?.seek(time);
     const [showRatioMenu, setShowRatioMenu] = useState(false);
     const [showGuideMenu, setShowGuideMenu] = useState(false);

@@ -47,9 +47,9 @@ const StudioEditorContent = ({ allowedTabs }: StudioEditorProps) => {
     const {
         engine, setEngine,
         selectedId, selectObject,
-        currentTime, isPlaying, togglePlay,
+        togglePlay,
         resolution, setResolution,
-        totalDuration, activeGuide: contextGuide, setGuide: setContextGuide,
+        activeGuide: contextGuide, setGuide: setContextGuide,
         isFullscreen, toggleFullscreen,
         aspectRatio, setAspectRatio
     } = useStudio();
@@ -66,6 +66,7 @@ const StudioEditorContent = ({ allowedTabs }: StudioEditorProps) => {
     const [activeBottomTab, setActiveBottomTab] = useState<BottomDockTab>(null);
     const [selectedObjectType, setSelectedObjectType] = useState<ObjectType>(null);
     const [showExportAdvanced, setShowExportAdvanced] = useState(false);
+    const [showDebug, setShowDebug] = useState(false);
 
     useEffect(() => {
         if (selectedId && engine) {
@@ -206,11 +207,41 @@ const StudioEditorContent = ({ allowedTabs }: StudioEditorProps) => {
 
                 <div className="flex-1 flex flex-col min-w-0 lg:min-w-0 bg-app-light-surface dark:bg-app-bg relative overflow-y-auto lg:overflow-hidden pb-32 lg:pb-0">
                     <div ref={mainCanvasContainerRef} className="relative z-40 lg:relative flex flex-col w-full min-w-0 min-h-0 bg-app-light-surface dark:bg-app-bg border-b border-app-light-border dark:border-app-border lg:border-none lg:flex-1">
-                        <div className="w-full h-auto max-h-[55vh] lg:max-h-none lg:flex-1 lg:min-h-0 flex items-center justify-center bg-slate-900/5 dark:bg-black/20 p-0 mt-8 mb-4">
+                        <div className="w-full h-auto max-h-[55vh] lg:max-h-none lg:flex-1 lg:min-h-0 flex items-center justify-center bg-slate-900/5 dark:bg-black/20 p-0 mt-8 mb-4 relative group">
                             <CanvasWorkspace
                                 ref={canvasRef}
                                 hideOverlayControls={true}
                             />
+
+                            {showDebug && engine && (
+                                <div className="absolute inset-0 pointer-events-none border-2 border-dashed border-red-500/20 z-50">
+                                    {engine.scene.objects.map(obj => (
+                                        <div
+                                            key={obj.id}
+                                            className="absolute border border-red-500/40 bg-red-500/5 transition-opacity"
+                                            style={{
+                                                left: obj.x,
+                                                top: obj.y,
+                                                width: obj.width,
+                                                height: obj.height,
+                                                transform: `rotate(${obj.rotation || 0}deg)`
+                                            }}
+                                        >
+                                            <div className="absolute -top-5 left-0 bg-red-500 text-white text-[8px] px-1 font-mono uppercase leading-tight">
+                                                {obj.name}: {obj.id.slice(0, 4)}... ({Math.round(obj.x)}, {Math.round(obj.y)})
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
+
+                            <button
+                                onClick={() => setShowDebug(!showDebug)}
+                                className={`absolute bottom-4 right-4 p-2 rounded-lg backdrop-blur-md transition-all z-[60] ${showDebug ? "bg-red-500 text-white" : "bg-white/10 text-white/40 hover:bg-white/20"}`}
+                                title="Toggle Debug View"
+                            >
+                                <AlertCircle size={14} />
+                            </button>
                         </div>
 
                         <CanvasControls

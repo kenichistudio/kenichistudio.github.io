@@ -3,12 +3,16 @@ import { Play, Pause, SkipBack, Layers, Music, Type, ZoomIn, ZoomOut, Scissors }
 import { useTimelineInteraction } from "../../hooks/useTimelineInteraction";
 
 import { useStudio } from "../../context/StudioContext";
+import { useStudioStore } from "../../store/useStudioStore";
 
 interface TimelineProps {
 }
 
 export const TimelineDesktop = () => {
-    const { currentTime, totalDuration, isPlaying, togglePlay, engine } = useStudio();
+    const { togglePlay, engine } = useStudio();
+    const currentTime = useStudioStore(s => s.currentTime);
+    const totalDuration = useStudioStore(s => s.totalDuration);
+    const isPlaying = useStudioStore(s => s.isPlaying);
     const onSeek = (time: number) => engine?.seek(time);
     const {
         trackRef,

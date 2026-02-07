@@ -1,12 +1,10 @@
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import { Engine } from '@core/Core';
+import { useStudioStore } from '../store/useStudioStore';
 
 interface StudioContextType {
     engine: Engine | null;
     selectedId: string | null;
-    currentTime: number;
-    totalDuration: number;
-    isPlaying: boolean;
     resolution: { width: number; height: number };
     activeGuide: string;
     isFullscreen: boolean;
@@ -28,9 +26,6 @@ const StudioContext = createContext<StudioContextType | undefined>(undefined);
 export const StudioProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const [engine, setEngine] = useState<Engine | null>(null);
     const [selectedId, setSelectedId] = useState<string | null>(null);
-    const [currentTime, setCurrentTime] = useState(0);
-    const [totalDuration, setTotalDuration] = useState(5000);
-    const [isPlaying, setIsPlaying] = useState(false);
     const [resolution, setResolutionState] = useState({ width: 1920, height: 1080 });
     const [activeGuide, setActiveGuide] = useState("none");
     const [isFullscreen, setIsFullscreen] = useState(false);
@@ -45,18 +40,20 @@ export const StudioProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     useEffect(() => {
         if (!engine) return;
 
-        // Subscribe to engine events
-        const unsubTime = engine.on('timeUpdate', (t: number) => setCurrentTime(t));
-        const unsubPlay = engine.on('playStateChange', (p: boolean) => setIsPlaying(p));
+        // Subscribe to engine events - Direct to Store (Headless)
+        const unsubTime = engine.on('timeUpdate', (t: number) => useStudioStore.getState().setTime(t));
+        const unsubPlay = engine.on('playStateChange', (p: boolean) => useStudioStore.getState().setIsPlaying(p));
+        const unsubDuration = engine.on('durationChange', (d: number) => useStudioStore.getState().setDuration(d));
+
         const unsubSelect = engine.on('selectionChange', (id: string | null) => setSelectedId(id));
-        const unsubDuration = engine.on('durationChange', (d: number) => setTotalDuration(d));
         const unsubResize = engine.on('resize', (w: number, h: number) => setResolutionState({ width: w, height: h }));
 
         // Initial sync
-        setCurrentTime(engine.currentTime);
-        setIsPlaying(engine.isPlaying);
+        useStudioStore.getState().setTime(engine.currentTime);
+        useStudioStore.getState().setIsPlaying(engine.isPlaying);
+        useStudioStore.getState().setDuration(engine.totalDuration);
+
         setSelectedId(engine.selectedObjectId);
-        setTotalDuration(engine.totalDuration);
         setResolutionState({ width: engine.canvas.width, height: engine.canvas.height });
         setActiveGuide(engine.scene.guideType || "none");
 
@@ -119,9 +116,6 @@ export const StudioProvider: React.FC<{ children: React.ReactNode }> = ({ childr
         engine,
         setEngine,
         selectedId,
-        currentTime,
-        isPlaying,
-        totalDuration,
         resolution,
         activeGuide,
         isFullscreen,
