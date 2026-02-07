@@ -19,7 +19,7 @@ export class SmartChartRenderer implements IRenderer<SmartChartObject> {
         // 3. Draw Nodes
         object.nodes.forEach(node => {
             // Physics / Interpolation
-            this.lerpNode(node, lerpFactor);
+            this.lerpNode(node, object);
 
             if (node.opacity < 0.01 && node.target.opacity <= 0.01) return;
 
@@ -129,9 +129,12 @@ export class SmartChartRenderer implements IRenderer<SmartChartObject> {
         }
 
         // Color Legend (for Split/Grouped data)
-        if (object.chartType === "split" || object.chartType === "scatter" || object.chartType === "race") {
+        if (["split", "scatter", "race", "parliament", "dotplot"].includes(object.chartType)) {
             this.drawLegend(ctx, object);
         }
+
+        // 4. Annotations
+        this.drawAnnotations(ctx, object);
     }
 
     private drawLegend(ctx: CanvasRenderingContext2D, object: SmartChartObject) {
@@ -235,7 +238,7 @@ export class SmartChartRenderer implements IRenderer<SmartChartObject> {
                 }
             }
         }
-        else if (object.chartType === "scatter" || object.chartType === "split") {
+        else if (object.chartType === "scatter" || object.chartType === "split" || object.chartType === "parliament" || object.chartType === "dotplot") {
             // Center label
             ctx.fillStyle = "#fff";
             ctx.textAlign = "center";
@@ -246,9 +249,38 @@ export class SmartChartRenderer implements IRenderer<SmartChartObject> {
         }
     }
 
-    private lerpNode(node: VisualNode, factor: number) {
-        // Simple lerp with threshold snap
-        const l = (a: number, b: number) => Math.abs(b - a) < 0.01 ? b : a + (b - a) * factor;
+    private lerpNode(node: VisualNode, object: SmartChartObject) {
+        // Map Duration to Lerp Factor (Approx)
+        // 1000ms ~ 0.1 factor at 60fps? 
+        // Formula: factor = 1 - pow(remaining, dt)? 
+        // Simple mapping: 
+        // 0ms -> 1.0 (Instant)
+        // 3000ms -> 0.02 (Slow)
+        let speed = 0.1;
+        if (object.animationDuration !== undefined) {
+            const d = Math.max(100, object.animationDuration);
+            speed = 100 / d; // e.g. 100/1000 = 0.1. 100/3000 = 0.033
+        }
+
+        let factor = speed;
+
+        // Easing Modifiers
+        if (object.animationEasing === "elastic") {
+            // Elasticity check: if close to target, snap? 
+            // Real elastic needs velocity. 
+            // Fake elastic: overshoot?
+            // For now, just make it faster/springier
+            factor = speed * 1.5;
+        } else if (object.animationEasing === "linear") {
+            // Linear is hard with lerp. Just standard.
+        }
+
+        // Apply
+        const l = (a: number, b: number) => {
+            const diff = b - a;
+            if (Math.abs(diff) < 0.1) return b;
+            return a + diff * factor;
+        };
 
         node.x = l(node.x, node.target.x);
         node.y = l(node.y, node.target.y);
@@ -257,5 +289,88 @@ export class SmartChartRenderer implements IRenderer<SmartChartObject> {
         node.rotation = l(node.rotation, node.target.rotation);
         node.opacity = l(node.opacity, node.target.opacity);
         node.color = lerpColor(node.color, node.target.color, factor);
+    }
+
+    private drawAnnotations(ctx: CanvasRenderingContext2D, object: SmartChartObject) {
+        if (!object.annotations || object.annotations.length === 0) return;
+
+        ctx.save();
+        ctx.font = `bold 14px ${object.fontFamily}`;
+
+        object.annotations.forEach(note => {
+            let tx = note.x || 0;
+            let ty = note.y || 0;
+
+            // If attached to a node, calculate position
+            if (note.targetNodeId) {
+                const node = object.nodes.find(n => n.id === note.targetNodeId);
+                if (node && node.opacity > 0.1) {
+                    tx = node.x + node.width / 2;
+                    ty = node.y + node.height / 2;
+                } else {
+                    // Node not found or invisible, skip? 
+                    // Or keep sticky at last known?
+                    // For now, skip
+                    if (!note.x && !note.y) return;
+                }
+            }
+
+            // Annotation Offset (Where the text bubble lives relative to target)
+            // Ideally customizable. For now, fixed offset top-right or based on position.
+            // Let's create a "Visual Offset" based on chart type or simple defaults.
+            // Default: Up and Right
+            const bubbleX = tx + 30;
+            const bubbleY = ty - 40;
+
+            // Draw Connector
+            ctx.beginPath();
+            ctx.strokeStyle = object.axisColor || "#666";
+            ctx.lineWidth = 1;
+            ctx.moveTo(tx, ty);
+            ctx.lineTo(bubbleX, bubbleY);
+            ctx.stroke();
+
+            // Draw Connector Dot at target
+            ctx.beginPath();
+            ctx.fillStyle = object.axisColor || "#666";
+            ctx.arc(tx, ty, 3, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Measure Text
+            const metrics = ctx.measureText(note.text);
+            const p = 8; // padding
+            const textW = metrics.width;
+            const textH = 14;
+
+            // Draw Bubble Background
+            ctx.fillStyle = "#ffffff";
+            ctx.shadowColor = "rgba(0,0,0,0.1)";
+            ctx.shadowBlur = 4;
+            ctx.shadowOffsetY = 2;
+
+            // Bubble Rect (Centered on bubbleX, bubbleY approx)
+            // Let's put bubble start at bubbleX?
+            const bx = bubbleX;
+            const by = bubbleY - textH - p;
+
+            ctx.beginPath();
+            if (typeof ctx.roundRect === 'function') {
+                ctx.roundRect(bx, by, textW + p * 2, textH + p * 2, 4);
+            } else {
+                ctx.rect(bx, by, textW + p * 2, textH + p * 2);
+            }
+            ctx.fill();
+
+            // Remove shadow for text
+            ctx.shadowColor = "transparent";
+
+            // Draw Text
+            ctx.fillStyle = "#000"; // Always black text for now? Or contrast.
+            ctx.textAlign = "left";
+            ctx.textBaseline = "top";
+            ctx.fillText(note.text, bx + p, by + p);
+        });
+
+        ctx.restore();
     }
 }

@@ -46,7 +46,20 @@ export interface RaceDataPoint {
     values: Record<string, number>;
 }
 
-export type SmartChartType = "bar" | "scatter" | "bubble" | "race" | "split";
+import { SMART_CHART_PALETTES } from "./SmartChartDesignSystem";
+
+export type SmartChartType = "bar" | "scatter" | "bubble" | "race" | "split" | "parliament" | "dotplot";
+
+export interface Annotation {
+    id: string;
+    text: string;
+    targetNodeId?: string; // If set, follows the node
+    x?: number; // fallback or absolute if no targetNodeId
+    y?: number;
+    startTime?: number; // Show from this time
+    endTime?: number; // Hide after this time
+    color?: string;
+}
 
 export class SmartChartObject extends KinetixObject {
     // Data Source
@@ -55,6 +68,7 @@ export class SmartChartObject extends KinetixObject {
 
     // Visual State
     public nodes: VisualNode[] = [];
+    public annotations: Annotation[] = []; // Storytelling layers
     public chartType: SmartChartType = "bar";
     public currentLabel: string = ""; // For Race Chart Background (e.g. "2005")
 
@@ -65,12 +79,20 @@ export class SmartChartObject extends KinetixObject {
     public gridColor = "#333";
     public fontFamily = "Inter";
     public cornerRadius = 4;
+    public colorPaletteId: string = "default"; // ID from SMART_CHART_PALETTES
+
+    // Animation Settings
+    public animationDuration: number = 800; // ms
+    public animationStagger: number = 5; // ms per item index
+    public animationEasing: 'linear' | 'elastic' | 'cubic' = 'cubic';
 
     // Toggles
     public showGrid = true;
     public showAxes = true;
     public showLabels = true;
     public showValues = true;
+    public showTicker = false; // For Bar Race year ticker
+    public sorted = false; // For Bar Race / Dot Plot sorting
     public labelPosition: "inside" | "outside" | "axis" = "axis";
 
     constructor(id: string) {
@@ -168,6 +190,37 @@ export class SmartChartObject extends KinetixObject {
         this.triggerTransition();
     }
 
+    applyPalette(id: string) {
+        this.colorPaletteId = id;
+        const palette = SMART_CHART_PALETTES.find(p => p.id === id) || SMART_CHART_PALETTES[0];
+        const colors = palette.colors;
+
+        // Group mapping
+        const groupColorMap: Record<string, string> = {};
+        let groupIndex = 0;
+
+        this.nodes.forEach((node, i) => {
+            let color = colors[i % colors.length];
+
+            if (node.group) {
+                if (!groupColorMap[node.group]) {
+                    groupColorMap[node.group] = colors[groupIndex % colors.length];
+                    groupIndex++;
+                }
+                color = groupColorMap[node.group];
+            }
+
+            node.target.color = color;
+            // Also update data source to persist?
+            // node.color -> this.data? 
+            // Ideally visual state is derived. 
+            // But lets keep it simple.
+        });
+
+        this.triggerTransition();
+    }
+
+
     /**
      * Ensures every data point has a corresponding VisualNode.
      * Handles Enter/Exit logic by creating/flagging nodes.
@@ -245,6 +298,141 @@ export class SmartChartObject extends KinetixObject {
         else if (this.chartType === "scatter") this.layoutScatterPlot(drawW, drawH, startX, startY);
         else if (this.chartType === "race") this.layoutBarRace(drawW, drawH, startX, startY);
         else if (this.chartType === "split") this.layoutSplit(drawW, drawH, startX, startY);
+        else if (this.chartType === "parliament") this.layoutParliament(drawW, drawH, startX, startY);
+        else if (this.chartType === "dotplot") this.layoutDotPlot(drawW, drawH, startX, startY);
+    }
+
+    private layoutParliament(drawW: number, drawH: number, startX: number, startY: number) {
+        const activeNodes = this.nodes.filter(n => n.target.opacity > 0);
+        // Sort by group then value
+        activeNodes.sort((a, b) => (a.group || "").localeCompare(b.group || "") || b.value - a.value);
+
+        const cx = startX + drawW / 2;
+        const cy = startY + drawH; // Bottom center
+
+        // Approx radius
+        const maxR = Math.min(drawW / 2, drawH);
+        const minR = maxR * 0.3; // Inner hole
+
+        // Calculate ideal node size -> Area = (PI*R^2 - PI*r^2)/2
+        // TotalArea = N * PI * (rad/2)^2
+        // rad approx sqrt(TotalAvailableArea / N)
+        const totalArea = (Math.PI * maxR * maxR - Math.PI * minR * minR) / 2;
+        const nodeArea = totalArea / (activeNodes.length || 1);
+        const nodeRadius = Math.sqrt(nodeArea / Math.PI) * 0.8; // gap factor
+        const nodeSize = nodeRadius * 2;
+
+        let currentCount = 0;
+        const totalNodes = activeNodes.length;
+
+        // Simple ring packing
+        // We can just spiral out?
+        // Or row by row
+        const rows = 10; // Auto-calculate?
+        const step = (maxR - minR) / rows;
+
+        // Better: Archimedean spiral-ish but constrained to semi-circle?
+        // Let's use simple concentric arcs
+
+        // Re-calculate simplistic layout:
+        // iterate rows from inner to outer
+        let r = minR;
+        let nodeIdx = 0;
+
+        while (nodeIdx < totalNodes && r < maxR * 1.5) {
+            // How many fit in this arc?
+            const arcProb = Math.PI * r;
+            const countInRow = Math.floor(arcProb / (nodeSize * 1.1));
+            const thetaStep = Math.PI / Math.max(1, countInRow - 1);
+
+            for (let i = 0; i < countInRow && nodeIdx < totalNodes; i++) {
+                const node = activeNodes[nodeIdx];
+                const theta = Math.PI + (i * thetaStep); // Start at PI (left) go to 2PI (right)? No, 180 to 360? 
+                // Canvas arc: 0 is right, PI is left. 
+                // We want PI (left) to 2PI (right) -> Upper Semi? Or Bottom?
+                // Visual usually is Bottom-Up -> PI to 2PI is bottom half.
+                // Parliament is usually inverted U -> PI (left) -> 0 (right) via Top.
+                // Let's do PI to 0 (Counter Clockwise methods usually).
+
+                // Let's go PI to 2PI (Bottom) if cy is Top?
+                // Code above: cy = startY + drawH (Bottom).
+                // So we want Upper arc: PI (left) -> 1.5PI (top) -> 2PI (right) or 0? 
+                // Math.cos(PI) = -1, Math.sin(PI) = 0
+                // We want to fill from Left to Right.
+
+                const angle = Math.PI + (Math.PI * (i / Math.max(1, countInRow - 1)));
+
+                // Wait, Parliament is usually an Arch.
+                // Left (-1, 0) to Right (1, 0) going UP.
+                // Angle PI to 0. 
+
+                const actualAngle = Math.PI - (Math.PI * i / Math.max(1, countInRow - 1)); // Go backwards from PI to 0
+
+                // Let's try:
+                // i=0 -> PI
+                // i=max -> 0
+
+                const finalAngle = Math.PI - (Math.PI * (i / Math.max(1, countInRow - 1)));
+
+                node.target.x = cx + Math.cos(finalAngle) * r;
+                node.target.y = cy - Math.sin(finalAngle) * r; // subtract Y because canvas Y is down
+                node.target.width = nodeSize;
+                node.target.height = nodeSize;
+                node.target.shape = "circle";
+                node.target.rotation = 0;
+                node.target.opacity = 1;
+
+                if (node.opacity === 0 && node.width === 0) {
+                    node.x = cx;
+                    node.y = cy;
+                }
+
+                nodeIdx++;
+            }
+            r += nodeSize * 1.1;
+        }
+    }
+
+    private layoutDotPlot(drawW: number, drawH: number, startX: number, startY: number) {
+        const activeNodes = this.nodes.filter(n => n.target.opacity > 0);
+        const maxVal = Math.max(...this.data.map(d => d.value)) || 1;
+        const nodeSize = 15;
+
+        // Bucket for stacking
+        // Round values to nearest "nodeSize" equivalent in pixel space?
+        // Or just bin them.
+
+        const bins: Record<number, number> = {}; // binIndex -> count
+        const range = drawW;
+
+        activeNodes.forEach(node => {
+            const xPos = (node.value / maxVal) * drawW;
+            // Discretize xPos to bin
+            const binIdx = Math.floor(xPos / (nodeSize + 2));
+
+            if (!bins[binIdx]) bins[binIdx] = 0;
+            const stackIdx = bins[binIdx]++;
+
+            // X is precise, Y is stacked? 
+            // Truly "Dot Plot" often bins the X too. 
+            // Let's bin X for clean stacks.
+
+            const finalX = startX + binIdx * (nodeSize + 2);
+            const finalY = (startY + drawH) - nodeSize / 2 - (stackIdx * (nodeSize + 2));
+
+            node.target.x = finalX;
+            node.target.y = finalY;
+            node.target.width = nodeSize;
+            node.target.height = nodeSize;
+            node.target.shape = "circle";
+            node.target.rotation = 0;
+            node.target.opacity = 1;
+
+            if (node.opacity === 0 && node.width === 0) {
+                node.x = finalX;
+                node.y = startY + drawH;
+            }
+        });
     }
 
     private layoutSplit(drawW: number, drawH: number, startX: number, startY: number) {
