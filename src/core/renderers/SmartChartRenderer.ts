@@ -63,17 +63,16 @@ export class SmartChartRenderer implements IRenderer<SmartChartObject> {
         const startY = padding.top;
 
         // Big Background Year for Race Chart
-        if (object.chartType === "race" && object.raceData.length > 0) {
-            // Find current year estimate from data (heuristic or stored prop?)
-            // Since we don't pass 'time' deep into renderer for logic, we infer from object state if possible
-            // Actually, `SmartChartRenderer.render` receives `time`. 
-            // But simpler: just grab the first node's data context if available? 
-            // Or better: calculated in `object.update()`?
-            // Let's rely on `object.raceData` being interpolated? No, `object` is state.
-            // We'll calculate "Progress" or just use a placeholder if we can't easily find current year.
-            // EDIT: SmartChartObject doesn't store "currentYear" publicly. 
-            // Let's skip year for now to avoid specific "Race" coupling in this generic renderer,
-            // OR add it if strictly needed. The user screenshot didn't imply it was missing, but it is "inspiration".
+        if (object.chartType === "race" && object.currentLabel) {
+            ctx.save();
+            ctx.font = `bold ${Math.min(drawW, drawH) * 0.4}px ${object.fontFamily}`;
+            ctx.fillStyle = object.gridColor || "#333";
+            ctx.globalAlpha = 0.2; // Faint background
+            ctx.textAlign = "right";
+            ctx.textBaseline = "bottom";
+            // Draw at bottom right, slightly padded
+            ctx.fillText(object.currentLabel, startX + drawW - 20, startY + drawH - 20);
+            ctx.restore();
         }
 
         if (object.showGrid) {
@@ -128,6 +127,55 @@ export class SmartChartRenderer implements IRenderer<SmartChartObject> {
                 }
             }
         }
+
+        // Color Legend (for Split/Grouped data)
+        if (object.chartType === "split" || object.chartType === "scatter" || object.chartType === "race") {
+            this.drawLegend(ctx, object);
+        }
+    }
+
+    private drawLegend(ctx: CanvasRenderingContext2D, object: SmartChartObject) {
+        // Extract unique groups
+        const groups = new Set<string>();
+        const groupColors: Record<string, string> = {};
+
+        object.data.forEach(d => {
+            if (d.group) {
+                groups.add(d.group);
+                if (!groupColors[d.group]) groupColors[d.group] = d.color;
+            }
+        });
+
+        if (groups.size === 0) return;
+
+        const groupList = Array.from(groups);
+        const { width, padding } = object;
+        const startX = padding.left;
+        const y = padding.top - 25; // Above chart
+
+        ctx.font = `bold 12px ${object.fontFamily}`;
+        ctx.textBaseline = "middle";
+
+        let currentX = startX;
+
+        groupList.forEach(group => {
+            const color = groupColors[group];
+
+            // Draw Dot
+            ctx.fillStyle = color;
+            ctx.beginPath();
+            ctx.arc(currentX, y, 5, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Draw Label
+            ctx.fillStyle = object.axisColor || "#888";
+            ctx.textAlign = "left";
+            ctx.fillText(group, currentX + 10, y);
+
+            // Advance X
+            const labelWidth = ctx.measureText(group).width;
+            currentX += 10 + labelWidth + 20; // Dot + Label + Gap
+        });
     }
 
     private drawNodeLabels(ctx: CanvasRenderingContext2D, object: SmartChartObject, node: VisualNode) {

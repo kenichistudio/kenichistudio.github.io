@@ -56,8 +56,8 @@ export class SmartChartObject extends KinetixObject {
     // Visual State
     public nodes: VisualNode[] = [];
     public chartType: SmartChartType = "bar";
+    public currentLabel: string = ""; // For Race Chart Background (e.g. "2005")
 
-    // Configuration
     // Configuration
     public padding = { top: 60, right: 40, bottom: 60, left: 60 }; // Balanced padding
     public barGap = 0.2; // 20% gap
@@ -101,7 +101,20 @@ export class SmartChartObject extends KinetixObject {
         if (this.chartType === "race" && this.raceData.length > 1) {
             this.updateRaceData(time);
         }
+
+        // If we are in a transition (morphing nodes), we need to ensure layout is updated
+        // But `updateLayout` calculates targets. The `lerp` happens in Renderer.
+        // If Renderer isn't called, no lerp. 
+        // We need an external driver.
+
         this.updateLayout();
+    }
+
+    // Helper to trigger external loops
+    public onTransition?: () => void;
+
+    private triggerTransition() {
+        if (this.onTransition) this.onTransition();
     }
 
     private updateRaceData(time: number) {
@@ -119,6 +132,9 @@ export class SmartChartObject extends KinetixObject {
 
         const prevData = this.raceData[index];
         const nextData = this.raceData[nextIndex];
+
+        // Update Label
+        this.currentLabel = prevData.year.toString();
 
         // 3. Interpolate values
         // We need to update `this.data` which drives the nodes
@@ -143,11 +159,13 @@ export class SmartChartObject extends KinetixObject {
         this.data = newData;
         this.syncNodes();
         this.updateLayout();
+        this.triggerTransition();
     }
 
     setChartType(type: SmartChartType) {
         this.chartType = type;
         this.updateLayout();
+        this.triggerTransition();
     }
 
     /**
@@ -162,11 +180,12 @@ export class SmartChartObject extends KinetixObject {
         this.data.forEach(d => {
             let node = nodeMap.get(d.id);
             if (!node) {
-                // ENTER: Create new node (spawn at bottom center or default pos)
+                // ENTER: Create new node
+                // Spawn at correct position but scale 0
                 node = {
                     id: d.id,
-                    x: this.width / 2,
-                    y: this.height, // Spawn from bottom
+                    x: this.width / 2, // Default center, will be updated by layout immediately
+                    y: this.height / 2,
                     width: 0,
                     height: 0,
                     rotation: 0,
@@ -184,12 +203,16 @@ export class SmartChartObject extends KinetixObject {
                 this.nodes.push(node);
             } else {
                 // UPDATE: Sync data props
+                // Smooth value interpolation? 
+                // The renderer lerps x/y/w/h, but `value` is used for text.
+                // We should lerp value too if we want counting numbers.
+                // For now, let's just snap value for text, or add `displayValue` prop later.
                 node.value = d.value;
                 node.label = d.label;
                 node.group = d.group;
+
                 // Target opacity is 1 (visible)
                 node.target.opacity = 1;
-                // If color changes in data, update it?
                 if (d.color) node.target.color = d.color;
             }
         });
@@ -316,6 +339,13 @@ export class SmartChartObject extends KinetixObject {
             node.target.height = h;
             node.target.shape = "rect";
             node.target.rotation = 0;
+
+            // "Spawn in place" logic: 
+            // If node is invisible and has no dimensions, assume it's new and teleport
+            if (node.opacity === 0 && node.width === 0) {
+                node.x = node.target.x + barW / 2;
+                node.y = node.target.y + h; // Start at bottom
+            }
         });
     }
 
@@ -336,6 +366,12 @@ export class SmartChartObject extends KinetixObject {
             node.target.height = 20;
             node.target.shape = "circle";
             node.target.rotation = 0;
+
+            // Spawn logic
+            if (node.opacity === 0 && node.width === 0) {
+                node.x = cx;
+                node.y = cy;
+            }
         });
     }
 

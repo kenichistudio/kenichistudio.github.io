@@ -15,12 +15,26 @@ export const SmartChartSettings: React.FC<SmartChartSettingsProps> = ({ object, 
 
     // Helper to trigger update
     const update = () => {
-        // Trigger generic update (maybe re-render scene or just object properties)
         onUpdate();
-        // Since SmartChart is "smart", changing properties usually requires re-layout
-        // The object methods handle that state, but we need to tell React/Engine to redraw
         forceUpdate(n => n + 1);
     };
+
+    // Auto-animate on transition
+    React.useEffect(() => {
+        object.onTransition = () => {
+            // Run a loop for 1 second to play the transition
+            let start = performance.now();
+            const duration = 1000;
+
+            const loop = (now: number) => {
+                if (now - start > duration) return;
+                update(); // Force engine render
+                requestAnimationFrame(loop);
+            };
+            requestAnimationFrame(loop);
+        };
+        return () => { object.onTransition = undefined; };
+    }, [object]);
 
     return (
         <div className="space-y-1">
