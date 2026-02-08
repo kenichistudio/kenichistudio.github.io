@@ -17,7 +17,7 @@ export class CharacterObject extends KinetixObject {
     public animOffset = 0;
 
     constructor(id: string) {
-        super(id, "Character");
+        super(id, "Character", "CharacterObject");
         this.width = 120;
         this.height = 200;
         this.name = "My Character";

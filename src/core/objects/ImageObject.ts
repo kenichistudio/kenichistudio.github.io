@@ -6,7 +6,7 @@ export class ImageObject extends KinetixObject {
     public loaded = false;
 
     constructor(id: string, src: string) {
-        super(id, "Image");
+        super(id, "Image", "ImageObject");
         this.src = src;
         this.loadImage();
     }

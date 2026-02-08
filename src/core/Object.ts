@@ -30,9 +30,12 @@ export abstract class KinetixObject {
         delay: number; // unused for now, or could vary exit start
     } = { type: "none", duration: 1000, delay: 0 };
 
-    constructor(id: string, name: string) {
+    readonly type: string;
+
+    constructor(id: string, name: string, type: string = "Object") {
         this.id = id;
         this.name = name;
+        this.type = type;
     }
 
     abstract draw(ctx: CanvasRenderingContext2D, time: number, totalDuration?: number): void;

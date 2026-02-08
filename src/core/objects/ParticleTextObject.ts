@@ -39,7 +39,7 @@ export class ParticleTextObject extends KinetixObject {
     public my = 0;
 
     constructor(id: string) {
-        super(id, "Particle Text");
+        super(id, "Particle Text", "ParticleTextObject");
         this.width = 600;
         this.height = 150;
     }

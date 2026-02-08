@@ -65,7 +65,7 @@ export class BarChartRaceObject extends KinetixObject {
     public lastDrawTime: number = 0;
 
     constructor(id: string) {
-        super(id, "BarChartRace");
+        super(id, "BarChartRace", "BarChartRaceObject");
         this.width = 600;
         this.height = 400;
     }

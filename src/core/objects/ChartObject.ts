@@ -23,7 +23,7 @@ export class ChartObject extends KinetixObject {
     innerRadius: number = 0.6; // For donut (0-1 relative to radius)
 
     constructor(id: string, type: ChartType = "bar") {
-        super(id, "Chart");
+        super(id, "Chart", "ChartObject");
         this.chartType = type;
         this.width = 400;
         this.height = 300;

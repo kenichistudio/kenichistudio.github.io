@@ -96,7 +96,7 @@ export class SmartChartObject extends KinetixObject {
     public labelPosition: "inside" | "outside" | "axis" = "axis";
 
     constructor(id: string) {
-        super(id, "SmartChart");
+        super(id, "SmartChart", "SmartChartObject");
         this.width = 600;
         this.height = 400;
 

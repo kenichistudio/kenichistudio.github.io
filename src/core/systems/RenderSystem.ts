@@ -23,7 +23,8 @@ export class RenderSystem {
 
             // Should skipping if opacity is 0? Maybe let renderer decide (for exit animations)
 
-            const renderer = this.renderers.get(obj.constructor.name.toLowerCase()) || this.renderers.get('default');
+            const type = (obj.type || obj.constructor.name).toLowerCase();
+            const renderer = this.renderers.get(type) || this.renderers.get('default');
 
             if (renderer) {
                 ctx.save();

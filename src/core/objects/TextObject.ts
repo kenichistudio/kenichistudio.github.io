@@ -39,7 +39,7 @@ export class TextObject extends KinetixObject {
     letterSpacing: number = 0;
 
     constructor(id: string, options: Partial<TextOptions> = {}) {
-        super(id, "Text");
+        super(id, "Text", "TextObject");
         this.text = options.text || "Hello World";
         this.fontSize = options.fontSize || 40;
         this.fontFamily = options.fontFamily || "Inter";

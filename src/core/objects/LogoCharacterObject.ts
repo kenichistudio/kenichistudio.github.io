@@ -24,7 +24,7 @@ export class LogoCharacterObject extends KinetixObject {
     // Ideally update always for smooth interaction
 
     constructor(id: string) {
-        super(id, "Logo Character");
+        super(id, "Logo Character", "LogoCharacterObject");
         this.width = 300;
         this.height = 300;
         this.text = "RAGHAV";

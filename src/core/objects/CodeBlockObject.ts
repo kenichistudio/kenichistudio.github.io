@@ -40,7 +40,7 @@ export class CodeBlockObject extends KinetixObject {
     highlightColor: string = "rgba(255, 255, 255, 0.1)";
 
     constructor(id: string, code: string = "") {
-        super(id, "CodeBlock");
+        super(id, "CodeBlock", "CodeBlockObject");
         this.code = code || "console.log('Hello Kinetix');";
         this.language = "javascript";
         this.fontSize = 16;
